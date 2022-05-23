@@ -1,0 +1,385 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Client {
+  accountNumber: String!
+  city: String!
+  country: String!
+  created_on: Timestamp!
+  deleted_on: Timestamp!
+  email: String!
+  firstName: String!
+  gsm: String!
+  houseNumber: Int!
+  id: Int!
+  lastName: String!
+  name: String!
+  postalCode: String!
+  projects: [Project!]!
+  reportSections: [ReportSection!]!
+  street: String!
+  updated_on: Timestamp!
+  vatNumber: String!
+}
+
+input CreateClientInput {
+  accountNumber: String!
+  city: String!
+  country: String!
+  email: String!
+  firstName: String!
+  gsm: String!
+  houseNumber: Int!
+  lastName: String!
+  name: String!
+  postalCode: String!
+  street: String!
+  vatNumber: String!
+}
+
+input CreateDesignerInput {
+  accountNumber: String!
+  city: String!
+  companyName: String!
+  country: String!
+  email: String!
+  firstName: String!
+  gsm: String!
+  houseNumber: Int!
+  lastName: String!
+  postalCode: String!
+  street: String!
+  vatNumber: String!
+}
+
+input CreateMediaInput {
+  name: String!
+  projectId: Int!
+  reportSectionId: Int
+  source: String!
+  type: String!
+}
+
+input CreateProjectInput {
+  active: Boolean!
+  city: String!
+  clientId: Int!
+  country: String!
+  description: String!
+  houseNumber: Int!
+  name: String!
+  postalCode: String!
+  street: String!
+}
+
+input CreateReportInput {
+  generalInfo: String!
+  number: Int!
+  pdf: String!
+  projectId: Int!
+}
+
+input CreateReportSectionInput {
+  clientId: Int
+  content: String!
+  designerId: Int
+  reportId: Int!
+  subcontractorId: Int
+}
+
+input CreateSubcontractorInput {
+  accountNumber: String!
+  city: String!
+  companyName: String!
+  country: String!
+  email: String!
+  firstName: String!
+  gsm: String!
+  houseNumber: Int!
+  lastName: String!
+  postalCode: String!
+  street: String!
+  vatNumber: String!
+}
+
+input CreateUserInput {
+  email: String!
+  firstName: String!
+  gsm: String!
+  lastName: String!
+  password: String!
+}
+
+type Designer {
+  accountNumber: String!
+  city: String!
+  companyName: String!
+  country: String!
+  created_on: Timestamp!
+  deleted_on: Timestamp!
+  email: String!
+  firstName: String!
+  gender: Int!
+  gsm: String!
+  houseNumber: Int!
+  id: Int!
+  lastName: String!
+  postalCode: String!
+  projects: [Project!]!
+  reportSections: [ReportSection!]!
+  street: String!
+  updated_on: Timestamp!
+  vatNumber: String!
+}
+
+type Media {
+  created_on: Timestamp!
+  deleted_on: Timestamp!
+  id: Int!
+  name: String!
+  project: Project!
+  projectId: Int!
+  reportSection: Media!
+  reportSectionId: Int
+  source: String!
+  type: String!
+  updated_on: Timestamp!
+}
+
+type Mutation {
+  createClient(createClientInput: CreateClientInput!): Client!
+  createDesigner(createDesignerInput: CreateDesignerInput!): Designer!
+  createMedia(createMediaInput: CreateMediaInput!): Media!
+  createProject(createProjectInput: CreateProjectInput!): Project!
+  createReport(createReportInput: CreateReportInput!): Report!
+  createReportSection(createReportSectionInput: CreateReportSectionInput!): ReportSection!
+  createSubcontractor(createSubcontractorInput: CreateSubcontractorInput!): Subcontractor!
+  createUser(createUserInput: CreateUserInput!): User!
+  removeClient(id: Int!): Client!
+  removeDesigner(id: Int!): Designer!
+  removeMedia(id: Int!): Media!
+  removeProject(id: Int!): Project!
+  removeReport(id: Int!): Report!
+  removeReportSection(id: Int!): ReportSection!
+  removeSubcontractor(id: Int!): Subcontractor!
+  removeUser(id: Int!): User!
+  updateClient(updateClientInput: UpdateClientInput!): Client!
+  updateDesigner(updateDesignerInput: UpdateDesignerInput!): Designer!
+  updateMedia(updateMediaInput: UpdateMediaInput!): Media!
+  updateProject(updateProjectInput: UpdateProjectInput!): Project!
+  updateReport(updateReportInput: UpdateReportInput!): Report!
+  updateReportSection(updateReportSectionInput: UpdateReportSectionInput!): ReportSection!
+  updateSubcontractor(updateSubcontractorInput: UpdateSubcontractorInput!): Subcontractor!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+}
+
+type Project {
+  active: Boolean!
+  city: String!
+  client: Client!
+  clientId: Int!
+  country: String!
+  created_on: Timestamp!
+  deleted_on: Timestamp!
+  description: String!
+  designers: [Designer!]!
+  houseNumber: Int!
+  id: Int!
+  media: [Media!]!
+  name: String!
+  postalCode: String!
+  reports: [Report!]!
+  street: String!
+  subcontractors: [Subcontractor!]!
+  updated_on: Timestamp!
+}
+
+type Query {
+  activeProjects: [Project!]!
+  activeProjectsByPagination(limit: Int!, offset: Int!): [Project!]!
+  client(id: Int!): Client!
+  clients: [Client!]!
+  designer(id: Int!): Designer!
+  designers: [Designer!]!
+  media(id: Int!): Media!
+  project(id: Int!): Project!
+  projects: [Project!]!
+  projectsByNameWithPagination(limit: Int!, name: String!, offset: Int!): [Project!]!
+  projectsByPagination(limit: Int!, offset: Int!): [Project!]!
+  report(id: Int!): Report!
+  reportSection(id: Int!): ReportSection!
+  reportSections: [ReportSection!]!
+  reports: [Report!]!
+  subcontractor(id: Int!): Subcontractor!
+  subcontractors: [Subcontractor!]!
+  totalActiveProjects: Int!
+  totalProjects: Int!
+  user(id: Int!): User!
+  users: [User!]!
+}
+
+type Report {
+  created_on: Timestamp!
+  deleted_on: Timestamp!
+  generalInfo: String!
+  id: Int!
+  number: Int!
+  pdf: String!
+  project: Project!
+  projectId: Int!
+  reportSections: [ReportSection!]!
+  updated_on: Timestamp!
+}
+
+type ReportSection {
+  client: Client!
+  clientId: Int
+  content: String!
+  created_on: Timestamp!
+  deleted_on: Timestamp!
+  designer: Designer!
+  designerId: Int
+  id: Int!
+  media: [Media!]!
+  report: Report!
+  reportId: Int!
+  subcontractor: Subcontractor!
+  subcontractorId: Int
+  updated_on: Timestamp!
+}
+
+type Subcontractor {
+  accountNumber: String!
+  city: String!
+  companyName: String!
+  country: String!
+  created_on: Timestamp!
+  deleted_on: Timestamp!
+  email: String!
+  firstName: String!
+  gender: Int!
+  gsm: String!
+  houseNumber: Int!
+  id: Int!
+  lastName: String!
+  postalCode: String!
+  projects: [Project!]!
+  reportSections: [ReportSection!]!
+  street: String!
+  updated_on: Timestamp!
+  vatNumber: String!
+}
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+input UpdateClientInput {
+  accountNumber: String
+  city: String
+  country: String
+  email: String
+  firstName: String
+  gsm: String
+  houseNumber: Int
+  id: Int!
+  lastName: String
+  name: String
+  postalCode: String
+  street: String
+  vatNumber: String
+}
+
+input UpdateDesignerInput {
+  accountNumber: String
+  city: String
+  companyName: String
+  country: String
+  email: String
+  firstName: String
+  gsm: String
+  houseNumber: Int
+  id: Int!
+  lastName: String
+  postalCode: String
+  street: String
+  vatNumber: String
+}
+
+input UpdateMediaInput {
+  id: Int!
+  name: String
+  projectId: Int
+  reportSectionId: Int
+  source: String
+  type: String
+}
+
+input UpdateProjectInput {
+  active: Boolean
+  city: String
+  clientId: Int
+  country: String
+  description: String
+  houseNumber: Int
+  id: Int!
+  name: String
+  postalCode: String
+  street: String
+}
+
+input UpdateReportInput {
+  generalInfo: String
+  id: Int!
+  number: Int
+  pdf: String
+  projectId: Int
+}
+
+input UpdateReportSectionInput {
+  clientId: Int
+  content: String
+  designerId: Int
+  id: Int!
+  reportId: Int
+  subcontractorId: Int
+}
+
+input UpdateSubcontractorInput {
+  accountNumber: String
+  city: String
+  companyName: String
+  country: String
+  email: String
+  firstName: String
+  gsm: String
+  houseNumber: Int
+  id: Int!
+  lastName: String
+  postalCode: String
+  street: String
+  vatNumber: String
+}
+
+input UpdateUserInput {
+  email: String
+  firstName: String
+  gsm: String
+  id: Int!
+  lastName: String
+  password: String
+}
+
+type User {
+  created_on: Timestamp!
+  deleted_on: Timestamp!
+  email: String!
+  firstName: String!
+  gsm: String!
+  id: Int!
+  lastName: String!
+  password: String!
+  updated_on: Timestamp!
+}

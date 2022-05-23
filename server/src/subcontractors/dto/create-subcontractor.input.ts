@@ -1,0 +1,70 @@
+import { InputType, Int, Field } from '@nestjs/graphql';
+import { IsString, IsNotEmpty, IsEmail, IsMobilePhone, IsInt, IsPositive, IsPostalCode, IsAlphanumeric, Contains, MaxLength } from 'class-validator';
+
+@InputType()
+export class CreateSubcontractorInput {
+  @IsString()
+  @IsNotEmpty()
+  @Field()
+  companyName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Field()
+  firstName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Field()
+  lastName: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  @Field()
+  email: string;
+
+  @IsMobilePhone('nl-BE')
+  @IsNotEmpty()
+  @Field()
+  gsm: string;
+
+  @IsNotEmpty()
+  @Field()
+  street: string
+
+  @IsNotEmpty()
+  @IsInt()
+  @IsPositive()
+  @Field(type => Int)
+  houseNumber: number;
+
+  @IsNotEmpty()
+  @IsPostalCode('BE')
+  @Field()
+  postalCode: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Field()
+  city: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Field()
+  country: string;
+
+  @IsNotEmpty()
+  @IsAlphanumeric()
+  @Contains('BE')
+  // @Contains('‹ ^(BE)?0[0-9]{9}$ ›')
+  @MaxLength(12)
+  @Field()
+  vatNumber: string;
+
+  @IsNotEmpty()
+  @IsAlphanumeric()
+  @Contains('BE')
+  @MaxLength(16)
+  @Field()
+  accountNumber: string;
+}
