@@ -60,7 +60,8 @@ const NavButton = styled.button<Props>`
     }
     :nth-child(2) {
       opacity: ${({ open }) => (open ? "0" : "1")};
-      transform: ${({ open }) => (open ? "translateX(2rem)" : "translateX(0)")};
+      transform: ${({ open }) =>
+        open ? "translateX(1.5rem)" : "translateX(0)"};
     }
     :nth-child(3) {
       transform: ${({ open }) =>
@@ -75,10 +76,10 @@ const NavButton = styled.button<Props>`
 const NavigationList = styled.ul<Props>`
   list-style: none;
   position: absolute;
-  left: 0rem;
+  left: 0;
   top: ${({ open }) => (open ? "0" : "-100%")};
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   overflow-y: hidden;
   overscroll-behavior: contain;
   padding-top: 6rem;

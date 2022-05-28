@@ -197,6 +197,7 @@ type Project {
 
 type Query {
   activeProjects: [Project!]!
+  activeProjectsByNameWithPagination(limit: Int!, name: String!, offset: Int!, sort: String!): [Project!]!
   activeProjectsByPagination(limit: Int!, offset: Int!): [Project!]!
   client(id: Int!): Client!
   clients: [Client!]!
@@ -205,7 +206,7 @@ type Query {
   media(id: Int!): Media!
   project(id: Int!): Project!
   projects: [Project!]!
-  projectsByNameWithPagination(limit: Int!, name: String!, offset: Int!): [Project!]!
+  projectsByNameWithPagination(limit: Int!, name: String!, offset: Int!, sort: String!): [Project!]!
   projectsByPagination(limit: Int!, offset: Int!): [Project!]!
   report(id: Int!): Report!
   reportSection(id: Int!): ReportSection!
@@ -213,8 +214,8 @@ type Query {
   reports: [Report!]!
   subcontractor(id: Int!): Subcontractor!
   subcontractors: [Subcontractor!]!
-  totalActiveProjects: Int!
-  totalProjects: Int!
+  totalActiveProjects(name: String!): Int!
+  totalProjects(name: String!): Int!
   user(id: Int!): User!
   users: [User!]!
 }

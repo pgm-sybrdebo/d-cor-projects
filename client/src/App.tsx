@@ -12,10 +12,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import * as ROUTES from "./routes";
-import ActiveProjects from "./pages/ActiveProjects";
-import Projects from "./pages/Projects";
-import Subcontractors from "./pages/Subcontractors";
-import Clients from "./pages/Clients";
+import { ActiveProjects, Projects, Subcontractors, Clients } from "./pages";
 
 function App() {
   return (

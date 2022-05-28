@@ -11,13 +11,13 @@ export class ProjectsResolver {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Query(() => Int, { name: 'totalProjects' })
-  async totalProjects() {
-    return this.projectsService.count();
+  async totalProjects(@Args('name', { type: () => String }) name: string) {
+    return this.projectsService.count(name);
   }
 
   @Query(() => Int, { name: 'totalActiveProjects' })
-  async totalActiveProjects() {
-    return this.projectsService.countActive();
+  totalActiveProjects(@Args('name', { type: () => String }) name: string) {
+    return this.projectsService.countActive(name);
   }
 
   @Mutation(() => Project)
@@ -54,11 +54,29 @@ export class ProjectsResolver {
   @Query(() => [Project], { name: 'projectsByNameWithPagination' })
   findAllProjectsByNameWithPagination(
     @Args('name', { type: () => String }) name: string,
+    @Args('sort', { type: () => String }) sort: string,
     @Args('offset', { type: () => Int }, new ParseIntPipe()) offset: number,
     @Args('limit', { type: () => Int }, new ParseIntPipe()) limit: number,
   ) {
     return this.projectsService.findAllProjectsByNameWithPagination(
       name,
+      sort,
+      offset,
+      limit,
+    );
+  }
+
+  @Query(() => [Project], { name: 'activeProjectsByNameWithPagination' })
+  findAllActiveProjectsByNameWithPagination(
+    @Args('name', { type: () => String }) name: string,
+    @Args('sort', { type: () => String }) sort: string,
+    @Args('offset', { type: () => Int }, new ParseIntPipe()) offset: number,
+    @Args('limit', { type: () => Int }, new ParseIntPipe()) limit: number,
+  ) {
+
+    return this.projectsService.findAllActiveProjectsByNameWithPagination(
+      name,
+      sort,
       offset,
       limit,
     );

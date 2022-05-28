@@ -14,6 +14,9 @@ import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
 
+const CACHENAME = "version-1";
+const urlsToCache = ['index.html'];
+
 declare const self: ServiceWorkerGlobalScope;
 
 clientsClaim();
@@ -68,6 +71,15 @@ registerRoute(
     ],
   })
 );
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHENAME)
+      .then((cache) => {
+        console.log('Opened cache');
+      })
+    );
+});
 
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})

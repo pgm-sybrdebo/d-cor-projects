@@ -6,7 +6,7 @@ interface BaseLayoutProps {
 }
 
 const MainLayout = styled.main`
-  max-width: ${(props) => props.theme.width.large};
+  max-width: ${(props) => props.theme.width.elarge};
   margin: 0 auto;
   padding: 0 1.5rem;
   width: 100%;
