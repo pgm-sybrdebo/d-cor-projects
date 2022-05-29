@@ -17,6 +17,8 @@ import BaseLayout from "../layouts/BaseLayout";
 import ConfirmDialog from "../components/table/dialogs/ConfirmDialog";
 import Loading from "../components/layout/Loading";
 import TableHeading from "../components/table/TableHeading";
+import CreateFormClient from "../components/table/createForms/CreateFormClient";
+import UpdateFormClient from "../components/table/updateForms/UpdateFormClient";
 
 const Clients = () => {
   const [selectedRow, setSelectedRow] = useState();
@@ -48,6 +50,10 @@ const Clients = () => {
     setSearch(searchString);
   };
 
+  const handleOpenCreateChange = (isOpenCreate: boolean) => {
+    setIsOpenCreate(isOpenCreate);
+  };
+
   const handleSnackbarClose = (
     e: React.SyntheticEvent | Event,
     reason?: string
@@ -70,7 +76,7 @@ const Clients = () => {
   const [getClientsByName, { error, loading, data }] = useLazyQuery(
     GET_ALL_CLIENTS_BY_NAME
   );
-  // //const [updateModel] = useMutation(UPDATE_MODEL);
+  // const [updateModel] = useMutation(UPDATE_MODEL);
   const [deleteClient] = useMutation(REMOVE_CLIENT);
 
   useEffect(() => {
@@ -163,7 +169,10 @@ const Clients = () => {
 
   return (
     <BaseLayout>
-      <TableHeading onSearchChange={handleSearchChange} />
+      <TableHeading
+        onSearchChange={handleSearchChange}
+        onOpenCreateChange={handleOpenCreateChange}
+      />
 
       {loading && <Loading />}
       {error && (
@@ -197,30 +206,30 @@ const Clients = () => {
         />
       )}
 
-      {/* // {isOpen && (
-      //   <UpdateFormModel
-      //     selectedRow={selectedRow}
-      //     handleClose={handleClose}
-      //     open={isOpen}
-      //     page={page}
-      //     name={searchValue}
-      //     onSnackbarMessageChange={handleSnackbarMessageChange}
-      //     onOpenSnackbarChange={handleOpenSnackbarChange}
-      //     onSnackbarSuccessChange={handleSnackbarSuccessChange}
-      //   />
-      // )} */}
+      {isOpen && (
+        <UpdateFormClient
+          selectedRow={selectedRow}
+          handleClose={handleClose}
+          open={isOpen}
+          page={page}
+          name={search}
+          onSnackbarMessageChange={handleSnackbarMessageChange}
+          onOpenSnackbarChange={handleOpenSnackbarChange}
+          onSnackbarSuccessChange={handleSnackbarSuccessChange}
+        />
+      )}
 
-      {/* // {isOpenCreate && (
-      //   <CreateFormModel
-      //     handleClose={handleClose}
-      //     open={isOpenCreate}
-      //     page={page}
-      //     name={searchValue}
-      //     onSnackbarMessageChange={handleSnackbarMessageChange}
-      //     onOpenSnackbarChange={handleOpenSnackbarChange}
-      //     onSnackbarSuccessChange={handleSnackbarSuccessChange}
-      //   />
-      // )} */}
+      {isOpenCreate && (
+        <CreateFormClient
+          handleClose={handleClose}
+          open={isOpenCreate}
+          page={page}
+          name={search}
+          onSnackbarMessageChange={handleSnackbarMessageChange}
+          onOpenSnackbarChange={handleOpenSnackbarChange}
+          onSnackbarSuccessChange={handleSnackbarSuccessChange}
+        />
+      )}
 
       <Snackbar
         open={openSnackbar}

@@ -29,6 +29,10 @@ export class Subcontractor {
 
   @Column()
   @Field()
+  function: string;
+
+  @Column()
+  @Field()
   email: string;
 
   @Column()
@@ -50,10 +54,6 @@ export class Subcontractor {
   @Column()
   @Field()
   city: string;
-
-  @Column()
-  @Field()
-  country: string;
 
   @Column()
   @Field()

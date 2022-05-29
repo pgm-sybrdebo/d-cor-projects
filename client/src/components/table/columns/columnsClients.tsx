@@ -58,6 +58,16 @@ const columnsClients: GridColDef[] = [
     flex: 1,
   },
   { field: "lastName", headerName: "Achternaam", minWidth: 100, flex: 1 },
+  {
+    field: "gender",
+    headerName: "Geslacht",
+    minWidth: 100,
+    flex: 1,
+    renderCell: (params) => {
+      console.log(params.row.gender);
+      return params.row.gender == 0 ? "man" : "vrouw";
+    },
+  },
   { field: "email", headerName: "Email", minWidth: 240, flex: 1 },
   { field: "gsm", headerName: "Gsm", minWidth: 150, flex: 1 },
   {

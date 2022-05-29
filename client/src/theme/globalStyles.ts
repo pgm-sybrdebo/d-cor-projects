@@ -27,8 +27,9 @@ const GlobalStyle = createGlobalStyle`
 
   h2 {
     font-size: ${(props) => props.theme.fontSizes.medium};
+    font-weight: ${(props) => props.theme.fontWeights.bold};
     line-height: 1.2;
-    color: ${(props) => props.theme.colors.primaryAccentColor};
+    // color: ${(props) => props.theme.colors.primaryAccentColor};
 
     @media (min-width: ${(props) => props.theme.width.medium}) {
       font-size: ${(props) => props.theme.fontSizes.emedium};

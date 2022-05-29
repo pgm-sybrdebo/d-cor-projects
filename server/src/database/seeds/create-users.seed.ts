@@ -10,6 +10,8 @@ import * as Faker from 'faker';
 import { Report } from "src/reports/entities/report.entity";
 import { ReportSection } from "src/report-sections/entities/report-section.entity";
 
+// yarn seed:run -s create-users
+
 export default class CreateUsers implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<any> {
     await factory(User)().createMany(1);

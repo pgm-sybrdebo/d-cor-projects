@@ -45,12 +45,16 @@ const SearchContainer = styled.div`
   }
 `;
 
-const TableHeading = ({ onSearchChange }: any) => {
+const TableHeading = ({ onSearchChange, onOpenCreateChange }: any) => {
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("");
+  const [isOpenCreate, setIsOpenCreate] = useState(false);
 
   const handleSearchChange = (searchString: string) => {
     setSearch(searchString);
+  };
+
+  const handleCLickCreate = () => {
+    setIsOpenCreate(true);
   };
 
   useEffect(() => {
@@ -59,10 +63,20 @@ const TableHeading = ({ onSearchChange }: any) => {
     }
   }, [search]);
 
+  useEffect(() => {
+    if (typeof onOpenCreateChange === "function") {
+      onOpenCreateChange(isOpenCreate);
+    }
+  }, [isOpenCreate]);
+
   return (
     <TableContainer>
       <ButtonContainer>
-        <PrimaryButton type="button" icon={<FaPlus />}>
+        <PrimaryButton
+          type="button"
+          icon={<FaPlus />}
+          onClick={handleCLickCreate}
+        >
           Nieuwe Cliënt
         </PrimaryButton>
       </ButtonContainer>
