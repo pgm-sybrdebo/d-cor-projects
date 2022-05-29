@@ -201,6 +201,7 @@ type Query {
   activeProjectsByPagination(limit: Int!, offset: Int!): [Project!]!
   client(id: Int!): Client!
   clients: [Client!]!
+  clientsByName(limit: Int!, name: String!, offset: Int!): [Client!]!
   designer(id: Int!): Designer!
   designers: [Designer!]!
   media(id: Int!): Media!
@@ -215,6 +216,7 @@ type Query {
   subcontractor(id: Int!): Subcontractor!
   subcontractors: [Subcontractor!]!
   totalActiveProjects(name: String!): Int!
+  totalClientsByName(name: String!): Int!
   totalProjects(name: String!): Int!
   user(id: Int!): User!
   users: [User!]!
