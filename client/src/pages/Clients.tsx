@@ -16,24 +16,7 @@ import {
 import BaseLayout from "../layouts/BaseLayout";
 import ConfirmDialog from "../components/table/dialogs/ConfirmDialog";
 import Loading from "../components/layout/Loading";
-
-// interface initState {
-//   action: string;
-// }
-
-// type ActionType = { action: "softDelete" } | { action: "delete" };
-
-// const initialState = { action: "" };
-// function actionReducer(state: initState, action: ActionType): initState {
-//   switch (action.action) {
-//     case "softDelete":
-//       return { action: "softDelete" };
-//     case "delete":
-//       return { action: "delete" };
-//     default:
-//       return state;
-//   }
-// }
+import TableHeading from "../components/table/TableHeading";
 
 const Clients = () => {
   const [selectedRow, setSelectedRow] = useState();
@@ -44,10 +27,8 @@ const Clients = () => {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
-  const [searchChange, setSearchChange] = useState("");
-  const [searchValue, setSearchValue] = useState("");
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
-  // const [state, dispatch] = React.useReducer(actionReducer, initialState);
 
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -61,6 +42,10 @@ const Clients = () => {
   };
   const handleSnackbarSuccessChange = (isSelected: boolean) => {
     setSnackbarSuccess(isSelected);
+  };
+
+  const handleSearchChange = (searchString: string) => {
+    setSearch(searchString);
   };
 
   const handleSnackbarClose = (
@@ -79,7 +64,7 @@ const Clients = () => {
     loading: totalLoading,
   } = useQuery(TOTAL_CLIENTS, {
     variables: {
-      name: searchValue,
+      name: search,
     },
   });
   const [getClientsByName, { error, loading, data }] = useLazyQuery(
@@ -91,12 +76,12 @@ const Clients = () => {
   useEffect(() => {
     getClientsByName({
       variables: {
-        name: searchValue,
+        name: search,
         offset: page,
         limit: 10,
       },
     });
-  }, [getClientsByName, page, searchValue]);
+  }, [getClientsByName, page, search]);
 
   const currentlySelectedRow = (
     params: GridCellParams,
@@ -144,7 +129,7 @@ const Clients = () => {
           {
             query: GET_ALL_CLIENTS_BY_NAME,
             variables: {
-              name: searchValue,
+              name: search,
               offset: page,
               limit: 10,
             },
@@ -152,7 +137,7 @@ const Clients = () => {
           {
             query: TOTAL_CLIENTS,
             variables: {
-              name: searchValue,
+              name: search,
             },
           },
         ],
@@ -178,16 +163,18 @@ const Clients = () => {
 
   return (
     <BaseLayout>
+      <TableHeading onSearchChange={handleSearchChange} />
+
       {loading && <Loading />}
-      {/* // {error && ( */}
-      {/* //   <Snackbar
-      //     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      //     open={true}
-      //     autoHideDuration={3000}
-      //   >
-      //     <Alert severity="error">An error occured: {error.message}</Alert>
-      //   </Snackbar>
-      // )} */}
+      {error && (
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          open={true}
+          autoHideDuration={3000}
+        >
+          <Alert severity="error">An error occured: {error.message}</Alert>
+        </Snackbar>
+      )}
       {data && totalData && (
         <Table
           data={data.clientsByName}
