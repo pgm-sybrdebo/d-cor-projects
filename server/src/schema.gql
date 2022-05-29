@@ -5,11 +5,11 @@
 type Client {
   accountNumber: String!
   city: String!
-  country: String!
   created_on: Timestamp!
   deleted_on: Timestamp!
   email: String!
   firstName: String!
+  gender: Int!
   gsm: String!
   houseNumber: Int!
   id: Int!
@@ -26,9 +26,9 @@ type Client {
 input CreateClientInput {
   accountNumber: String!
   city: String!
-  country: String!
   email: String!
   firstName: String!
+  gender: Int!
   gsm: String!
   houseNumber: Int!
   lastName: String!
@@ -42,9 +42,9 @@ input CreateDesignerInput {
   accountNumber: String!
   city: String!
   companyName: String!
-  country: String!
   email: String!
   firstName: String!
+  gender: Int!
   gsm: String!
   houseNumber: Int!
   lastName: String!
@@ -92,9 +92,10 @@ input CreateSubcontractorInput {
   accountNumber: String!
   city: String!
   companyName: String!
-  country: String!
   email: String!
   firstName: String!
+  function: String!
+  gender: Int!
   gsm: String!
   houseNumber: Int!
   lastName: String!
@@ -115,7 +116,6 @@ type Designer {
   accountNumber: String!
   city: String!
   companyName: String!
-  country: String!
   created_on: Timestamp!
   deleted_on: Timestamp!
   email: String!
@@ -201,6 +201,7 @@ type Query {
   activeProjectsByPagination(limit: Int!, offset: Int!): [Project!]!
   client(id: Int!): Client!
   clients: [Client!]!
+  clientsByName(limit: Int!, name: String!, offset: Int!): [Client!]!
   designer(id: Int!): Designer!
   designers: [Designer!]!
   media(id: Int!): Media!
@@ -215,6 +216,7 @@ type Query {
   subcontractor(id: Int!): Subcontractor!
   subcontractors: [Subcontractor!]!
   totalActiveProjects(name: String!): Int!
+  totalClientsByName(name: String!): Int!
   totalProjects(name: String!): Int!
   user(id: Int!): User!
   users: [User!]!
@@ -254,11 +256,11 @@ type Subcontractor {
   accountNumber: String!
   city: String!
   companyName: String!
-  country: String!
   created_on: Timestamp!
   deleted_on: Timestamp!
   email: String!
   firstName: String!
+  function: String!
   gender: Int!
   gsm: String!
   houseNumber: Int!
@@ -280,9 +282,9 @@ scalar Timestamp
 input UpdateClientInput {
   accountNumber: String
   city: String
-  country: String
   email: String
   firstName: String
+  gender: Int
   gsm: String
   houseNumber: Int
   id: Int!
@@ -297,9 +299,9 @@ input UpdateDesignerInput {
   accountNumber: String
   city: String
   companyName: String
-  country: String
   email: String
   firstName: String
+  gender: Int
   gsm: String
   houseNumber: Int
   id: Int!
@@ -352,9 +354,10 @@ input UpdateSubcontractorInput {
   accountNumber: String
   city: String
   companyName: String
-  country: String
   email: String
   firstName: String
+  function: String
+  gender: Int
   gsm: String
   houseNumber: Int
   id: Int!

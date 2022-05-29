@@ -1,3 +1,4 @@
+import { GridColDef } from "@mui/x-data-grid";
 export interface ProjectCardProp {
   id: number;
   name: string;
@@ -27,4 +28,13 @@ export interface ProjectOverview {
   city: string;
   country: string;
   active: boolean;
+}
+
+export interface TableProps {
+  columns: GridColDef[]
+  data: any
+  onCellClick?: any
+  total?: number
+  page?: any
+  setPage?: any
 }

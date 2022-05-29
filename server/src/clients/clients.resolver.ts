@@ -8,6 +8,11 @@ import { UpdateClientInput } from './dto/update-client.input';
 export class ClientsResolver {
   constructor(private readonly clientsService: ClientsService) {}
 
+  @Query(() => Int, { name: 'totalClientsByName' })
+  async totalProjects(@Args('name', { type: () => String }) name: string) {
+    return this.clientsService.count(name);
+  }
+
   @Mutation(() => Client)
   createClient(@Args('createClientInput') createClientInput: CreateClientInput) {
     return this.clientsService.create(createClientInput);
@@ -16,6 +21,19 @@ export class ClientsResolver {
   @Query(() => [Client], { name: 'clients' })
   findAll() {
     return this.clientsService.findAll();
+  }
+
+  @Query(() => [Client], { name: 'clientsByName' })
+  findAllProjectsByNameWithPagination(
+    @Args('name', { type: () => String }) name: string,
+    @Args('offset', { type: () => Int }) offset: number,
+    @Args('limit', { type: () => Int }) limit: number,
+  ) {
+    return this.clientsService.findAllClientsByName(
+      name,
+      offset,
+      limit,
+    );
   }
 
   @Query(() => Client, { name: 'client' })
