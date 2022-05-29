@@ -15,6 +15,7 @@ import {
 } from "../graphql/clients";
 import BaseLayout from "../layouts/BaseLayout";
 import ConfirmDialog from "../components/table/dialogs/ConfirmDialog";
+import Loading from "../components/layout/Loading";
 
 // interface initState {
 //   action: string;
@@ -85,7 +86,7 @@ const Clients = () => {
     GET_ALL_CLIENTS_BY_NAME
   );
   // //const [updateModel] = useMutation(UPDATE_MODEL);
-  // const [deleteClient] = useMutation(REMOVE_CLIENT);
+  const [deleteClient] = useMutation(REMOVE_CLIENT);
 
   useEffect(() => {
     getClientsByName({
@@ -108,76 +109,76 @@ const Clients = () => {
       return;
     }
 
-    // if (
-    //   field === "edit" &&
-    //   event.target instanceof Element &&
-    //   (event.target.tagName === "BUTTON" ||
-    //     event.target.tagName === "svg" ||
-    //     event.target.tagName === "path")
-    // ) {
-    //   setSelectedRow(params.row);
-    //   setIsOpen(true);
-    // } else if (
-    //   field === "delete" &&
-    //   event.target instanceof Element &&
-    //   (event.target.tagName === "BUTTON" ||
-    //     event.target.tagName === "svg" ||
-    //     event.target.tagName === "path")
-    // ) {
-    //   setSelectedRow(params.row);
-    //   setIsOpenDialog(true);
-    //   setTitle("Bevestig het verwijderen van deze client");
-    //   setMessage(
-    //     "Ben je zeker dat je dit model wilt verwijderen? Dit kan niet ongedaan gemaakt worden."
-    //   );
-    // }
+    if (
+      field === "edit" &&
+      event.target instanceof Element &&
+      (event.target.tagName === "BUTTON" ||
+        event.target.tagName === "svg" ||
+        event.target.tagName === "path")
+    ) {
+      setSelectedRow(params.row);
+      setIsOpen(true);
+    } else if (
+      field === "delete" &&
+      event.target instanceof Element &&
+      (event.target.tagName === "BUTTON" ||
+        event.target.tagName === "svg" ||
+        event.target.tagName === "path")
+    ) {
+      setSelectedRow(params.row);
+      setIsOpenDialog(true);
+      setTitle("Bevestig het verwijderen van deze client");
+      setMessage(
+        "Ben je zeker dat je dit model wilt verwijderen? Dit kan niet ongedaan gemaakt worden."
+      );
+    }
   };
 
-  // const deleteCurrentClient = async (id: number) => {
-  //   try {
-  //     await deleteClient({
-  //       variables: {
-  //         id: id,
-  //       },
-  //       refetchQueries: [
-  //         {
-  //           query: GET_ALL_CLIENTS_BY_NAME,
-  //           variables: {
-  //             name: searchValue,
-  //             offset: page,
-  //             limit: 10,
-  //           },
-  //         },
-  //         {
-  //           query: TOTAL_CLIENTS,
-  //           variables: {
-  //             name: searchValue,
-  //           },
-  //         },
-  //       ],
-  //     });
-  //     setSnackbarSuccess(true);
-  //     setSnackbarMessage("Client is verwijderd!");
-  //     setOpenSnackbar(true);
-  //     handleClose();
-  //   } catch (error) {
-  //     setSnackbarSuccess(false);
-  //     setSnackbarMessage(
-  //       `Client kon niet verwijderd wegens volgende fout: ${error}`
-  //     );
-  //     setOpenSnackbar(true);
-  //   }
-  // };
+  const deleteCurrentClient = async (id: number) => {
+    try {
+      await deleteClient({
+        variables: {
+          id: id,
+        },
+        refetchQueries: [
+          {
+            query: GET_ALL_CLIENTS_BY_NAME,
+            variables: {
+              name: searchValue,
+              offset: page,
+              limit: 10,
+            },
+          },
+          {
+            query: TOTAL_CLIENTS,
+            variables: {
+              name: searchValue,
+            },
+          },
+        ],
+      });
+      setSnackbarSuccess(true);
+      setSnackbarMessage("Client is verwijderd!");
+      setOpenSnackbar(true);
+      handleClose();
+    } catch (error) {
+      setSnackbarSuccess(false);
+      setSnackbarMessage(
+        `Client kon niet verwijderd wegens volgende fout: ${error}`
+      );
+      setOpenSnackbar(true);
+    }
+  };
 
-  // const handleClose = () => {
-  //   setIsOpen(false);
-  //   setIsOpenDialog(false);
-  //   setIsOpenCreate(false);
-  // };
+  const handleClose = () => {
+    setIsOpen(false);
+    setIsOpenDialog(false);
+    setIsOpenCreate(false);
+  };
 
   return (
     <BaseLayout>
-      {/* {loading && <Loading />} */}
+      {loading && <Loading />}
       {/* // {error && ( */}
       {/* //   <Snackbar
       //     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -198,7 +199,7 @@ const Clients = () => {
         />
       )}
 
-      {/* {isOpenDialog && (
+      {isOpenDialog && (
         <ConfirmDialog
           selectedRow={selectedRow}
           title={title}
@@ -207,7 +208,7 @@ const Clients = () => {
           handleClose={handleClose}
           handleConfirm={deleteCurrentClient}
         />
-      )} */}
+      )}
 
       {/* // {isOpen && (
       //   <UpdateFormModel
@@ -234,7 +235,7 @@ const Clients = () => {
       //   />
       // )} */}
 
-      {/* <Snackbar
+      <Snackbar
         open={openSnackbar}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         autoHideDuration={3000}
@@ -246,7 +247,7 @@ const Clients = () => {
         >
           {snackbarMessage}
         </Alert>
-      </Snackbar> */}
+      </Snackbar>
     </BaseLayout>
   );
 };
