@@ -6,20 +6,10 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  TextareaAutosize,
   TextField,
 } from "@material-ui/core";
-import {
-  Typography,
-  Button,
-  Input,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@mui/material";
+import { Button, InputLabel, Select, MenuItem } from "@mui/material";
 import { Formik, Form, Field, FieldArray } from "formik";
-import { Add, Remove } from "@material-ui/icons";
-import { bgcolor, borderColor } from "@mui/system";
 import { useState, useEffect } from "react";
 import {
   GET_ALL_CLIENTS_BY_NAME,
@@ -32,16 +22,6 @@ const ButtonContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 3rem 0;
-`;
-
-const Label = styled.label`
-  display: block;
-  font-size: 0.9rem;
-  color: rgba(0, 0, 0, 0.54);
-  padding: 0;
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: 0.00938em;
 `;
 
 interface CreateFormClientProps {
