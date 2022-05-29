@@ -18,6 +18,7 @@ import {
 } from "../graphql/subcontractor";
 import CreateFormSubcontractor from "../components/table/createForms/CreateFormSubcontractor";
 import { columnsSubcontractor } from "../components/table/columns/columnsSubcontractor";
+import UpdateFormSubcontractor from "../components/table/updateForms/UpdateFormSubcontractor";
 
 const Subcontractors = () => {
   const [selectedRow, setSelectedRow] = useState();
@@ -204,8 +205,8 @@ const Subcontractors = () => {
         />
       )}
 
-      {/* {isOpen && (
-        <UpdateFormClient
+      {isOpen && (
+        <UpdateFormSubcontractor
           selectedRow={selectedRow}
           handleClose={handleClose}
           open={isOpen}
@@ -215,7 +216,7 @@ const Subcontractors = () => {
           onOpenSnackbarChange={handleOpenSnackbarChange}
           onSnackbarSuccessChange={handleSnackbarSuccessChange}
         />
-      )} */}
+      )}
 
       {isOpenCreate && (
         <CreateFormSubcontractor

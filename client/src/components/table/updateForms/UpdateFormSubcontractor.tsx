@@ -15,6 +15,7 @@ import {
   CREATE_SUBCONTRACTOR,
   GET_ALL_SUBCONTRACTORS_BY_COMPANY_NAME,
   TOTAL_SUBCONTRACTORS,
+  UPDATE_SUBCONTRACTOR,
 } from "../../../graphql/subcontractor";
 
 const ButtonContainer = styled.div`
@@ -24,9 +25,10 @@ const ButtonContainer = styled.div`
   margin: 3rem 0;
 `;
 
-interface CreateFormSubcontractorProps {
+interface UpdateFormSubcontractorProps {
+  selectedRow: any;
   open: boolean;
-  handleClose: any;
+  handleClose: () => void;
   page: number;
   name: string;
   onSnackbarMessageChange: any;
@@ -76,7 +78,8 @@ const validationSchema = yup.object({
     .required("Verplicht"),
 });
 
-const CreateFormSubcontractor = ({
+const UpdateFormSubcontractor = ({
+  selectedRow,
   open,
   handleClose,
   page,
@@ -84,7 +87,7 @@ const CreateFormSubcontractor = ({
   onSnackbarMessageChange,
   onOpenSnackbarChange,
   onSnackbarSuccessChange,
-}: CreateFormSubcontractorProps) => {
+}: UpdateFormSubcontractorProps) => {
   const [message, setMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarSuccess, setSnackbarSuccess] = useState(true);
@@ -107,7 +110,7 @@ const CreateFormSubcontractor = ({
     onOpenSnackbarChange,
     onSnackbarSuccessChange,
   ]);
-  const [createSubcontractor] = useMutation(CREATE_SUBCONTRACTOR);
+  const [updateSubcontractor] = useMutation(UPDATE_SUBCONTRACTOR);
 
   return (
     <Dialog fullWidth open={open} onClose={handleClose}>
@@ -116,30 +119,31 @@ const CreateFormSubcontractor = ({
         <DialogContent>
           <Formik
             initialValues={{
-              companyName: "",
-              firstName: "",
-              lastName: "",
-              gender: 0,
-              function: "",
-              email: "",
-              gsm: "",
-              street: "",
-              houseNumber: 0,
-              postalCode: "",
-              city: "",
-              accountNumber: "",
-              vatNumber: "",
+              companyName: selectedRow.companyName,
+              firstName: selectedRow.firstName,
+              lastName: selectedRow.lastName,
+              gender: selectedRow.gender,
+              function: selectedRow.function,
+              email: selectedRow.email,
+              gsm: selectedRow.gsm,
+              street: selectedRow.street,
+              houseNumber: selectedRow.houseNumber,
+              postalCode: selectedRow.postalCode,
+              city: selectedRow.city,
+              accountNumber: selectedRow.accountNumber,
+              vatNumber: selectedRow.vatNumber,
             }}
             onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
               console.log(values);
               try {
-                await createSubcontractor({
+                await updateSubcontractor({
                   variables: {
+                    id: selectedRow.id,
                     companyName: values.companyName,
                     firstName: values.firstName,
                     lastName: values.lastName,
-                    gender: values.gender,
+                    gender: Number(values.gender),
                     function: values.function,
                     email: values.email,
                     gsm: values.gsm,
@@ -168,13 +172,13 @@ const CreateFormSubcontractor = ({
                   ],
                 });
                 setSnackbarSuccess(true);
-                setMessage("Nieuwe onderaannemer is toegevoegd!");
+                setMessage("Onderaannemer is aangepast!");
                 setOpenSnackbar(true);
                 handleClose();
               } catch (error) {
                 setSnackbarSuccess(false);
                 setMessage(
-                  `Onderaannemer kon niet aangemaakt worden door volgende fout: ${error}`
+                  `Onderaannemer kon niet aangepast worden door volgende fout: ${error}`
                 );
                 setOpenSnackbar(true);
               }
@@ -419,7 +423,7 @@ const CreateFormSubcontractor = ({
                       },
                     }}
                   >
-                    Aanmaken
+                    Aanpassen
                   </Button>
                   <Button
                     onClick={handleClose}
@@ -450,4 +454,4 @@ const CreateFormSubcontractor = ({
   );
 };
 
-export default CreateFormSubcontractor;
+export default UpdateFormSubcontractor;
