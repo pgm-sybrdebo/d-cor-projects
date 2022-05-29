@@ -132,6 +132,7 @@ const CreateFormSubcontractor = ({
             }}
             onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
+              console.log(values);
               try {
                 await createSubcontractor({
                   variables: {

@@ -64,7 +64,6 @@ const columnsSubcontractor: GridColDef[] = [
     minWidth: 100,
     flex: 1,
     renderCell: (params) => {
-      console.log(params.row);
       return params.row.gender == 0 ? "man" : "vrouw";
     },
   },
