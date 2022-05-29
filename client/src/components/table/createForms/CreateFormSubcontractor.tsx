@@ -12,10 +12,10 @@ import { Button, InputLabel, Select, MenuItem } from "@mui/material";
 import { Formik, Form, Field, FieldArray } from "formik";
 import { useState, useEffect } from "react";
 import {
-  GET_ALL_CLIENTS_BY_NAME,
-  TOTAL_CLIENTS,
-  UPDATE_CLIENT,
-} from "../../../graphql/clients";
+  CREATE_SUBCONTRACTOR,
+  GET_ALL_SUBCONTRACTORS_BY_COMPANY_NAME,
+  TOTAL_SUBCONTRACTORS,
+} from "../../../graphql/subcontractor";
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -24,10 +24,9 @@ const ButtonContainer = styled.div`
   margin: 3rem 0;
 `;
 
-interface UpdateFormClientProps {
-  selectedRow: any;
+interface CreateFormSubcontractorProps {
   open: boolean;
-  handleClose: () => void;
+  handleClose: any;
   page: number;
   name: string;
   onSnackbarMessageChange: any;
@@ -42,10 +41,17 @@ const accountRegex = /^(BE)\d{14}$/;
 const postalCodeRegex = /^\d{4}$/;
 
 const validationSchema = yup.object({
-  name: yup.string().min(3, "Te kort").required("Verplicht"),
+  companyName: yup.string().min(3, "Te kort").required("Verplicht"),
   firstName: yup.string().min(3, "Te kort").required("Verplicht"),
   lastName: yup.string().min(3, "Te kort").required("Verplicht"),
   gender: yup.number().min(0).max(1).required("Verplicht"),
+  function: yup
+    .string()
+    .oneOf(
+      ["Dakwerker", "Vloerenlegger", "Elektricien", "Loodgieter", "Metselaar"],
+      "Ongeldige functie"
+    )
+    .required("Verplicht"),
   email: yup.string().email("Ongeldig email").required("Verplicht"),
   gsm: yup
     .string()
@@ -70,8 +76,7 @@ const validationSchema = yup.object({
     .required("Verplicht"),
 });
 
-const UpdateFormClient = ({
-  selectedRow,
+const CreateFormSubcontractor = ({
   open,
   handleClose,
   page,
@@ -79,11 +84,10 @@ const UpdateFormClient = ({
   onSnackbarMessageChange,
   onOpenSnackbarChange,
   onSnackbarSuccessChange,
-}: UpdateFormClientProps) => {
+}: CreateFormSubcontractorProps) => {
   const [message, setMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarSuccess, setSnackbarSuccess] = useState(true);
-  console.log(selectedRow);
 
   useEffect(() => {
     if (typeof onSnackbarMessageChange === "function") {
@@ -103,39 +107,39 @@ const UpdateFormClient = ({
     onOpenSnackbarChange,
     onSnackbarSuccessChange,
   ]);
-  const [updateClient] = useMutation(UPDATE_CLIENT);
+  const [createSubcontractor] = useMutation(CREATE_SUBCONTRACTOR);
 
   return (
     <Dialog fullWidth open={open} onClose={handleClose}>
       <>
-        <DialogTitle>Nieuwe Cliënt aanmaken</DialogTitle>
+        <DialogTitle>Nieuwe onderaannemer aanmaken</DialogTitle>
         <DialogContent>
           <Formik
             initialValues={{
-              name: selectedRow.name,
-              firstName: selectedRow.firstName,
-              lastName: selectedRow.lastName,
-              gender: selectedRow.gender,
-              email: selectedRow.email,
-              gsm: selectedRow.gsm,
-              street: selectedRow.street,
-              houseNumber: selectedRow.houseNumber,
-              postalCode: selectedRow.postalCode,
-              city: selectedRow.city,
-              accountNumber: selectedRow.accountNumber,
-              vatNumber: selectedRow.vatNumber,
+              companyName: "",
+              firstName: "",
+              lastName: "",
+              gender: 0,
+              function: "",
+              email: "",
+              gsm: "",
+              street: "",
+              houseNumber: 0,
+              postalCode: "",
+              city: "",
+              accountNumber: "",
+              vatNumber: "",
             }}
             onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
               try {
-                console.log(values.gender);
-                await updateClient({
+                await createSubcontractor({
                   variables: {
-                    id: selectedRow.id,
-                    name: values.name,
+                    companyName: values.companyName,
                     firstName: values.firstName,
                     lastName: values.lastName,
-                    gender: Number(values.gender),
+                    gender: values.gender,
+                    function: values.function,
                     email: values.email,
                     gsm: values.gsm,
                     street: values.street,
@@ -147,7 +151,7 @@ const UpdateFormClient = ({
                   },
                   refetchQueries: [
                     {
-                      query: GET_ALL_CLIENTS_BY_NAME,
+                      query: GET_ALL_SUBCONTRACTORS_BY_COMPANY_NAME,
                       variables: {
                         name: name,
                         offset: page,
@@ -155,7 +159,7 @@ const UpdateFormClient = ({
                       },
                     },
                     {
-                      query: TOTAL_CLIENTS,
+                      query: TOTAL_SUBCONTRACTORS,
                       variables: {
                         name: name,
                       },
@@ -163,13 +167,13 @@ const UpdateFormClient = ({
                   ],
                 });
                 setSnackbarSuccess(true);
-                setMessage("cliënt is aangepast!");
+                setMessage("Nieuwe onderaannemer is toegevoegd!");
                 setOpenSnackbar(true);
                 handleClose();
               } catch (error) {
                 setSnackbarSuccess(false);
                 setMessage(
-                  `Cliënt kon niet worden aangepast door volgende fout: ${error}`
+                  `Onderaannemer kon niet aangemaakt worden door volgende fout: ${error}`
                 );
                 setOpenSnackbar(true);
               }
@@ -193,15 +197,15 @@ const UpdateFormClient = ({
                     <Field
                       component={TextField}
                       fullWidth
-                      name="name"
+                      name="companyName"
                       type="text"
-                      label="Naam:"
-                      value={values.name}
+                      label="Bedrijfsnaam:"
+                      value={values.companyName}
                       onChange={(e: any) => {
-                        setFieldValue("name", e.target.value);
+                        setFieldValue("companyName", e.target.value);
                       }}
-                      error={Boolean(touched.name && errors.name)}
-                      helperText={touched.name && errors.name}
+                      error={Boolean(touched.companyName && errors.companyName)}
+                      helperText={touched.companyName && errors.companyName}
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -234,7 +238,7 @@ const UpdateFormClient = ({
                       helperText={touched.lastName && errors.lastName}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={6}>
                     <InputLabel id="gender">Geslacht</InputLabel>
                     <Select
                       sx={{ width: "100%" }}
@@ -247,6 +251,24 @@ const UpdateFormClient = ({
                     >
                       <MenuItem value={0}>Man</MenuItem>
                       <MenuItem value={1}>Vrouw</MenuItem>
+                    </Select>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <InputLabel id="function">Functie</InputLabel>
+                    <Select
+                      sx={{ width: "100%" }}
+                      labelId="function"
+                      id="function"
+                      value={values.function}
+                      onChange={(e: any) => {
+                        setFieldValue("function", e.target.value);
+                      }}
+                    >
+                      <MenuItem value={"Dakwerker"}>Dakwerker</MenuItem>
+                      <MenuItem value={"Elektricien"}>Elektricien</MenuItem>
+                      <MenuItem value={"Loodgieter"}>Loodgieter</MenuItem>
+                      <MenuItem value={"Metselaar"}>Metselaar</MenuItem>
+                      <MenuItem value={"Vloerenlegger"}>Vloerenlegger</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={6}>
@@ -396,7 +418,7 @@ const UpdateFormClient = ({
                       },
                     }}
                   >
-                    Aanpassen
+                    Aanmaken
                   </Button>
                   <Button
                     onClick={handleClose}
@@ -427,4 +449,4 @@ const UpdateFormClient = ({
   );
 };
 
-export default UpdateFormClient;
+export default CreateFormSubcontractor;

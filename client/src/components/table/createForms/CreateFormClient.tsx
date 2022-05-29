@@ -190,7 +190,7 @@ const CreateFormClient = ({
                       fullWidth
                       name="name"
                       type="text"
-                      label="Name:"
+                      label="Naam:"
                       value={values.name}
                       onChange={(e: any) => {
                         setFieldValue("name", e.target.value);

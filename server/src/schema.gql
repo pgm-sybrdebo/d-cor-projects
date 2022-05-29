@@ -215,9 +215,11 @@ type Query {
   reports: [Report!]!
   subcontractor(id: Int!): Subcontractor!
   subcontractors: [Subcontractor!]!
+  subcontractorsByCompanyName(companyName: String!, limit: Int!, offset: Int!): [Subcontractor!]!
   totalActiveProjects(name: String!): Int!
   totalClientsByName(name: String!): Int!
   totalProjects(name: String!): Int!
+  totalSubcontractorsByCompanyName(companyName: String!): Int!
   user(id: Int!): User!
   users: [User!]!
 }

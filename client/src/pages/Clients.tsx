@@ -120,7 +120,7 @@ const Clients = () => {
       setIsOpenDialog(true);
       setTitle("Bevestig het verwijderen van deze client");
       setMessage(
-        "Ben je zeker dat je dit model wilt verwijderen? Dit kan niet ongedaan gemaakt worden."
+        "Ben je zeker dat je deze cliënt wilt verwijderen? Dit kan niet ongedaan gemaakt worden."
       );
     }
   };

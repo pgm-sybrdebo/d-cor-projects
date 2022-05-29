@@ -12,6 +12,18 @@ export class SubcontractorsService {
     @InjectRepository(Subcontractor) private readonly subcontractorsRepository: Repository<Subcontractor>,
   ){}
 
+  async count(companyName: String): Promise<number> {
+    const rawData = await this.subcontractorsRepository.query(`
+    SELECT
+      COUNT(DISTINCT id) AS total
+    FROM
+      "subcontractor"
+    WHERE subcontractor.deleted_on IS NULL
+    AND LOWER(subcontractor."companyName") LIKE LOWER('${companyName}%')
+    `);
+    return rawData[0].total;
+  }
+
   create(createSubcontractorInput: CreateSubcontractorInput):Promise<Subcontractor> {
     const newSubcontractor = this.subcontractorsRepository.create(createSubcontractorInput);
     return this.subcontractorsRepository.save(newSubcontractor);
@@ -19,6 +31,25 @@ export class SubcontractorsService {
 
   findAll(): Promise<Subcontractor[]> {
     return this.subcontractorsRepository.find();
+  }
+
+  async findAllSubcontractorsByCompanyName(
+    companyName: string,
+    offset: number,
+    limit: number,
+  ): Promise<Subcontractor[]> {
+    const rawData = await this.subcontractorsRepository.query(`
+      SELECT
+        *
+      FROM
+        subcontractor
+      WHERE subcontractor.deleted_on IS NULL
+      AND LOWER(subcontractor."companyName") LIKE LOWER('${companyName}%')
+      GROUP BY subcontractor.id
+      OFFSET ${offset * limit}
+      LIMIT ${limit}
+    `);
+    return rawData;
   }
 
   findOne(id: number): Promise<Subcontractor> {
@@ -38,13 +69,12 @@ export class SubcontractorsService {
     return this.subcontractorsRepository.save(updatedSubcontractor); 
   }
 
-  async remove(id: number): Promise<Number> {
+  async remove(id: number): Promise<Subcontractor> {
     const subcontractor = await this.subcontractorsRepository.findOneOrFail({
       where: {
         id: id,
       },
     });
-    this.subcontractorsRepository.remove(subcontractor);
-    return id;
+    return this.subcontractorsRepository.softRemove(subcontractor);
   }
 }
