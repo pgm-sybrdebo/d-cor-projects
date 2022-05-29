@@ -1,12 +1,12 @@
 import {
   Box,
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Typography,
 } from "@material-ui/core";
+import { Button } from "@mui/material";
 
 interface ConfirmDialogProps {
   selectedRow: any;
@@ -38,15 +38,24 @@ const ConfirmDialog = ({
         </DialogContent>
         <DialogActions>
           <Button
-            variant="contained"
+            variant="outlined"
             size="large"
             fullWidth
             onClick={() => handleConfirm(selectedRow.id)}
-            style={{
-              backgroundColor: "#56b13d",
+            sx={{
+              borderWidth: 2,
+              borderColor: "#56B13D",
+              backgroundColor: "#56B13D",
               marginRight: "3rem",
-              marginTop: "2rem",
+              marginTop: "1rem",
               marginBottom: "1rem",
+              color: "#FFF",
+              ":hover": {
+                borderWidth: 2,
+                borderColor: "#56B13D",
+                bgcolor: "#FFF",
+                color: "#56B13D",
+              },
             }}
           >
             Bevestig
@@ -56,11 +65,18 @@ const ConfirmDialog = ({
             variant="outlined"
             size="large"
             fullWidth
-            style={{
+            sx={{
               borderColor: "#ED0034",
-              borderWidth: "2px",
-              marginTop: "2rem",
+              color: "#ED0034",
+              borderWidth: 2,
+              marginTop: "1rem",
               marginBottom: "1rem",
+              ":hover": {
+                borderColor: "#ED0034",
+                color: "#FFF",
+                borderWidth: 2,
+                bgcolor: "rgba(238, 0, 52, 0.4)",
+              },
             }}
           >
             Cancel
