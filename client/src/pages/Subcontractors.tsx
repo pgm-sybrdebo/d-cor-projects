@@ -35,6 +35,7 @@ const Subcontractors = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarSuccess, setSnackbarSuccess] = useState(true);
+  const [filter, setFilter] = useState("");
 
   const handleSnackbarMessageChange = (isSelected: string) => {
     setSnackbarMessage(isSelected);
@@ -54,6 +55,10 @@ const Subcontractors = () => {
     setIsOpenCreate(isOpenCreate);
   };
 
+  const handleFilterChange = (filterString: string) => {
+    setFilter(filterString);
+  };
+
   const handleSnackbarClose = (
     e: React.SyntheticEvent | Event,
     reason?: string
@@ -71,6 +76,7 @@ const Subcontractors = () => {
   } = useQuery(TOTAL_SUBCONTRACTORS, {
     variables: {
       companyName: search,
+      func: filter,
     },
   });
   const [getSubcontractorsByName, { error, loading, data }] = useLazyQuery(
@@ -82,11 +88,12 @@ const Subcontractors = () => {
     getSubcontractorsByName({
       variables: {
         companyName: search,
+        func: filter,
         offset: page,
         limit: 10,
       },
     });
-  }, [getSubcontractorsByName, page, search]);
+  }, [getSubcontractorsByName, page, search, filter]);
 
   const currentlySelectedRow = (
     params: GridCellParams,
@@ -135,6 +142,7 @@ const Subcontractors = () => {
             query: GET_ALL_SUBCONTRACTORS_BY_COMPANY_NAME,
             variables: {
               companyName: search,
+              func: filter,
               offset: page,
               limit: 10,
             },
@@ -143,6 +151,7 @@ const Subcontractors = () => {
             query: TOTAL_SUBCONTRACTORS,
             variables: {
               companyName: search,
+              func: filter,
             },
           },
         ],
@@ -171,6 +180,8 @@ const Subcontractors = () => {
       <TableHeading
         onSearchChange={handleSearchChange}
         onOpenCreateChange={handleOpenCreateChange}
+        onFilterChange={handleFilterChange}
+        title="onderaannemer"
       />
 
       {loading && <Loading />}

@@ -1,14 +1,14 @@
 import { gql } from "@apollo/client";
 
 export const TOTAL_SUBCONTRACTORS = gql`
-query($companyName: String!) {
-  totalSubcontractorsByCompanyName(companyName: $companyName)
+query($companyName: String!, $func: String!) {
+  totalSubcontractorsByCompanyName(companyName: $companyName, func: $func)
 }
 `;
 
 export const GET_ALL_SUBCONTRACTORS_BY_COMPANY_NAME = gql`
-  query ($companyName: String!, $offset: Int!, $limit: Int!) {
-    subcontractorsByCompanyName(companyName: $companyName, offset: $offset, limit: $limit) {
+  query ($companyName: String!, $func: String!, $offset: Int!, $limit: Int!) {
+    subcontractorsByCompanyName(companyName: $companyName, func: $func, offset: $offset, limit: $limit) {
       id
       companyName
       firstName

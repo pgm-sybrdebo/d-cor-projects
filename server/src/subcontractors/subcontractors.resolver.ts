@@ -9,8 +9,11 @@ export class SubcontractorsResolver {
   constructor(private readonly subcontractorsService: SubcontractorsService) {}
 
   @Query(() => Int, { name: 'totalSubcontractorsByCompanyName' })
-  async totalSubcontractors(@Args('companyName', { type: () => String }) companyName: string) {
-    return this.subcontractorsService.count(companyName);
+  async totalSubcontractors(
+    @Args('companyName', { type: () => String }) companyName: string,
+    @Args('func', { type: () => String }) func: string,
+  ) {
+    return this.subcontractorsService.count(companyName, func);
   }
 
   @Mutation(() => Subcontractor)
@@ -26,11 +29,13 @@ export class SubcontractorsResolver {
   @Query(() => [Subcontractor], { name: 'subcontractorsByCompanyName' })
   findAllProjectsByNameWithPagination(
     @Args('companyName', { type: () => String }) companyName: string,
+    @Args('func', { type: () => String }) func: string,
     @Args('offset', { type: () => Int }) offset: number,
     @Args('limit', { type: () => Int }) limit: number,
   ) {
     return this.subcontractorsService.findAllSubcontractorsByCompanyName(
       companyName,
+      func,
       offset,
       limit,
     );

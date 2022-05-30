@@ -18,10 +18,23 @@ import {
 } from "../../../graphql/subcontractor";
 
 const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin: 3rem 0;
+
+  @media (min-width: ${(props) => props.theme.width.medium}) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  button:first-child {
+    margin-bottom: 2rem;
+
+    @media (min-width: ${(props) => props.theme.width.medium}) {
+      margin-right: 3rem;
+      margin-bottom: 0;
+    }
+  }
 `;
 
 interface CreateFormSubcontractorProps {
@@ -209,7 +222,7 @@ const CreateFormSubcontractor = ({
                       helperText={touched.companyName && errors.companyName}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -224,7 +237,7 @@ const CreateFormSubcontractor = ({
                       helperText={touched.firstName && errors.firstName}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -239,7 +252,7 @@ const CreateFormSubcontractor = ({
                       helperText={touched.lastName && errors.lastName}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <InputLabel id="gender">Geslacht</InputLabel>
                     <Select
                       sx={{ width: "100%" }}
@@ -254,7 +267,7 @@ const CreateFormSubcontractor = ({
                       <MenuItem value={1}>Vrouw</MenuItem>
                     </Select>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <InputLabel id="function">Functie</InputLabel>
                     <Select
                       sx={{ width: "100%" }}
@@ -272,7 +285,7 @@ const CreateFormSubcontractor = ({
                       <MenuItem value={"Vloerenlegger"}>Vloerenlegger</MenuItem>
                     </Select>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -287,7 +300,7 @@ const CreateFormSubcontractor = ({
                       helperText={touched.email && errors.email}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -302,7 +315,7 @@ const CreateFormSubcontractor = ({
                       helperText={touched.gsm && errors.gsm}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -317,7 +330,7 @@ const CreateFormSubcontractor = ({
                       helperText={touched.street && errors.street}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -332,7 +345,7 @@ const CreateFormSubcontractor = ({
                       helperText={touched.houseNumber && errors.houseNumber}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -348,7 +361,7 @@ const CreateFormSubcontractor = ({
                       helperText={touched.postalCode && errors.postalCode}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -363,7 +376,7 @@ const CreateFormSubcontractor = ({
                       helperText={touched.city && errors.city}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -381,7 +394,7 @@ const CreateFormSubcontractor = ({
                       helperText={touched.accountNumber && errors.accountNumber}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -409,7 +422,6 @@ const CreateFormSubcontractor = ({
                       borderWidth: 2,
                       borderColor: "#56B13D",
                       backgroundColor: "#56B13D",
-                      marginRight: "3rem",
                       color: "#FFF",
                       ":hover": {
                         borderWidth: 2,

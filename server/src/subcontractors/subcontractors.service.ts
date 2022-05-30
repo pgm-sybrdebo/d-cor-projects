@@ -12,7 +12,7 @@ export class SubcontractorsService {
     @InjectRepository(Subcontractor) private readonly subcontractorsRepository: Repository<Subcontractor>,
   ){}
 
-  async count(companyName: String): Promise<number> {
+  async count(companyName: String, func: String): Promise<number> {
     const rawData = await this.subcontractorsRepository.query(`
     SELECT
       COUNT(DISTINCT id) AS total
@@ -20,6 +20,7 @@ export class SubcontractorsService {
       "subcontractor"
     WHERE subcontractor.deleted_on IS NULL
     AND LOWER(subcontractor."companyName") LIKE LOWER('${companyName}%')
+    AND LOWER(subcontractor."function") LIKE LOWER('${func}%')
     `);
     return rawData[0].total;
   }
@@ -35,6 +36,7 @@ export class SubcontractorsService {
 
   async findAllSubcontractorsByCompanyName(
     companyName: string,
+    func: string,
     offset: number,
     limit: number,
   ): Promise<Subcontractor[]> {
@@ -45,6 +47,7 @@ export class SubcontractorsService {
         subcontractor
       WHERE subcontractor.deleted_on IS NULL
       AND LOWER(subcontractor."companyName") LIKE LOWER('${companyName}%')
+      AND LOWER(subcontractor."function") LIKE LOWER('${func}%')
       GROUP BY subcontractor.id
       OFFSET ${offset * limit}
       LIMIT ${limit}

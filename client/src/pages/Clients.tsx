@@ -172,6 +172,7 @@ const Clients = () => {
       <TableHeading
         onSearchChange={handleSearchChange}
         onOpenCreateChange={handleOpenCreateChange}
+        title={"cliënt"}
       />
 
       {loading && <Loading />}

@@ -66,8 +66,8 @@ const ProjectHeading = ({ onSearchChange, onSortChange }: any) => {
     setSearch(searchString);
   };
 
-  const handleSortChange = (sortString: string) => {
-    setSort(sortString);
+  const handleValueChange = (valueString: string) => {
+    setSort(valueString);
   };
 
   useEffect(() => {
@@ -90,7 +90,25 @@ const ProjectHeading = ({ onSearchChange, onSortChange }: any) => {
         </PrimaryButton>
       </ButtonContainer>
       <SortContainer>
-        <Dropdown onSortChange={handleSortChange} />
+        <Dropdown
+          onValueChange={handleValueChange}
+          title={"Sorteer"}
+          defaultString={"descending"}
+          values={[
+            {
+              value: "alphabetically",
+              string: "Alfabetisch",
+            },
+            {
+              value: "descending",
+              string: "Datum aflopend",
+            },
+            {
+              value: "ascending",
+              string: "Datum oplopend",
+            },
+          ]}
+        />
       </SortContainer>
       <SearchContainer>
         <SearchBar onSearchChange={handleSearchChange} />
