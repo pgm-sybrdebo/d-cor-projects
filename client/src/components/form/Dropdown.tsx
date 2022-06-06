@@ -58,16 +58,18 @@ const Dropdown = ({
     <Container>
       <Box sx={{ minWidth: 200 }}>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-small">{title}</InputLabel>
+          <InputLabel id="inputLabel">{title}</InputLabel>
           <Select
-            labelId="demo-simple-select-small"
-            id="demo-simple-select"
+            labelId="inputLabel"
+            id="select"
             value={value}
             label="Sort"
             onChange={handleChange}
           >
             {values.map((v: Value) => (
-              <MenuItem value={v.value}>{v.string}</MenuItem>
+              <MenuItem value={v.value} key={v.string}>
+                {v.string}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>

@@ -1,14 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Designer } from 'src/designers/entities/designer.entity';
+import { Media } from 'src/media/entities/media.entity';
+import { Subcontractor } from 'src/subcontractors/entities/subcontractor.entity';
 import { Raw, Repository } from 'typeorm';
 import { CreateProjectInput } from './dto/create-project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { Project } from './entities/project.entity';
+import { MediaService } from 'src/media/media.service';
+import { Report } from 'src/reports/entities/report.entity';
+import { ReportsService } from 'src/reports/reports.service';
+import { DesignersService } from 'src/designers/designers.service';
+import { SubcontractorsService } from 'src/subcontractors/subcontractors.service';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectRepository(Project) private readonly projectsRepository: Repository<Project>,
+    private designersService: DesignersService,
+    private subcontractorsService: SubcontractorsService,
+    private mediaService: MediaService,
+    private reportsService: ReportsService,
   ){}
 
   async count(name: String): Promise<number> {
@@ -208,4 +220,130 @@ export class ProjectsService {
     this.projectsRepository.remove(project);
     return id;
   }
+
+
+  async addDesignerToProject(projectId: number, designerId: number): Promise<Project> {
+    const foundProject = await this.projectsRepository.findOne({
+      where: {
+        id: projectId,
+      },
+      relations: ['designers'],
+    });
+    const foundDesigner = await this.designersService.findOne(designerId);
+
+    if (foundProject && foundDesigner) {
+      foundProject.designers = foundProject.designers
+        ? [...foundProject.designers, foundDesigner]
+        : [foundDesigner];
+
+      return this.projectsRepository.save(foundProject);
+    } else {
+      throw new Error(`Founding Project or Designer problem`);
+    }
+  }
+
+  async removeDesignerFromProject(projectId: number, designerId: number): Promise<Project> {
+    const foundProject = await this.projectsRepository.findOne(
+      {
+        where: {
+          id: projectId,
+        },
+        relations: ['designers'],
+      }
+    );
+    const foundDesigner = await this.designersService.findOne(designerId);
+
+    if (foundProject && foundDesigner) {
+      foundProject.designers = foundProject.designers
+        ? [...foundProject.designers.filter((f) => f.id != designerId)]
+        : [];
+
+      return this.projectsRepository.save(foundProject);
+    } else {
+      throw new Error(`Founding project or designer problem`);
+    }
+  }
+
+  async addSubcontractorToProject(projectId: number, subcontractorId: number): Promise<Project> {
+    const foundProject = await this.projectsRepository.findOne({
+      where: {
+        id: projectId,
+      },
+      relations: ['subcontractors'],
+    });
+    const foundSubcontractor = await this.subcontractorsService.findOne(subcontractorId);
+
+    if (foundProject && foundSubcontractor) {
+      foundProject.subcontractors = foundProject.subcontractors
+        ? [...foundProject.subcontractors, foundSubcontractor]
+        : [foundSubcontractor];
+
+      return this.projectsRepository.save(foundProject);
+    } else {
+      throw new Error(`Founding Project or Subcontractor problem`);
+    }
+  }
+
+  async removeSubcontractorFromProject(projectId: number, subcontractorId: number): Promise<Project> {
+    const foundProject = await this.projectsRepository.findOne(
+      {
+        where: {
+          id: projectId,
+        },
+        relations: ['subcontractors'],
+      }
+    );
+    const foundSubcontractor = await this.subcontractorsService.findOne(subcontractorId);
+
+    if (foundProject && foundSubcontractor) {
+      foundProject.subcontractors = foundProject.subcontractors
+        ? [...foundProject.subcontractors.filter((f) => f.id != subcontractorId)]
+        : [];
+
+      return this.projectsRepository.save(foundProject);
+    } else {
+      throw new Error(`Founding project or subcontractor problem`);
+    }
+  }
+
+
+
+
+
+  // resolve fields
+
+  async getDesignersByProjectId(projectId: number): Promise<Designer[]> {
+    const project = await this.projectsRepository.
+      findOneOrFail({
+        where: {
+          id: projectId,
+        },
+        relations: ['designers'],
+      });
+      console.log(project);
+    if (project.designers) return project.designers;
+    return [];
+  }
+
+  async getSubcontractorsByProjectId(projectId: number): Promise<Subcontractor[]> {
+    const project = await this.projectsRepository.
+      findOneOrFail({
+        where: {
+          id: projectId,
+        },
+        relations: ['subcontractors'],
+      });
+    if (project.subcontractors) return project.subcontractors;
+    return [];
+  }
+
+  getMediaByProjectId(projectId: number): Promise<Media[]> {
+    return this.mediaService.findAllByProjectId(projectId);
+  }
+
+  getReportsByProjectId(projectId: number): Promise<Report[]> {
+    return this.reportsService.findAllByProjectId(projectId);
+  }
+
+
 }

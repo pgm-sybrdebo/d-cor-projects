@@ -16,57 +16,92 @@ import {
   TOTAL_CLIENTS,
   CREATE_CLIENT,
 } from "../../../graphql/clients";
+import InputMaskTextField from "../../form/InputMaskTextField";
 
 const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin: 3rem 0;
+
+  @media (min-width: ${(props) => props.theme.width.medium}) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  button:first-child {
+    margin-bottom: 2rem;
+
+    @media (min-width: ${(props) => props.theme.width.medium}) {
+      margin-bottom: 0;
+      order: 2;
+    }
+  }
 `;
 
 interface CreateFormClientProps {
   open: boolean;
-  handleClose: any;
+  handleClose: () => void;
   page: number;
   name: string;
-  onSnackbarMessageChange: any;
-  onOpenSnackbarChange: any;
-  onSnackbarSuccessChange: any;
+  onSnackbarMessageChange: (message: string) => void;
+  onOpenSnackbarChange: (open: boolean) => void;
+  onSnackbarSuccessChange: (success: boolean) => void;
 }
 
 const phoneRegex = /^(\+?32|0)4\d{8}$/;
 const vatRegex = /^(BE)?0[0-9]{9}$/;
-const accountRegex = /^(BE)\d{14}$/;
+// const accountRegex = /^(BE)\d{14}$/;
+const accountRegex = /^(BE)[0-9]{14}$/;
 
 const postalCodeRegex = /^\d{4}$/;
 
 const validationSchema = yup.object({
-  name: yup.string().min(3, "Te kort").required("Verplicht"),
-  firstName: yup.string().min(3, "Te kort").required("Verplicht"),
-  lastName: yup.string().min(3, "Te kort").required("Verplicht"),
-  gender: yup.number().min(0).max(1).required("Verplicht"),
-  email: yup.string().email("Ongeldig email").required("Verplicht"),
+  name: yup
+    .string()
+    .min(3, "Naam is te kort. Dit moet minstens 3 tekens bevatten.")
+    .required("Dit veld is verplicht!"),
+  firstName: yup
+    .string()
+    .min(3, "Voornaam is te kort. Dit moet minstens 3 tekens bevatten.")
+    .required("Dit veld is verplicht!"),
+  lastName: yup
+    .string()
+    .min(3, "Achternaam is te kort. Dit moet minstens 3 tekens bevatten.")
+    .required("Dit veld is verplicht!"),
+  gender: yup.number().min(0).max(1).required("Dit veld is verplicht!"),
+  email: yup
+    .string()
+    .email("Ongeldig email!")
+    .required("Dit veld is verplicht!"),
   gsm: yup
     .string()
-    .matches(phoneRegex, "Ongeldig gsm nummer")
-    .required("Verplicht"),
-  street: yup.string().min(3, "Ongeldige straatnaam").required("Verplicht"),
-  houseNumber: yup.number().min(1, "Ongeldig huisnummer").required("Verplicht"),
+    .matches(phoneRegex, "Ongeldig gsm nummer!")
+    .required("Dit veld is verplicht!"),
+  street: yup
+    .string()
+    .min(3, "Ongeldige straatnaam!")
+    .required("Dit veld is verplicht!"),
+  houseNumber: yup
+    .number()
+    .min(1, "Ongeldig huisnummer!")
+    .required("Dit veld is verplicht!"),
   postalCode: yup
     .string()
-    .matches(postalCodeRegex, "Ongeldige postcode")
-    .min(4, "Ongeldige postcode")
-    .max(4, "Ongeldige postcode")
-    .required("Verplicht"),
-  city: yup.string().min(3, "Ongeldige stad").required("Verplicht"),
+    .matches(postalCodeRegex, "Ongeldige postcode!")
+    .min(4, "Ongeldige postcode!")
+    .max(4, "Ongeldige postcode!")
+    .required("Dit veld is verplicht!"),
+  city: yup
+    .string()
+    .min(3, "Ongeldige stad!")
+    .required("Dit veld is verplicht!"),
   vatNumber: yup
     .string()
-    .matches(vatRegex, "Ongeldig BTW nummer")
-    .required("Verplicht"),
+    .matches(vatRegex, "Ongeldig BTW of ondernemingsnummer!"),
   accountNumber: yup
     .string()
-    .matches(accountRegex, "Ongeldig bankrekeningnummer")
-    .required("Verplicht"),
+    .matches(accountRegex, "Ongeldig IBAN rekeningnummer!")
+    .required("Dit veld is verplicht!"),
 });
 
 const CreateFormClient = ({
@@ -78,6 +113,7 @@ const CreateFormClient = ({
   onOpenSnackbarChange,
   onSnackbarSuccessChange,
 }: CreateFormClientProps) => {
+  const [createClient] = useMutation(CREATE_CLIENT);
   const [message, setMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarSuccess, setSnackbarSuccess] = useState(true);
@@ -92,6 +128,10 @@ const CreateFormClient = ({
     if (typeof onSnackbarSuccessChange === "function") {
       onSnackbarSuccessChange(snackbarSuccess);
     }
+
+    console.log("weird open", openSnackbar);
+    console.log("weird message", message);
+    console.log("weird succes", snackbarSuccess);
   }, [
     message,
     openSnackbar,
@@ -100,10 +140,9 @@ const CreateFormClient = ({
     onOpenSnackbarChange,
     onSnackbarSuccessChange,
   ]);
-  const [createClient] = useMutation(CREATE_CLIENT);
 
   return (
-    <Dialog fullWidth open={open} onClose={handleClose}>
+    <Dialog fullWidth open={open} onClose={handleClose} disableEnforceFocus>
       <>
         <DialogTitle>Nieuwe Cliënt aanmaken</DialogTitle>
         <DialogContent>
@@ -124,6 +163,7 @@ const CreateFormClient = ({
             }}
             onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
+              console.log("pls", values);
               try {
                 await createClient({
                   variables: {
@@ -157,9 +197,9 @@ const CreateFormClient = ({
                     },
                   ],
                 });
-                setSnackbarSuccess(true);
-                setMessage("Nieuwe cliënt is toegevoegd!");
-                setOpenSnackbar(true);
+                await setSnackbarSuccess(true);
+                await setMessage("Nieuwe cliënt is toegevoegd!");
+                await setOpenSnackbar(true);
                 handleClose();
               } catch (error) {
                 setSnackbarSuccess(false);
@@ -199,7 +239,7 @@ const CreateFormClient = ({
                       helperText={touched.name && errors.name}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -214,7 +254,7 @@ const CreateFormClient = ({
                       helperText={touched.firstName && errors.firstName}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -230,7 +270,14 @@ const CreateFormClient = ({
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <InputLabel id="gender">Geslacht</InputLabel>
+                    <InputLabel
+                      id="gender"
+                      sx={{
+                        transform: "scale(0.75)",
+                      }}
+                    >
+                      Geslacht:
+                    </InputLabel>
                     <Select
                       sx={{ width: "100%" }}
                       labelId="gender"
@@ -244,7 +291,7 @@ const CreateFormClient = ({
                       <MenuItem value={1}>Vrouw</MenuItem>
                     </Select>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -259,22 +306,26 @@ const CreateFormClient = ({
                       helperText={touched.email && errors.email}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
-                      component={TextField}
+                      component={InputMaskTextField}
                       fullWidth
                       name="gsm"
                       type="text"
                       label="Gsm:"
                       value={values.gsm}
                       onChange={(e: any) => {
-                        setFieldValue("gsm", e.target.value);
+                        setFieldValue(
+                          "gsm",
+                          e.target.value.replaceAll(" ", "")
+                        );
                       }}
                       error={Boolean(touched.gsm && errors.gsm)}
                       helperText={touched.gsm && errors.gsm}
+                      mask="+32 999 99 99 99"
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -289,7 +340,7 @@ const CreateFormClient = ({
                       helperText={touched.street && errors.street}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -304,9 +355,9 @@ const CreateFormClient = ({
                       helperText={touched.houseNumber && errors.houseNumber}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
-                      component={TextField}
+                      component={InputMaskTextField}
                       fullWidth
                       name="postalCode"
                       type="text"
@@ -318,9 +369,10 @@ const CreateFormClient = ({
                       }}
                       error={Boolean(touched.postalCode && errors.postalCode)}
                       helperText={touched.postalCode && errors.postalCode}
+                      mask="9999"
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -335,9 +387,9 @@ const CreateFormClient = ({
                       helperText={touched.city && errors.city}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
-                      component={TextField}
+                      component={InputMaskTextField}
                       fullWidth
                       name="accountNumber"
                       type="text"
@@ -345,28 +397,35 @@ const CreateFormClient = ({
                       max="4"
                       value={values.accountNumber}
                       onChange={(e: any) => {
-                        setFieldValue("accountNumber", e.target.value);
+                        setFieldValue(
+                          "accountNumber",
+                          e.target.value.replaceAll(" ", "")
+                        );
                       }}
                       error={Boolean(
                         touched.accountNumber && errors.accountNumber
                       )}
                       helperText={touched.accountNumber && errors.accountNumber}
+                      mask="BE99 9999 9999 9999"
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
-                      component={TextField}
+                      component={InputMaskTextField}
                       fullWidth
                       name="vatNumber"
                       type="text"
-                      label="BTW nummer:"
-                      max="4"
+                      label="BTW of ondernemingsnr.:"
                       value={values.vatNumber}
                       onChange={(e: any) => {
-                        setFieldValue("vatNumber", e.target.value);
+                        setFieldValue(
+                          "vatNumber",
+                          e.target.value.replaceAll(" ", "")
+                        );
                       }}
                       error={Boolean(touched.vatNumber && errors.vatNumber)}
                       helperText={touched.vatNumber && errors.vatNumber}
+                      mask="BE 0999 999 999"
                     />
                   </Grid>
                 </Grid>
@@ -381,7 +440,6 @@ const CreateFormClient = ({
                       borderWidth: 2,
                       borderColor: "#56B13D",
                       backgroundColor: "#56B13D",
-                      marginRight: "3rem",
                       color: "#FFF",
                       ":hover": {
                         borderWidth: 2,
@@ -393,20 +451,23 @@ const CreateFormClient = ({
                   >
                     Aanmaken
                   </Button>
+
                   <Button
                     onClick={handleClose}
                     variant="outlined"
                     size="large"
                     fullWidth
                     sx={{
-                      borderColor: "#ED0034",
-                      color: "#ED0034",
+                      backgroundColor: "#999999",
+                      borderColor: "#999999",
+                      color: "#FFF",
                       borderWidth: 2,
+
                       ":hover": {
-                        borderColor: "#ED0034",
-                        color: "#FFF",
+                        borderColor: "#999999",
+                        color: "#999999",
                         borderWidth: 2,
-                        bgcolor: "rgba(238, 0, 52, 0.4)",
+                        bgcolor: "#FFF",
                       },
                     }}
                   >

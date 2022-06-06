@@ -1,5 +1,5 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsBoolean, IsInt, IsNotEmpty, IsPositive, IsPostalCode, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsInt, IsNotEmpty, IsPositive, IsPostalCode, IsString } from 'class-validator';
 
 @InputType()
 export class CreateProjectInput {
@@ -13,6 +13,11 @@ export class CreateProjectInput {
   @IsString()
   @Field()
   name: string;
+  
+  @IsNotEmpty()
+  @IsDate()
+  @Field((type) => Date)
+  startDate: Date;
 
   @IsNotEmpty()
   @Field()
@@ -33,11 +38,6 @@ export class CreateProjectInput {
   @IsString()
   @Field()
   city: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @Field()
-  country: string;
 
   @IsNotEmpty()
   @IsString()

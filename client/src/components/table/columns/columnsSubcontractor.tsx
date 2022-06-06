@@ -69,7 +69,26 @@ const columnsSubcontractor: GridColDef[] = [
   },
   { field: "function", headerName: "Functie", minWidth: 150, flex: 1 },
   { field: "email", headerName: "Email", minWidth: 240, flex: 1 },
-  { field: "gsm", headerName: "Gsm", minWidth: 150, flex: 1 },
+  {
+    field: "gsm",
+    headerName: "Gsm",
+    minWidth: 150,
+    flex: 1,
+    renderCell: (params) => {
+      const gsm = params.row.gsm;
+      const newSting =
+        gsm.slice(0, 3) +
+        " " +
+        gsm.slice(3, 6) +
+        " " +
+        gsm.slice(6, 8) +
+        " " +
+        gsm.slice(8, 10) +
+        " " +
+        gsm.slice(10, 12);
+      return newSting;
+    },
+  },
   {
     field: "address",
     headerName: "Adres",
@@ -86,8 +105,42 @@ const columnsSubcontractor: GridColDef[] = [
       );
     },
   },
-  { field: "accountNumber", headerName: "Rekeningnr.", minWidth: 180, flex: 1 },
-  { field: "vatNumber", headerName: "BTW nr.", minWidth: 150, flex: 1 },
+  {
+    field: "accountNumber",
+    headerName: "Rekeningnr.",
+    minWidth: 180,
+    flex: 1,
+    renderCell: (params) => {
+      const account = params.row.accountNumber;
+      const newSting =
+        account.slice(0, 4) +
+        " " +
+        account.slice(4, 8) +
+        " " +
+        account.slice(8, 12) +
+        " " +
+        account.slice(12, 16);
+      return newSting;
+    },
+  },
+  {
+    field: "vatNumber",
+    headerName: "BTW nr.",
+    minWidth: 150,
+    flex: 1,
+    renderCell: (params) => {
+      const vat = params.row.vatNumber;
+      const newSting =
+        vat.slice(0, 2) +
+        " " +
+        vat.slice(2, 6) +
+        " " +
+        vat.slice(6, 9) +
+        " " +
+        vat.slice(9, 12);
+      return newSting;
+    },
+  },
   {
     field: "edit",
     headerName: "Aanpassen",

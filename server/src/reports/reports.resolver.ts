@@ -1,8 +1,9 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ResolveField, Parent } from '@nestjs/graphql';
 import { ReportsService } from './reports.service';
 import { Report } from './entities/report.entity';
 import { CreateReportInput } from './dto/create-report.input';
 import { UpdateReportInput } from './dto/update-report.input';
+import { ReportSection } from 'src/report-sections/entities/report-section.entity';
 
 @Resolver(() => Report)
 export class ReportsResolver {
@@ -31,5 +32,10 @@ export class ReportsResolver {
   @Mutation(() => Report)
   removeReport(@Args('id', { type: () => Int }) id: number) {
     return this.reportsService.remove(id);
+  }
+
+  @ResolveField((returns) => [ReportSection])
+  reportSections(@Parent() report: Report): Promise<ReportSection[]> {
+    return this.reportsService.getReportSectionsByReportId(report.id);
   }
 }

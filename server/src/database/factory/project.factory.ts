@@ -27,11 +27,11 @@ define(Project, (faker: typeof Faker, context: Context) => {
   project.designers = newDesigners;
   project.subcontractors = newSubcontractors;
   project.name = faker.company.companyName();
+  project.startDate = faker.date.past();
   project.street = faker.address.streetName();
   project.houseNumber = faker.random.number({min: 1, max: 60});
   project.city = faker.address.city();
   project.postalCode = faker.address.zipCode();
-  project.country = "België";
   project.description = faker.lorem.paragraph();
   project.active = faker.random.boolean();
 

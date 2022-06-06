@@ -1,5 +1,5 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsString, IsNotEmpty, IsEmail, IsMobilePhone, IsInt, IsPositive, IsPostalCode, IsAlphanumeric, Contains, MaxLength, Max, Min } from 'class-validator';
+import { IsString, IsNotEmpty, IsEmail, IsMobilePhone, IsInt, IsPositive, IsPostalCode, IsAlphanumeric, Contains, MaxLength, Max, Min, Matches } from 'class-validator';
 
 @InputType()
 export class CreateDesignerInput {
@@ -58,15 +58,14 @@ export class CreateDesignerInput {
 
   @IsNotEmpty()
   @IsAlphanumeric()
-  @Contains('BE')
-  // @Contains('‹ ^(BE)?0[0-9]{9}$ ›')
+  @Matches('(BE)?0[0-9]{9}')
   @MaxLength(12)
   @Field()
   vatNumber: string;
 
   @IsNotEmpty()
   @IsAlphanumeric()
-  @Contains('BE')
+  @Matches('(BE)[0-9]{14}')
   @MaxLength(16)
   @Field()
   accountNumber: string;

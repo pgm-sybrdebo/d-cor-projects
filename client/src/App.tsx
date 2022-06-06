@@ -12,7 +12,13 @@ import {
   useNavigate,
 } from "react-router-dom";
 import * as ROUTES from "./routes";
-import { ActiveProjects, Projects, Subcontractors, Clients } from "./pages";
+import {
+  ActiveProjects,
+  Projects,
+  Subcontractors,
+  Clients,
+  Project,
+} from "./pages";
 
 function App() {
   return (
@@ -26,6 +32,7 @@ function App() {
           />
           <Route path={ROUTES.ACTIVE_PROJECTS} element={<ActiveProjects />} />
           <Route path={ROUTES.PROJECTS} element={<Projects />} />
+          <Route path={ROUTES.PROJECT} element={<Project />} />
           <Route path={ROUTES.CLIENTS} element={<Clients />} />
           <Route path={ROUTES.SUBCONTRACTORS} element={<Subcontractors />} />
         </Routes>

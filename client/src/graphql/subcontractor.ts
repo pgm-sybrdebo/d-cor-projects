@@ -6,6 +6,16 @@ query($companyName: String!, $func: String!) {
 }
 `;
 
+export const GET_ALL_SUBCONTRACTORS = gql`
+  query {
+    subcontractors {
+      id
+      companyName
+    }
+  }
+`;
+
+
 export const GET_ALL_SUBCONTRACTORS_BY_COMPANY_NAME = gql`
   query ($companyName: String!, $func: String!, $offset: Int!, $limit: Int!) {
     subcontractorsByCompanyName(companyName: $companyName, func: $func, offset: $offset, limit: $limit) {

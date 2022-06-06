@@ -17,12 +17,26 @@ import {
   TOTAL_SUBCONTRACTORS,
   UPDATE_SUBCONTRACTOR,
 } from "../../../graphql/subcontractor";
+import InputMaskTextField from "../../form/InputMaskTextField";
 
 const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin: 3rem 0;
+
+  @media (min-width: ${(props) => props.theme.width.medium}) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  button:first-child {
+    margin-bottom: 2rem;
+
+    @media (min-width: ${(props) => props.theme.width.medium}) {
+      order: 2;
+      margin-bottom: 0;
+    }
+  }
 `;
 
 interface UpdateFormSubcontractorProps {
@@ -31,6 +45,7 @@ interface UpdateFormSubcontractorProps {
   handleClose: () => void;
   page: number;
   name: string;
+  func: string;
   onSnackbarMessageChange: any;
   onOpenSnackbarChange: any;
   onSnackbarSuccessChange: any;
@@ -43,39 +58,60 @@ const accountRegex = /^(BE)\d{14}$/;
 const postalCodeRegex = /^\d{4}$/;
 
 const validationSchema = yup.object({
-  companyName: yup.string().min(3, "Te kort").required("Verplicht"),
-  firstName: yup.string().min(3, "Te kort").required("Verplicht"),
-  lastName: yup.string().min(3, "Te kort").required("Verplicht"),
-  gender: yup.number().min(0).max(1).required("Verplicht"),
+  companyName: yup
+    .string()
+    .min(3, "Bedrijfsnaam is te kort. Dit moet minstens 3 tekens bevatten.")
+    .required("Dit veld is verplicht!"),
+  firstName: yup
+    .string()
+    .min(3, "Voornaam is te kort. Dit moet minstens 3 tekens bevatten.")
+    .required("Dit veld is verplicht!"),
+  lastName: yup
+    .string()
+    .min(3, "Achternaam is te kort. Dit moet minstens 3 tekens bevatten.")
+    .required("Dit veld is verplicht!"),
+  gender: yup.number().min(0).max(1).required("Dit veld is verplicht!"),
   function: yup
     .string()
     .oneOf(
       ["Dakwerker", "Vloerenlegger", "Elektricien", "Loodgieter", "Metselaar"],
       "Ongeldige functie"
     )
-    .required("Verplicht"),
-  email: yup.string().email("Ongeldig email").required("Verplicht"),
+    .required("Dit veld is verplicht!"),
+  email: yup
+    .string()
+    .email("Ongeldig email!")
+    .required("Dit veld is verplicht!"),
   gsm: yup
     .string()
-    .matches(phoneRegex, "Ongeldig gsm nummer")
-    .required("Verplicht"),
-  street: yup.string().min(3, "Ongeldige straatnaam").required("Verplicht"),
-  houseNumber: yup.number().min(1, "Ongeldig huisnummer").required("Verplicht"),
+    .matches(phoneRegex, "Ongeldig gsm nummer!")
+    .required("Dit veld is verplicht!"),
+  street: yup
+    .string()
+    .min(3, "Ongeldige straatnaam!")
+    .required("Dit veld is verplicht!"),
+  houseNumber: yup
+    .number()
+    .min(1, "Ongeldig huisnummer!")
+    .required("Dit veld is verplicht!"),
   postalCode: yup
     .string()
-    .matches(postalCodeRegex, "Ongeldige postcode")
+    .matches(postalCodeRegex, "Ongeldige postcode!")
     .min(4, "Ongeldige postcode")
     .max(4, "Ongeldige postcode")
-    .required("Verplicht"),
-  city: yup.string().min(3, "Ongeldige stad").required("Verplicht"),
+    .required("Dit veld is verplicht!"),
+  city: yup
+    .string()
+    .min(3, "Ongeldige stad!")
+    .required("Die veld is verplicht!"),
   vatNumber: yup
     .string()
-    .matches(vatRegex, "Ongeldig BTW nummer")
-    .required("Verplicht"),
+    .matches(vatRegex, "Ongeldig BTW of ondernemingsnummer!")
+    .required("Dit veld is verplicht!"),
   accountNumber: yup
     .string()
-    .matches(accountRegex, "Ongeldig bankrekeningnummer")
-    .required("Verplicht"),
+    .matches(accountRegex, "Ongeldig bankrekeningnummer!")
+    .required("Dit veld is verplicht!"),
 });
 
 const UpdateFormSubcontractor = ({
@@ -84,6 +120,7 @@ const UpdateFormSubcontractor = ({
   handleClose,
   page,
   name,
+  func,
   onSnackbarMessageChange,
   onOpenSnackbarChange,
   onSnackbarSuccessChange,
@@ -113,7 +150,7 @@ const UpdateFormSubcontractor = ({
   const [updateSubcontractor] = useMutation(UPDATE_SUBCONTRACTOR);
 
   return (
-    <Dialog fullWidth open={open} onClose={handleClose}>
+    <Dialog fullWidth open={open} onClose={handleClose} disableEnforceFocus>
       <>
         <DialogTitle>Nieuwe onderaannemer aanmaken</DialogTitle>
         <DialogContent>
@@ -135,7 +172,6 @@ const UpdateFormSubcontractor = ({
             }}
             onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
-              console.log(values);
               try {
                 await updateSubcontractor({
                   variables: {
@@ -159,6 +195,7 @@ const UpdateFormSubcontractor = ({
                       query: GET_ALL_SUBCONTRACTORS_BY_COMPANY_NAME,
                       variables: {
                         companyName: name,
+                        func: func,
                         offset: page,
                         limit: 10,
                       },
@@ -167,18 +204,21 @@ const UpdateFormSubcontractor = ({
                       query: TOTAL_SUBCONTRACTORS,
                       variables: {
                         companyName: name,
+                        func: func,
                       },
                     },
                   ],
                 });
-                setSnackbarSuccess(true);
-                setMessage("Onderaannemer is aangepast!");
-                setOpenSnackbar(true);
+                await setSnackbarSuccess(true);
+                await setMessage(
+                  `Onderaannemer ${values.companyName} is aangepast!`
+                );
+                await setOpenSnackbar(true);
                 handleClose();
               } catch (error) {
                 setSnackbarSuccess(false);
                 setMessage(
-                  `Onderaannemer kon niet aangepast worden door volgende fout: ${error}`
+                  `Onderaannemer ${values.companyName} kon niet aangepast worden door volgende fout: ${error}`
                 );
                 setOpenSnackbar(true);
               }
@@ -213,7 +253,7 @@ const UpdateFormSubcontractor = ({
                       helperText={touched.companyName && errors.companyName}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -228,7 +268,7 @@ const UpdateFormSubcontractor = ({
                       helperText={touched.firstName && errors.firstName}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -243,7 +283,7 @@ const UpdateFormSubcontractor = ({
                       helperText={touched.lastName && errors.lastName}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <InputLabel id="gender">Geslacht</InputLabel>
                     <Select
                       sx={{ width: "100%" }}
@@ -258,7 +298,7 @@ const UpdateFormSubcontractor = ({
                       <MenuItem value={1}>Vrouw</MenuItem>
                     </Select>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <InputLabel id="function">Functie</InputLabel>
                     <Select
                       sx={{ width: "100%" }}
@@ -276,7 +316,7 @@ const UpdateFormSubcontractor = ({
                       <MenuItem value={"Vloerenlegger"}>Vloerenlegger</MenuItem>
                     </Select>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -291,22 +331,26 @@ const UpdateFormSubcontractor = ({
                       helperText={touched.email && errors.email}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
-                      component={TextField}
+                      component={InputMaskTextField}
                       fullWidth
                       name="gsm"
                       type="text"
                       label="Gsm:"
                       value={values.gsm}
                       onChange={(e: any) => {
-                        setFieldValue("gsm", e.target.value);
+                        setFieldValue(
+                          "gsm",
+                          e.target.value.replaceAll(" ", "")
+                        );
                       }}
                       error={Boolean(touched.gsm && errors.gsm)}
                       helperText={touched.gsm && errors.gsm}
+                      mask="+32 999 99 99 99"
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -321,7 +365,7 @@ const UpdateFormSubcontractor = ({
                       helperText={touched.street && errors.street}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -336,9 +380,9 @@ const UpdateFormSubcontractor = ({
                       helperText={touched.houseNumber && errors.houseNumber}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
-                      component={TextField}
+                      component={InputMaskTextField}
                       fullWidth
                       name="postalCode"
                       type="text"
@@ -350,9 +394,10 @@ const UpdateFormSubcontractor = ({
                       }}
                       error={Boolean(touched.postalCode && errors.postalCode)}
                       helperText={touched.postalCode && errors.postalCode}
+                      mask="9999"
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -367,9 +412,9 @@ const UpdateFormSubcontractor = ({
                       helperText={touched.city && errors.city}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
-                      component={TextField}
+                      component={InputMaskTextField}
                       fullWidth
                       name="accountNumber"
                       type="text"
@@ -377,17 +422,21 @@ const UpdateFormSubcontractor = ({
                       max="4"
                       value={values.accountNumber}
                       onChange={(e: any) => {
-                        setFieldValue("accountNumber", e.target.value);
+                        setFieldValue(
+                          "accountNumber",
+                          e.target.value.replaceAll(" ", "")
+                        );
                       }}
                       error={Boolean(
                         touched.accountNumber && errors.accountNumber
                       )}
                       helperText={touched.accountNumber && errors.accountNumber}
+                      mask="BE99 9999 9999 9999"
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Field
-                      component={TextField}
+                      component={InputMaskTextField}
                       fullWidth
                       name="vatNumber"
                       type="text"
@@ -395,10 +444,14 @@ const UpdateFormSubcontractor = ({
                       max="4"
                       value={values.vatNumber}
                       onChange={(e: any) => {
-                        setFieldValue("vatNumber", e.target.value);
+                        setFieldValue(
+                          "vatNumber",
+                          e.target.value.replaceAll(" ", "")
+                        );
                       }}
                       error={Boolean(touched.vatNumber && errors.vatNumber)}
                       helperText={touched.vatNumber && errors.vatNumber}
+                      mask="BE 0999 999 999"
                     />
                   </Grid>
                 </Grid>
@@ -413,7 +466,6 @@ const UpdateFormSubcontractor = ({
                       borderWidth: 2,
                       borderColor: "#56B13D",
                       backgroundColor: "#56B13D",
-                      marginRight: "3rem",
                       color: "#FFF",
                       ":hover": {
                         borderWidth: 2,
@@ -431,14 +483,16 @@ const UpdateFormSubcontractor = ({
                     size="large"
                     fullWidth
                     sx={{
-                      borderColor: "#ED0034",
-                      color: "#ED0034",
+                      backgroundColor: "#999999",
+                      borderColor: "#999999",
+                      color: "#FFF",
                       borderWidth: 2,
+
                       ":hover": {
-                        borderColor: "#ED0034",
-                        color: "#FFF",
+                        borderColor: "#999999",
+                        color: "#999999",
                         borderWidth: 2,
-                        bgcolor: "rgba(238, 0, 52, 0.4)",
+                        bgcolor: "#FFF",
                       },
                     }}
                   >

@@ -20,6 +20,15 @@ export class ReportSectionsService {
     return this.reportSectionsRepository.find();
   }
 
+
+  findAllByReportId(reportId: number): Promise<ReportSection[]> {
+    return this.reportSectionsRepository.find({
+      where: {
+        reportId: reportId,
+      },
+    });
+  }
+
   findOne(id: number): Promise<ReportSection> {
     return this.reportSectionsRepository.findOneOrFail({
       where: {

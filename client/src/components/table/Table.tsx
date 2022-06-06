@@ -35,6 +35,7 @@ const Table = ({
           page={page}
           paginationMode="server"
           rowCount={total}
+          rowsPerPageOptions={[10]}
           onPageChange={handleChangePage}
         />
       </>

@@ -6,6 +6,7 @@ import { Designer } from './entities/designer.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Designer])],
-  providers: [DesignersResolver, DesignersService]
+  providers: [DesignersResolver, DesignersService],
+  exports: [DesignersService],
 })
 export class DesignersModule {}

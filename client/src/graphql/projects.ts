@@ -22,7 +22,6 @@ export const GET_ALL_PROJECTS_BY_NAME_WITH_PAGINATION = gql`
       houseNumber
       postalCode
       city
-      country
       active
     }
   }
@@ -39,7 +38,6 @@ export const GET_ALL_ACTIVE_PROJECTS_BY_NAME_WITH_PAGINATION = gql`
       houseNumber
       postalCode
       city
-      country
       active
     }
   }
@@ -47,17 +45,17 @@ export const GET_ALL_ACTIVE_PROJECTS_BY_NAME_WITH_PAGINATION = gql`
 
 
 export const UPDATE_PROJECT = gql`
-  mutation ($id: Int!, $name: String, $description: String, $street: String, $houseNumber: Int, $postalCode: String, $city: String, $country: String, $active: Boolean) {
+  mutation ($id: Int!, $startDate: Timestamp, $name: String, $description: String, $street: String, $houseNumber: Int, $postalCode: String, $city: String, $active: Boolean) {
     updateProject(
       updateProjectInput: {
         id: $id, 
         name: $name,
+        startDate: $startDate,
         description: $description,
         street: $street,
         houseNumber: $houseNumber,
         postalCode: $postalCode,
         city: $city,
-        country: $country,
         active: $active
       }
     ){
@@ -65,3 +63,70 @@ export const UPDATE_PROJECT = gql`
     }
   }
 `;
+
+export const PROJECT_DETAIL = gql`
+query ($id: Int!) {
+  project(id: $id) {
+    id
+    name
+    description
+    street
+    houseNumber
+    postalCode
+    city
+    active
+  }
+}
+`;
+
+export const CREATE_PROJECT = gql`
+  mutation ($name: String!, $startDate: Timestamp!, $clientId: Int!, $description: String!, $active: Boolean!, $street: String!, $houseNumber: Int!, $postalCode: String!, $city: String! ) {
+    createProject(createProjectInput: {
+      name: $name,
+      startDate: $startDate,
+      clientId: $clientId,
+      description: $description,
+      active: $active,
+      street: $street
+      houseNumber: $houseNumber,
+      postalCode: $postalCode,
+      city: $city,
+    }) {
+      id
+    }
+  }
+`;
+
+export const ADD_SUBCONTRACTOR_TO_PROJECT = gql`
+  mutation($projectId: Int!, $subcontractorId: Int!) {
+    addSubcontractorToProject(projectId: $projectId, subcontractorId: $subcontractorId) {
+      id
+    }
+  }
+`;
+
+export const ADD_DESIGNER_TO_PROJECT = gql`
+  mutation($projectId: Int!, $designerId: Int!) {
+    addDesignerToProject(projectId: $projectId, designerId: $designerId) {
+      id
+    }
+  }
+`;
+
+export const REMOVE_SUBCONTRACTOR_FROM_PROJECT = gql`
+  mutation($projectId: Int!, $subcontractorId: Int!) {
+    removeSubcontractorFromProject(projectId: $projectId, subcontractorId: $subcontractorId) {
+      id
+    }
+  }
+`;
+
+
+export const REMOVE_DESIGNER_FROM_PROJECT = gql`
+  mutation($projectId: Int!, $designerId: Int!) {
+    removeDesignerFromProject(projectId: $projectId, designerId: $designerId) {
+      id
+    }
+  }
+`;
+

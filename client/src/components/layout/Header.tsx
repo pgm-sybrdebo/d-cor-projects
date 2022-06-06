@@ -174,7 +174,7 @@ const Header = () => {
 
         <Navigation open={open}>
           <NavigationList open={open}>
-            <li>
+            <li key={"activeProjects"}>
               <NavLink
                 to={Routes.ACTIVE_PROJECTS}
                 className={(navData) => (navData.isActive ? "is-active" : "")}
@@ -182,7 +182,7 @@ const Header = () => {
                 Actieve projecten
               </NavLink>
             </li>
-            <li>
+            <li key={"projects"}>
               <NavLink
                 to={Routes.PROJECTS}
                 className={(navData) => (navData.isActive ? "is-active" : "")}
@@ -190,7 +190,7 @@ const Header = () => {
                 Projecten
               </NavLink>
             </li>
-            <li>
+            <li key={"clients"}>
               <NavLink
                 to={Routes.CLIENTS}
                 className={(navData) => (navData.isActive ? "is-active" : "")}
@@ -198,7 +198,7 @@ const Header = () => {
                 Cliënten
               </NavLink>
             </li>
-            <li>
+            <li key={"subcontractors"}>
               <NavLink
                 to={Routes.SUBCONTRACTORS}
                 className={(navData) => (navData.isActive ? "is-active" : "")}

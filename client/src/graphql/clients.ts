@@ -6,6 +6,16 @@ query($name: String!) {
 }
 `;
 
+export const GET_ALL_CLIENTS = gql`
+  query {
+    clients {
+      id
+      name
+    }
+  }
+`;
+      
+
 export const GET_ALL_CLIENTS_BY_NAME = gql`
   query ($name: String!, $offset: Int!, $limit: Int!) {
     clientsByName(name: $name, offset: $offset, limit: $limit) {

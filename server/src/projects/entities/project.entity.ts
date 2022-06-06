@@ -25,6 +25,10 @@ export class Project {
 
   @Column()
   @Field()
+  startDate: Date;
+
+  @Column()
+  @Field()
   street: string;
 
   @Column()
@@ -38,10 +42,6 @@ export class Project {
   @Column()
   @Field()
   city: string;
-
-  @Column()
-  @Field()
-  country: string;
 
   @Column()
   @Field()
@@ -83,7 +83,7 @@ export class Project {
   reports: Report[];
 
   @ManyToMany(() => Designer, (designer) => designer.projects, {cascade: true})
-  @Field((type) => [Designer])
+  @Field((type) => [Designer], {nullable: true})
   @JoinTable({
     name: 'project_designer',
     joinColumn: {

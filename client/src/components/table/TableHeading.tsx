@@ -47,27 +47,22 @@ const FilterContainer = styled.div`
 
 export interface TableHeadingProps {
   onSearchChange: (value: string) => void;
-  onOpenCreateChange: (value: boolean) => void;
   onFilterChange?: (value: string) => void;
   title: string;
+  handleOpenCreate: () => void;
 }
 
 const TableHeading = ({
   onSearchChange,
-  onOpenCreateChange,
   onFilterChange,
   title,
+  handleOpenCreate,
 }: TableHeadingProps) => {
   const [search, setSearch] = useState("");
-  const [isOpenCreate, setIsOpenCreate] = useState(false);
   const [filter, setFilter] = useState("");
 
   const handleSearchChange = (searchString: string) => {
     setSearch(searchString);
-  };
-
-  const handleCLickCreate = () => {
-    setIsOpenCreate(true);
   };
 
   const handleValueChange = (valueString: string) => {
@@ -85,12 +80,6 @@ const TableHeading = ({
   }, [search]);
 
   useEffect(() => {
-    if (typeof onOpenCreateChange === "function") {
-      onOpenCreateChange(isOpenCreate);
-    }
-  }, [isOpenCreate]);
-
-  useEffect(() => {
     if (typeof onFilterChange === "function") {
       onFilterChange(filter);
     }
@@ -102,7 +91,7 @@ const TableHeading = ({
         <PrimaryButton
           type="button"
           icon={<FaPlus />}
-          onClick={handleCLickCreate}
+          onClick={handleOpenCreate}
         >
           Nieuwe {title}
         </PrimaryButton>

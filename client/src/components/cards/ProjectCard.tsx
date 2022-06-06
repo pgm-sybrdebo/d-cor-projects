@@ -9,16 +9,19 @@ import {
 } from "../../graphql/projects";
 import { ProjectCardProp } from "../../interfaces";
 import { Button } from "../form/Button";
+import { Link } from "react-router-dom";
+import * as Routes from "../../routes";
 
 const Card = styled.li`
-  display: flex;
+  position: relative;
+  // display: flex;
   width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
+  // justify-content: space-between;
+  // align-items: center;
+  // padding: 1rem;
   margin-bottom: 2rem;
-  border: 3px solid ${(props) => props.theme.colors.black};
-  border-radius: ${(props) => props.theme.borderRadius.normal};
+  // border: 3px solid ${(props) => props.theme.colors.black};
+  // border-radius: ${(props) => props.theme.borderRadius.normal};
 
   @media (min-width: ${(props) => props.theme.width.medium}) {
     width: calc(50% - 1.5rem);
@@ -28,12 +31,29 @@ const Card = styled.li`
     width: calc(33% - 1.5rem);
   }
 
-  p {
+  a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    color: ${(props) => props.theme.colors.black};
+    border: 3px solid ${(props) => props.theme.colors.black};
+    border-radius: ${(props) => props.theme.borderRadius.normal};
+  }
+
+  div {
     margin: 0 0.5rem;
     text-align: center;
+
+    p {
+      margin-bottom: 0rem;
+    }
   }
 
   button {
+    position: absolute;
+    right: 1rem;
+    top: calc(50% - 1rem);
     background-color: transparent;
     border: none;
     padding: 0;
@@ -48,9 +68,21 @@ const Card = styled.li`
   }
 `;
 
+const Small = styled.p`
+  font-size: 0.8rem;
+  // text-align: left;
+`;
+
+const Block = styled.div`
+  display: block;
+  width: 2rem;
+  height: 2rem;
+`;
+
 const ProjectCard = ({
   id,
   name,
+  city,
   active,
   search,
   sort,
@@ -87,8 +119,14 @@ const ProjectCard = ({
 
   return (
     <Card>
-      <FaFolder color="#1D1D1B" size={32} />
-      <p>{name}</p>
+      <Link to={`/project/${id}`}>
+        <FaFolder color="#1D1D1B" size={32} />
+        <div>
+          <p>{name}</p>
+          <Small>{city}</Small>
+        </div>
+        <Block />
+      </Link>
       <Button disabled={false} type="submit" onClick={handleClick}>
         {active ? (
           <FaHeart color="#56B13D" size={32} />

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import Table from "../components/table/Table";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { GridCellParams, MuiEvent } from "@mui/x-data-grid";
-import { Button, Snackbar } from "@material-ui/core";
-import { columnsClients } from "../components/table/columns/columnsClients";
+import { Snackbar } from "@material-ui/core";
 import { Alert } from "@mui/material";
 
 import BaseLayout from "../layouts/BaseLayout";
@@ -51,8 +49,8 @@ const Subcontractors = () => {
     setSearch(searchString);
   };
 
-  const handleOpenCreateChange = (isOpenCreate: boolean) => {
-    setIsOpenCreate(isOpenCreate);
+  const handleOpenCreateChange = () => {
+    setIsOpenCreate(true);
   };
 
   const handleFilterChange = (filterString: string) => {
@@ -179,9 +177,9 @@ const Subcontractors = () => {
     <BaseLayout>
       <TableHeading
         onSearchChange={handleSearchChange}
-        onOpenCreateChange={handleOpenCreateChange}
         onFilterChange={handleFilterChange}
         title="onderaannemer"
+        handleOpenCreate={handleOpenCreateChange}
       />
 
       {loading && <Loading />}
@@ -223,6 +221,7 @@ const Subcontractors = () => {
           open={isOpen}
           page={page}
           name={search}
+          func={filter}
           onSnackbarMessageChange={handleSnackbarMessageChange}
           onOpenSnackbarChange={handleOpenSnackbarChange}
           onSnackbarSuccessChange={handleSnackbarSuccessChange}
@@ -235,6 +234,7 @@ const Subcontractors = () => {
           open={isOpenCreate}
           page={page}
           name={search}
+          func={filter}
           onSnackbarMessageChange={handleSnackbarMessageChange}
           onOpenSnackbarChange={handleOpenSnackbarChange}
           onSnackbarSuccessChange={handleSnackbarSuccessChange}
