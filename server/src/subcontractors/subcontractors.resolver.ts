@@ -8,6 +8,14 @@ import { UpdateSubcontractorInput } from './dto/update-subcontractor.input';
 export class SubcontractorsResolver {
   constructor(private readonly subcontractorsService: SubcontractorsService) {}
 
+  @Query(() => Int, { name: 'totalSubcontractorsByCompanyName' })
+  async totalSubcontractors(
+    @Args('companyName', { type: () => String }) companyName: string,
+    @Args('func', { type: () => String }) func: string,
+  ) {
+    return this.subcontractorsService.count(companyName, func);
+  }
+
   @Mutation(() => Subcontractor)
   createSubcontractor(@Args('createSubcontractorInput') createSubcontractorInput: CreateSubcontractorInput) {
     return this.subcontractorsService.create(createSubcontractorInput);
@@ -16,6 +24,21 @@ export class SubcontractorsResolver {
   @Query(() => [Subcontractor], { name: 'subcontractors' })
   findAll() {
     return this.subcontractorsService.findAll();
+  }
+
+  @Query(() => [Subcontractor], { name: 'subcontractorsByCompanyName' })
+  findAllProjectsByNameWithPagination(
+    @Args('companyName', { type: () => String }) companyName: string,
+    @Args('func', { type: () => String }) func: string,
+    @Args('offset', { type: () => Int }) offset: number,
+    @Args('limit', { type: () => Int }) limit: number,
+  ) {
+    return this.subcontractorsService.findAllSubcontractorsByCompanyName(
+      companyName,
+      func,
+      offset,
+      limit,
+    );
   }
 
   @Query(() => Subcontractor, { name: 'subcontractor' })

@@ -2,6 +2,7 @@ import { GridColDef } from "@mui/x-data-grid";
 export interface ProjectCardProp {
   id: number;
   name: string;
+  city: string;
   active: boolean;
   search: string;
   sort: string;

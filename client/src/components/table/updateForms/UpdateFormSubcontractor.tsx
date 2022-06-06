@@ -12,10 +12,11 @@ import { Button, InputLabel, Select, MenuItem } from "@mui/material";
 import { Formik, Form, Field, FieldArray } from "formik";
 import { useState, useEffect } from "react";
 import {
-  GET_ALL_CLIENTS_BY_NAME,
-  TOTAL_CLIENTS,
-  CREATE_CLIENT,
-} from "../../../graphql/clients";
+  CREATE_SUBCONTRACTOR,
+  GET_ALL_SUBCONTRACTORS_BY_COMPANY_NAME,
+  TOTAL_SUBCONTRACTORS,
+  UPDATE_SUBCONTRACTOR,
+} from "../../../graphql/subcontractor";
 import InputMaskTextField from "../../form/InputMaskTextField";
 
 const ButtonContainer = styled.div`
@@ -32,33 +33,34 @@ const ButtonContainer = styled.div`
     margin-bottom: 2rem;
 
     @media (min-width: ${(props) => props.theme.width.medium}) {
-      margin-bottom: 0;
       order: 2;
+      margin-bottom: 0;
     }
   }
 `;
 
-interface CreateFormClientProps {
+interface UpdateFormSubcontractorProps {
+  selectedRow: any;
   open: boolean;
   handleClose: () => void;
   page: number;
   name: string;
-  onSnackbarMessageChange: (message: string) => void;
-  onOpenSnackbarChange: (open: boolean) => void;
-  onSnackbarSuccessChange: (success: boolean) => void;
+  func: string;
+  onSnackbarMessageChange: any;
+  onOpenSnackbarChange: any;
+  onSnackbarSuccessChange: any;
 }
 
 const phoneRegex = /^(\+?32|0)4\d{8}$/;
 const vatRegex = /^(BE)?0[0-9]{9}$/;
-// const accountRegex = /^(BE)\d{14}$/;
-const accountRegex = /^(BE)[0-9]{14}$/;
+const accountRegex = /^(BE)\d{14}$/;
 
 const postalCodeRegex = /^\d{4}$/;
 
 const validationSchema = yup.object({
-  name: yup
+  companyName: yup
     .string()
-    .min(3, "Naam is te kort. Dit moet minstens 3 tekens bevatten.")
+    .min(3, "Bedrijfsnaam is te kort. Dit moet minstens 3 tekens bevatten.")
     .required("Dit veld is verplicht!"),
   firstName: yup
     .string()
@@ -69,6 +71,13 @@ const validationSchema = yup.object({
     .min(3, "Achternaam is te kort. Dit moet minstens 3 tekens bevatten.")
     .required("Dit veld is verplicht!"),
   gender: yup.number().min(0).max(1).required("Dit veld is verplicht!"),
+  function: yup
+    .string()
+    .oneOf(
+      ["Dakwerker", "Vloerenlegger", "Elektricien", "Loodgieter", "Metselaar"],
+      "Ongeldige functie"
+    )
+    .required("Dit veld is verplicht!"),
   email: yup
     .string()
     .email("Ongeldig email!")
@@ -88,32 +97,34 @@ const validationSchema = yup.object({
   postalCode: yup
     .string()
     .matches(postalCodeRegex, "Ongeldige postcode!")
-    .min(4, "Ongeldige postcode!")
-    .max(4, "Ongeldige postcode!")
+    .min(4, "Ongeldige postcode")
+    .max(4, "Ongeldige postcode")
     .required("Dit veld is verplicht!"),
   city: yup
     .string()
     .min(3, "Ongeldige stad!")
-    .required("Dit veld is verplicht!"),
+    .required("Die veld is verplicht!"),
   vatNumber: yup
     .string()
-    .matches(vatRegex, "Ongeldig BTW of ondernemingsnummer!"),
+    .matches(vatRegex, "Ongeldig BTW of ondernemingsnummer!")
+    .required("Dit veld is verplicht!"),
   accountNumber: yup
     .string()
-    .matches(accountRegex, "Ongeldig IBAN rekeningnummer!")
+    .matches(accountRegex, "Ongeldig bankrekeningnummer!")
     .required("Dit veld is verplicht!"),
 });
 
-const CreateFormClient = ({
+const UpdateFormSubcontractor = ({
+  selectedRow,
   open,
   handleClose,
   page,
   name,
+  func,
   onSnackbarMessageChange,
   onOpenSnackbarChange,
   onSnackbarSuccessChange,
-}: CreateFormClientProps) => {
-  const [createClient] = useMutation(CREATE_CLIENT);
+}: UpdateFormSubcontractorProps) => {
   const [message, setMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarSuccess, setSnackbarSuccess] = useState(true);
@@ -128,10 +139,6 @@ const CreateFormClient = ({
     if (typeof onSnackbarSuccessChange === "function") {
       onSnackbarSuccessChange(snackbarSuccess);
     }
-
-    console.log("weird open", openSnackbar);
-    console.log("weird message", message);
-    console.log("weird succes", snackbarSuccess);
   }, [
     message,
     openSnackbar,
@@ -140,37 +147,40 @@ const CreateFormClient = ({
     onOpenSnackbarChange,
     onSnackbarSuccessChange,
   ]);
+  const [updateSubcontractor] = useMutation(UPDATE_SUBCONTRACTOR);
 
   return (
     <Dialog fullWidth open={open} onClose={handleClose} disableEnforceFocus>
       <>
-        <DialogTitle>Nieuwe Cliënt aanmaken</DialogTitle>
+        <DialogTitle>Nieuwe onderaannemer aanmaken</DialogTitle>
         <DialogContent>
           <Formik
             initialValues={{
-              name: "",
-              firstName: "",
-              lastName: "",
-              gender: 0,
-              email: "",
-              gsm: "",
-              street: "",
-              houseNumber: 0,
-              postalCode: "",
-              city: "",
-              accountNumber: "",
-              vatNumber: "",
+              companyName: selectedRow.companyName,
+              firstName: selectedRow.firstName,
+              lastName: selectedRow.lastName,
+              gender: selectedRow.gender,
+              function: selectedRow.function,
+              email: selectedRow.email,
+              gsm: selectedRow.gsm,
+              street: selectedRow.street,
+              houseNumber: selectedRow.houseNumber,
+              postalCode: selectedRow.postalCode,
+              city: selectedRow.city,
+              accountNumber: selectedRow.accountNumber,
+              vatNumber: selectedRow.vatNumber,
             }}
             onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
-              console.log("pls", values);
               try {
-                await createClient({
+                await updateSubcontractor({
                   variables: {
-                    name: values.name,
+                    id: selectedRow.id,
+                    companyName: values.companyName,
                     firstName: values.firstName,
                     lastName: values.lastName,
-                    gender: values.gender,
+                    gender: Number(values.gender),
+                    function: values.function,
                     email: values.email,
                     gsm: values.gsm,
                     street: values.street,
@@ -182,29 +192,33 @@ const CreateFormClient = ({
                   },
                   refetchQueries: [
                     {
-                      query: GET_ALL_CLIENTS_BY_NAME,
+                      query: GET_ALL_SUBCONTRACTORS_BY_COMPANY_NAME,
                       variables: {
-                        name: name,
+                        companyName: name,
+                        func: func,
                         offset: page,
                         limit: 10,
                       },
                     },
                     {
-                      query: TOTAL_CLIENTS,
+                      query: TOTAL_SUBCONTRACTORS,
                       variables: {
-                        name: name,
+                        companyName: name,
+                        func: func,
                       },
                     },
                   ],
                 });
                 await setSnackbarSuccess(true);
-                await setMessage("Nieuwe cliënt is toegevoegd!");
+                await setMessage(
+                  `Onderaannemer ${values.companyName} is aangepast!`
+                );
                 await setOpenSnackbar(true);
                 handleClose();
               } catch (error) {
                 setSnackbarSuccess(false);
                 setMessage(
-                  `Cliënt kon niet aangemaakt worden door volgende fout: ${error}`
+                  `Onderaannemer ${values.companyName} kon niet aangepast worden door volgende fout: ${error}`
                 );
                 setOpenSnackbar(true);
               }
@@ -228,15 +242,15 @@ const CreateFormClient = ({
                     <Field
                       component={TextField}
                       fullWidth
-                      name="name"
+                      name="companyName"
                       type="text"
-                      label="Naam:"
-                      value={values.name}
+                      label="Bedrijfsnaam:"
+                      value={values.companyName}
                       onChange={(e: any) => {
-                        setFieldValue("name", e.target.value);
+                        setFieldValue("companyName", e.target.value);
                       }}
-                      error={Boolean(touched.name && errors.name)}
-                      helperText={touched.name && errors.name}
+                      error={Boolean(touched.companyName && errors.companyName)}
+                      helperText={touched.companyName && errors.companyName}
                     />
                   </Grid>
                   <Grid item xs={12} md={6}>
@@ -269,15 +283,8 @@ const CreateFormClient = ({
                       helperText={touched.lastName && errors.lastName}
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <InputLabel
-                      id="gender"
-                      sx={{
-                        transform: "scale(0.75)",
-                      }}
-                    >
-                      Geslacht:
-                    </InputLabel>
+                  <Grid item xs={12} md={6}>
+                    <InputLabel id="gender">Geslacht</InputLabel>
                     <Select
                       sx={{ width: "100%" }}
                       labelId="gender"
@@ -289,6 +296,24 @@ const CreateFormClient = ({
                     >
                       <MenuItem value={0}>Man</MenuItem>
                       <MenuItem value={1}>Vrouw</MenuItem>
+                    </Select>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <InputLabel id="function">Functie</InputLabel>
+                    <Select
+                      sx={{ width: "100%" }}
+                      labelId="function"
+                      id="function"
+                      value={values.function}
+                      onChange={(e: any) => {
+                        setFieldValue("function", e.target.value);
+                      }}
+                    >
+                      <MenuItem value={"Dakwerker"}>Dakwerker</MenuItem>
+                      <MenuItem value={"Elektricien"}>Elektricien</MenuItem>
+                      <MenuItem value={"Loodgieter"}>Loodgieter</MenuItem>
+                      <MenuItem value={"Metselaar"}>Metselaar</MenuItem>
+                      <MenuItem value={"Vloerenlegger"}>Vloerenlegger</MenuItem>
                     </Select>
                   </Grid>
                   <Grid item xs={12} md={6}>
@@ -415,7 +440,8 @@ const CreateFormClient = ({
                       fullWidth
                       name="vatNumber"
                       type="text"
-                      label="BTW of ondernemingsnr.:"
+                      label="BTW nummer:"
+                      max="4"
                       value={values.vatNumber}
                       onChange={(e: any) => {
                         setFieldValue(
@@ -449,9 +475,8 @@ const CreateFormClient = ({
                       },
                     }}
                   >
-                    Aanmaken
+                    Aanpassen
                   </Button>
-
                   <Button
                     onClick={handleClose}
                     variant="outlined"
@@ -483,4 +508,4 @@ const CreateFormClient = ({
   );
 };
 
-export default CreateFormClient;
+export default UpdateFormSubcontractor;

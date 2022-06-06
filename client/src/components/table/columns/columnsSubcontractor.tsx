@@ -29,6 +29,17 @@ const Button = styled.button`
   }
 `;
 
+const Center = styled.span`
+  text-align: center;
+  display: block;
+  width: 100%;
+`;
+
+const Description = styled.span`
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
+
 const Address = styled.div`
   padding: 0.5rem 0;
 
@@ -38,8 +49,8 @@ const Address = styled.div`
   }
 `;
 
-const columnsClients: GridColDef[] = [
-  { field: "name", headerName: "Naam", minWidth: 200, flex: 1 },
+const columnsSubcontractor: GridColDef[] = [
+  { field: "companyName", headerName: "Bedrijfsnaam", minWidth: 200, flex: 1 },
   {
     field: "firstName",
     headerName: "Voornaam",
@@ -56,6 +67,7 @@ const columnsClients: GridColDef[] = [
       return params.row.gender == 0 ? "man" : "vrouw";
     },
   },
+  { field: "function", headerName: "Functie", minWidth: 150, flex: 1 },
   { field: "email", headerName: "Email", minWidth: 240, flex: 1 },
   {
     field: "gsm",
@@ -159,4 +171,4 @@ const columnsClients: GridColDef[] = [
   },
 ];
 
-export { columnsClients };
+export { columnsSubcontractor };

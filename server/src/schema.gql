@@ -65,11 +65,11 @@ input CreateProjectInput {
   active: Boolean!
   city: String!
   clientId: Int!
-  country: String!
   description: String!
   houseNumber: Int!
   name: String!
   postalCode: String!
+  startDate: Timestamp!
   street: String!
 }
 
@@ -148,6 +148,8 @@ type Media {
 }
 
 type Mutation {
+  addDesignerToProject(designerId: Int!, projectId: Int!): Project!
+  addSubcontractorToProject(projectId: Int!, subcontractorId: Int!): Project!
   createClient(createClientInput: CreateClientInput!): Client!
   createDesigner(createDesignerInput: CreateDesignerInput!): Designer!
   createMedia(createMediaInput: CreateMediaInput!): Media!
@@ -158,11 +160,13 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   removeClient(id: Int!): Client!
   removeDesigner(id: Int!): Designer!
+  removeDesignerFromProject(designerId: Int!, projectId: Int!): Project!
   removeMedia(id: Int!): Media!
   removeProject(id: Int!): Project!
   removeReport(id: Int!): Report!
   removeReportSection(id: Int!): ReportSection!
   removeSubcontractor(id: Int!): Subcontractor!
+  removeSubcontractorFromProject(projectId: Int!, subcontractorId: Int!): Project!
   removeUser(id: Int!): User!
   updateClient(updateClientInput: UpdateClientInput!): Client!
   updateDesigner(updateDesignerInput: UpdateDesignerInput!): Designer!
@@ -179,17 +183,17 @@ type Project {
   city: String!
   client: Client!
   clientId: Int!
-  country: String!
   created_on: Timestamp!
   deleted_on: Timestamp!
   description: String!
-  designers: [Designer!]!
+  designers: [Designer!]
   houseNumber: Int!
   id: Int!
   media: [Media!]!
   name: String!
   postalCode: String!
   reports: [Report!]!
+  startDate: Timestamp!
   street: String!
   subcontractors: [Subcontractor!]!
   updated_on: Timestamp!
@@ -215,9 +219,11 @@ type Query {
   reports: [Report!]!
   subcontractor(id: Int!): Subcontractor!
   subcontractors: [Subcontractor!]!
+  subcontractorsByCompanyName(companyName: String!, func: String!, limit: Int!, offset: Int!): [Subcontractor!]!
   totalActiveProjects(name: String!): Int!
   totalClientsByName(name: String!): Int!
   totalProjects(name: String!): Int!
+  totalSubcontractorsByCompanyName(companyName: String!, func: String!): Int!
   user(id: Int!): User!
   users: [User!]!
 }
@@ -324,12 +330,12 @@ input UpdateProjectInput {
   active: Boolean
   city: String
   clientId: Int
-  country: String
   description: String
   houseNumber: Int
   id: Int!
   name: String
   postalCode: String
+  startDate: Timestamp
   street: String
 }
 

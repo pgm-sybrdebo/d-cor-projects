@@ -20,6 +20,14 @@ export class MediaService {
     return this.mediaRepository.find();
   }
 
+  findAllByProjectId(projectId: number): Promise<Media[]> {
+    return this.mediaRepository.find({
+      where: {
+        projectId: projectId,
+      },
+    });
+  }
+
   findOne(id: number): Promise<Media> {
     return this.mediaRepository.findOneOrFail({
       where: {

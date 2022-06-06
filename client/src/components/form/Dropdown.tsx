@@ -24,34 +24,53 @@ const Container = styled.div`
   }
 `;
 
-const Dropdown = ({ onSortChange }: any) => {
-  const [sort, setSort] = useState("descending");
+export interface DropdownProps {
+  onValueChange: (value: string) => void;
+  title: string;
+  defaultString: string;
+  values: Value[];
+}
+
+export interface Value {
+  value: string;
+  string: string;
+}
+
+const Dropdown = ({
+  onValueChange,
+  title,
+  defaultString,
+  values,
+}: DropdownProps) => {
+  const [value, setValue] = useState(defaultString);
 
   useEffect(() => {
-    if (typeof onSortChange === "function") {
-      onSortChange(sort);
+    if (typeof onValueChange === "function") {
+      onValueChange(value);
     }
-  }, [sort]);
+  }, [value]);
 
   const handleChange = (event: SelectChangeEvent) => {
-    setSort(event.target.value as string);
+    setValue(event.target.value as string);
   };
 
   return (
     <Container>
       <Box sx={{ minWidth: 200 }}>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-small">Sorteer</InputLabel>
+          <InputLabel id="inputLabel">{title}</InputLabel>
           <Select
-            labelId="demo-simple-select-small"
-            id="demo-simple-select"
-            value={sort}
+            labelId="inputLabel"
+            id="select"
+            value={value}
             label="Sort"
             onChange={handleChange}
           >
-            <MenuItem value={"alphabetically"}>Alfabetisch</MenuItem>
-            <MenuItem value={"descending"}>Datum aflopend</MenuItem>
-            <MenuItem value={"ascending"}>Datum oplopend</MenuItem>
+            {values.map((v: Value) => (
+              <MenuItem value={v.value} key={v.string}>
+                {v.string}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </Box>

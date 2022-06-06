@@ -58,17 +58,32 @@ const SortContainer = styled.div`
   }
 `;
 
-const ProjectHeading = ({ onSearchChange, onSortChange }: any) => {
+export interface ProjectHeadingProps {
+  onSearchChange: (value: string) => void;
+  onSortChange?: (value: string) => void;
+  handleOpenCreate: () => void;
+}
+
+const ProjectHeading = ({
+  onSearchChange,
+  onSortChange,
+  handleOpenCreate,
+}: ProjectHeadingProps) => {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
+  // const [isOpenCreate, setIsOpenCreate] = useState(false);
 
   const handleSearchChange = (searchString: string) => {
     setSearch(searchString);
   };
 
-  const handleSortChange = (sortString: string) => {
-    setSort(sortString);
+  const handleValueChange = (valueString: string) => {
+    setSort(valueString);
   };
+
+  // const handleCLickCreate = () => {
+  //   setIsOpenCreate(true);
+  // };
 
   useEffect(() => {
     if (typeof onSearchChange === "function") {
@@ -82,15 +97,43 @@ const ProjectHeading = ({ onSearchChange, onSortChange }: any) => {
     }
   }, [sort]);
 
+  // useEffect(() => {
+  //   if (typeof onOpenCreateChange === "function") {
+  //     onOpenCreateChange(isOpenCreate);
+  //   }
+  // }, [isOpenCreate]);
+
   return (
     <ProjectContainer>
       <ButtonContainer>
-        <PrimaryButton type="button" icon={<FaPlus />}>
+        <PrimaryButton
+          type="button"
+          icon={<FaPlus />}
+          onClick={handleOpenCreate}
+        >
           Nieuw project
         </PrimaryButton>
       </ButtonContainer>
       <SortContainer>
-        <Dropdown onSortChange={handleSortChange} />
+        <Dropdown
+          onValueChange={handleValueChange}
+          title={"Sorteer"}
+          defaultString={"descending"}
+          values={[
+            {
+              value: "alphabetically",
+              string: "Alfabetisch",
+            },
+            {
+              value: "descending",
+              string: "Datum aflopend",
+            },
+            {
+              value: "ascending",
+              string: "Datum oplopend",
+            },
+          ]}
+        />
       </SortContainer>
       <SearchContainer>
         <SearchBar onSearchChange={handleSearchChange} />

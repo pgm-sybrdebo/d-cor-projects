@@ -37,12 +37,15 @@ const Clients = () => {
   const [snackbarSuccess, setSnackbarSuccess] = useState(true);
 
   const handleSnackbarMessageChange = (isSelected: string) => {
+    console.log("message", isSelected);
     setSnackbarMessage(isSelected);
   };
   const handleOpenSnackbarChange = (isSelected: boolean) => {
+    console.log("open", isSelected);
     setOpenSnackbar(isSelected);
   };
   const handleSnackbarSuccessChange = (isSelected: boolean) => {
+    console.log("success", isSelected);
     setSnackbarSuccess(isSelected);
   };
 
@@ -50,8 +53,8 @@ const Clients = () => {
     setSearch(searchString);
   };
 
-  const handleOpenCreateChange = (isOpenCreate: boolean) => {
-    setIsOpenCreate(isOpenCreate);
+  const handleOpenCreateChange = () => {
+    setIsOpenCreate(true);
   };
 
   const handleSnackbarClose = (
@@ -120,7 +123,7 @@ const Clients = () => {
       setIsOpenDialog(true);
       setTitle("Bevestig het verwijderen van deze client");
       setMessage(
-        "Ben je zeker dat je dit model wilt verwijderen? Dit kan niet ongedaan gemaakt worden."
+        "Ben je zeker dat je deze cliënt wilt verwijderen? Dit kan niet ongedaan gemaakt worden."
       );
     }
   };
@@ -171,7 +174,8 @@ const Clients = () => {
     <BaseLayout>
       <TableHeading
         onSearchChange={handleSearchChange}
-        onOpenCreateChange={handleOpenCreateChange}
+        title={"cliënt"}
+        handleOpenCreate={handleOpenCreateChange}
       />
 
       {loading && <Loading />}

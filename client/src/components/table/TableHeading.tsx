@@ -15,15 +15,10 @@ const TableContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  // margin-bottom: 2rem;
-  // max-width: 12rem;
-  // min-width: 12rem;
-  // width: 100%;
   flex-grow: 1;
-  // margin-right: 3rem;
 
   @media (min-width: 44rem) {
-    max-width: 12rem;
+    max-width: 16rem;
     order: 1;
   }
 
@@ -33,10 +28,6 @@ const ButtonContainer = styled.div`
 `;
 
 const SearchContainer = styled.div`
-  // max-width: 30rem;
-  // width: 100%;
-  // margin-bottom: 2rem;
-  // margin: 0 3rem 2rem 3rem;
   flex-grow: 1;
 
   @media (min-width: 44rem) {
@@ -45,16 +36,41 @@ const SearchContainer = styled.div`
   }
 `;
 
-const TableHeading = ({ onSearchChange, onOpenCreateChange }: any) => {
+const FilterContainer = styled.div`
+  flex-grow: 1;
+
+  @media (min-width: 44rem) {
+    max-width: 12rem;
+    order: 3;
+  }
+`;
+
+export interface TableHeadingProps {
+  onSearchChange: (value: string) => void;
+  onFilterChange?: (value: string) => void;
+  title: string;
+  handleOpenCreate: () => void;
+}
+
+const TableHeading = ({
+  onSearchChange,
+  onFilterChange,
+  title,
+  handleOpenCreate,
+}: TableHeadingProps) => {
   const [search, setSearch] = useState("");
-  const [isOpenCreate, setIsOpenCreate] = useState(false);
+  const [filter, setFilter] = useState("");
 
   const handleSearchChange = (searchString: string) => {
     setSearch(searchString);
   };
 
-  const handleCLickCreate = () => {
-    setIsOpenCreate(true);
+  const handleValueChange = (valueString: string) => {
+    if (valueString === "Alle") {
+      setFilter("");
+    } else {
+      setFilter(valueString);
+    }
   };
 
   useEffect(() => {
@@ -64,10 +80,10 @@ const TableHeading = ({ onSearchChange, onOpenCreateChange }: any) => {
   }, [search]);
 
   useEffect(() => {
-    if (typeof onOpenCreateChange === "function") {
-      onOpenCreateChange(isOpenCreate);
+    if (typeof onFilterChange === "function") {
+      onFilterChange(filter);
     }
-  }, [isOpenCreate]);
+  }, [filter]);
 
   return (
     <TableContainer>
@@ -75,11 +91,47 @@ const TableHeading = ({ onSearchChange, onOpenCreateChange }: any) => {
         <PrimaryButton
           type="button"
           icon={<FaPlus />}
-          onClick={handleCLickCreate}
+          onClick={handleOpenCreate}
         >
-          Nieuwe Cliënt
+          Nieuwe {title}
         </PrimaryButton>
       </ButtonContainer>
+      {title === "onderaannemer" && (
+        <FilterContainer>
+          <Dropdown
+            onValueChange={handleValueChange}
+            title={"Functie"}
+            defaultString={"Alle"}
+            values={[
+              {
+                value: "Alle",
+                string: "Alle",
+              },
+              {
+                value: "Dakwerker",
+                string: "Dakwerker",
+              },
+              {
+                value: "Elektricien",
+                string: "Elektricien",
+              },
+              {
+                value: "Loodgieter",
+                string: "Loodgieter",
+              },
+              {
+                value: "Metselaar",
+                string: "Metselaar",
+              },
+              {
+                value: "Vloerenlegger",
+                string: "Vloerenlegger",
+              },
+            ]}
+          />
+        </FilterContainer>
+      )}
+
       <SearchContainer>
         <SearchBar onSearchChange={handleSearchChange} />
       </SearchContainer>

@@ -3,9 +3,19 @@ import { ProjectsService } from './projects.service';
 import { ProjectsResolver } from './projects.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Project } from './entities/project.entity';
+import { DesignersModule } from 'src/designers/designers.module';
+import { SubcontractorsModule } from 'src/subcontractors/subcontractors.module';
+import { MediaModule } from 'src/media/media.module';
+import { ReportsModule } from 'src/reports/reports.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Project])],
+  imports: [
+    TypeOrmModule.forFeature([Project]), 
+    DesignersModule, 
+    SubcontractorsModule, 
+    MediaModule,
+    ReportsModule
+  ],
   providers: [ProjectsResolver, ProjectsService],
   exports: [ProjectsService],
 })
