@@ -1,9 +1,7 @@
-// import { GridColDef, } from '@material-ui/data-grid';
 import { GridColDef } from "@mui/x-data-grid";
 import styled from "styled-components";
-import { Delete, DeleteForever } from "@material-ui/icons";
+import { Delete } from "@material-ui/icons";
 import { BiEdit } from "react-icons/bi";
-// import moment from "moment";
 
 const Button = styled.button`
   width: 2rem;

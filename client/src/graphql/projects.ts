@@ -69,12 +69,46 @@ query ($id: Int!) {
   project(id: $id) {
     id
     name
+    startDate
     description
     street
     houseNumber
     postalCode
     city
     active
+
+    client {
+      name
+    }
+
+    subcontractors {
+      function
+      id
+      companyName
+      firstName
+      lastName
+      gsm
+      email
+    }
+
+    designers {
+      id
+      companyName
+      firstName
+      lastName
+      gender
+    }
+
+    reports {
+      created_on 
+      pdf
+    }
+    
+    media {
+      name 
+      source
+      type
+    }
   }
 }
 `;

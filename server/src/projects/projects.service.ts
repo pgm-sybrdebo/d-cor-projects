@@ -12,11 +12,14 @@ import { Report } from 'src/reports/entities/report.entity';
 import { ReportsService } from 'src/reports/reports.service';
 import { DesignersService } from 'src/designers/designers.service';
 import { SubcontractorsService } from 'src/subcontractors/subcontractors.service';
+import { Client } from 'src/clients/entities/client.entity';
+import { ClientsService } from 'src/clients/clients.service';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectRepository(Project) private readonly projectsRepository: Repository<Project>,
+    private clientsService: ClientsService,
     private designersService: DesignersService,
     private subcontractorsService: SubcontractorsService,
     private mediaService: MediaService,
@@ -343,6 +346,10 @@ export class ProjectsService {
 
   getReportsByProjectId(projectId: number): Promise<Report[]> {
     return this.reportsService.findAllByProjectId(projectId);
+  }
+
+  getClientByClientId(clientId: number): Promise<Client> {
+    return this.clientsService.findOne(clientId);
   }
 
 
