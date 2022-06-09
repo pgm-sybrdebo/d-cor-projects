@@ -45,13 +45,12 @@ export class MediaService {
     return this.mediaRepository.save(updatedMedia); 
   }
 
-  async remove(id: number): Promise<Number> {
+  async remove(id: number): Promise<Media> {
     const media = await this.mediaRepository.findOneOrFail({
       where: {
         id: id,
       },
     });
-    this.mediaRepository.remove(media);
-    return id;
+    return this.mediaRepository.softRemove(media);
   }
 }

@@ -71,6 +71,7 @@ export interface Subcontractor {
 }
 
 export interface Media {
+  id: number;
   name: string;
   source: string;
   type: string;

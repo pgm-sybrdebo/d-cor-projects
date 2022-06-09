@@ -5,8 +5,6 @@ import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { GridCellParams, MuiEvent } from "@mui/x-data-grid";
 import { Button, Snackbar } from "@material-ui/core";
 import { columnsClients } from "../components/table/columns/columnsClients";
-// import CreateFormModel from "../components/dashboard/createForms/CreateFormModel";
-// import UpdateFormModel from "../components/dashboard/updateForms/UpdateFormModel";
 import { Alert } from "@mui/material";
 import {
   GET_ALL_CLIENTS_BY_NAME,

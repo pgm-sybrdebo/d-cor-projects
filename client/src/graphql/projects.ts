@@ -103,8 +103,9 @@ query ($id: Int!) {
       created_on 
       pdf
     }
-    
+
     media {
+      id
       name 
       source
       type

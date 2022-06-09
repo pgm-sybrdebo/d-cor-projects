@@ -19,6 +19,7 @@ import {
   Clients,
   Project,
 } from "./pages";
+import NewReport from "./pages/NewReport";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path={ROUTES.PROJECT} element={<Project />} />
           <Route path={ROUTES.CLIENTS} element={<Clients />} />
           <Route path={ROUTES.SUBCONTRACTORS} element={<Subcontractors />} />
+          <Route path={ROUTES.NEW_REPORT} element={<NewReport />} />
         </Routes>
       </Router>
     </ThemeProvider>

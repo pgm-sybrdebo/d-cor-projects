@@ -214,14 +214,13 @@ export class ProjectsService {
     return this.projectsRepository.save(updatedProject); 
   }
 
-  async remove(id: number): Promise<Number> {
+  async remove(id: number): Promise<Project> {
     const project = await this.projectsRepository.findOneOrFail({
       where: {
         id: id,
       },
     });
-    this.projectsRepository.remove(project);
-    return id;
+    return this.projectsRepository.softRemove(project);
   }
 
 

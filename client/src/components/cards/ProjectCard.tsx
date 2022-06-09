@@ -8,7 +8,7 @@ import {
   UPDATE_PROJECT,
 } from "../../graphql/projects";
 import { ProjectCardProp } from "../../interfaces";
-import { Button } from "../form/Button";
+import { SecondaryButton } from "../form/SecondaryButton";
 import { Link } from "react-router-dom";
 import * as Routes from "../../routes";
 
@@ -60,6 +60,7 @@ const Card = styled.li`
 
     &:hover {
       border: none;
+      background-color: transparent;
     }
 
     svg:hover {
@@ -127,13 +128,13 @@ const ProjectCard = ({
         </div>
         <Block />
       </Link>
-      <Button disabled={false} type="submit" onClick={handleClick}>
+      <SecondaryButton disabled={false} type="submit" onClick={handleClick}>
         {active ? (
           <FaHeart color="#56B13D" size={32} />
         ) : (
           <FaRegHeart color="#56B13D" size={32} />
         )}
-      </Button>
+      </SecondaryButton>
     </Card>
   );
 };

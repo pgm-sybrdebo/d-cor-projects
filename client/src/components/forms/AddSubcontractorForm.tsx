@@ -162,7 +162,7 @@ const AddSubcontractorForm = ({
                           {
                             query: PROJECT_DETAIL,
                             variables: {
-                              projectId,
+                              id: projectId,
                             },
                           },
                         ],

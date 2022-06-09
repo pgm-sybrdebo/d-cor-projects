@@ -12,6 +12,7 @@ import Pagination from "../components/projects/Pagination";
 import { ProjectsOverview } from "../interfaces";
 import Loading from "../components/layout/Loading";
 import CreateFormProject from "../components/forms/CreateFormProject";
+import { Snackbar, Alert } from "@mui/material";
 
 const ProjectsList = styled.ul`
   display: flex;
@@ -169,6 +170,20 @@ const Projects = () => {
           onSnackbarSuccessChange={handleSnackbarSuccessChange}
         />
       )}
+      <Snackbar
+        open={openSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          severity={snackbarSuccess ? "success" : "error"}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
       {loading && <Loading />}
       {!error &&
         !totalError &&

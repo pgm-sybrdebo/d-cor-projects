@@ -48,14 +48,13 @@ export class ReportsService {
     return this.reportsRepository.save(updatedReport); 
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Report> {
     const report = await this.reportsRepository.findOneOrFail({
       where: {
         id: id,
       },
     });
-    this.reportsRepository.remove(report);
-    return id;
+    return this.reportsRepository.softRemove(report);
   }
 
   // Resolve fields

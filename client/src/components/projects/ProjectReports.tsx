@@ -3,6 +3,7 @@ import { ProjectProps } from "./ProjectDetail";
 import { Delete } from "@material-ui/icons";
 import { FaFilePdf, FaPen, FaPlus } from "react-icons/fa";
 import PrimaryButton from "../form/PrimaryButton";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   margin-top: 3rem;
@@ -26,6 +27,14 @@ const Container = styled.div`
 
 const ButtonContainer = styled.div`
   flex-grow: 1;
+
+  a {
+    color: ${(props) => props.theme.colors.white};
+
+    &:hover {
+      color: ${(props) => props.theme.colors.primaryAccentColor};
+    }
+  }
 
   @media (min-width: 30rem) {
     max-width: 16rem;
@@ -162,7 +171,9 @@ const ProjectReports = ({ project }: ProjectProps) => {
             icon={<FaPlus />}
             onClick={handleOpenNewReport}
           >
-            Nieuw werfverslag
+            <Link to={`/nieuw-werfverslag/${project.id}`}>
+              Nieuw werfverslag
+            </Link>
           </PrimaryButton>
         </ButtonContainer>
       </ContainerHeading>
