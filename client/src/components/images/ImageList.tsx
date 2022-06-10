@@ -62,7 +62,6 @@ const ImageList = ({
   }, [uploads]);
 
   const handleDeleteUploadImage = (isSelected: any) => {
-    console.log("yesssssss", isSelected);
     setUploads(isSelected);
   };
 
@@ -72,6 +71,7 @@ const ImageList = ({
         {media &&
           media.map((image) => (
             <ImageCard
+              key={image.id}
               id={image.id}
               source={image.source}
               name={image.name}
@@ -81,6 +81,7 @@ const ImageList = ({
         {upload &&
           upload.map((image) => (
             <ImageCard
+              key={image.filename}
               source={image.filename}
               name={image.filename}
               projectId={projectId}

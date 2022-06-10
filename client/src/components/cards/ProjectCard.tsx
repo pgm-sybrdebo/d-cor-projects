@@ -1,5 +1,4 @@
 import { useMutation } from "@apollo/client";
-import React from "react";
 import { FaFolder, FaHeart, FaRegHeart } from "react-icons/fa";
 import styled from "styled-components";
 import {
@@ -10,7 +9,6 @@ import {
 import { ProjectCardProp } from "../../interfaces";
 import { SecondaryButton } from "../form/SecondaryButton";
 import { Link } from "react-router-dom";
-import * as Routes from "../../routes";
 
 const Card = styled.li`
   position: relative;
@@ -90,7 +88,7 @@ const ProjectCard = ({
   offset,
   limit,
 }: ProjectCardProp) => {
-  const [updateProject, { data, loading, error }] = useMutation(UPDATE_PROJECT);
+  const [updateProject] = useMutation(UPDATE_PROJECT);
 
   const handleClick = () => {
     updateProject({

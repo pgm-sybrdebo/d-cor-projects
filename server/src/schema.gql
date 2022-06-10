@@ -75,9 +75,10 @@ input CreateProjectInput {
 
 input CreateReportInput {
   generalInfo: String!
-  number: Int!
+  nextDate: Timestamp!
   pdf: String!
   projectId: Int!
+  startDate: Timestamp!
 }
 
 input CreateReportSectionInput {
@@ -233,11 +234,13 @@ type Report {
   deleted_on: Timestamp!
   generalInfo: String!
   id: Int!
+  nextDate: Timestamp!
   number: Int!
   pdf: String!
   project: Project!
   projectId: Int!
   reportSections: [ReportSection!]!
+  startDate: Timestamp!
   updated_on: Timestamp!
 }
 
@@ -342,9 +345,10 @@ input UpdateProjectInput {
 input UpdateReportInput {
   generalInfo: String
   id: Int!
-  number: Int
+  nextDate: Timestamp
   pdf: String
   projectId: Int
+  startDate: Timestamp
 }
 
 input UpdateReportSectionInput {

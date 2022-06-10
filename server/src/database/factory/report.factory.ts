@@ -15,6 +15,8 @@ define(Report, (faker: typeof Faker, context: Context) => {
   report.number = number;
   report.generalInfo = faker.lorem.paragraph();
   report.pdf = "pdf";
+  report.startDate = faker.date.between('2021-01-01', '2021-12-31');
+  report.nextDate = faker.date.between('2022-01-01', '2022-12-31');
   number++;
   return report;
 });

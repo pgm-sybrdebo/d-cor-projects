@@ -97,3 +97,8 @@ export interface UploadImageCard {
   filename: string;
   type: string;
 }
+
+export interface ValueProp {
+  id: number;
+  name: string;
+}

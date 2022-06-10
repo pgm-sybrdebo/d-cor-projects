@@ -102,7 +102,6 @@ const ImageCard = ({
     });
   };
   const handleStopUploadImage = async (name: string) => {
-    console.log("target", id);
     const deleteRequest = await fetch(
       `${process.env.REACT_APP_DELETE_PROJECT_IMAGE}/${name}`,
       {
@@ -121,6 +120,7 @@ const ImageCard = ({
         alt={name}
       />
       <DeleteButton
+        type="button"
         onClick={() =>
           id ? handleDeleteImage(id, name) : handleStopUploadImage(name)
         }

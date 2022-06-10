@@ -157,20 +157,12 @@ const ProjectReports = ({ project }: ProjectProps) => {
     return formatDate;
   };
 
-  const handleOpenNewReport = () => {
-    console.log("open new report");
-  };
-
   return (
     <Container>
       <ContainerHeading>
         <h2>Werfverslagen:</h2>
         <ButtonContainer>
-          <PrimaryButton
-            type="button"
-            icon={<FaPlus />}
-            onClick={handleOpenNewReport}
-          >
+          <PrimaryButton type="button" icon={<FaPlus />}>
             <Link to={`/nieuw-werfverslag/${project.id}`}>
               Nieuw werfverslag
             </Link>

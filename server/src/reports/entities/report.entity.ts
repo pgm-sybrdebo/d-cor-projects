@@ -26,6 +26,14 @@ export class Report {
   @Field()
   pdf: string;
 
+  @Column()
+  @Field()
+  startDate: Date;
+
+  @Column()
+  @Field()
+  nextDate: Date;
+
   @CreateDateColumn()
   @Field()
   created_on: Date;

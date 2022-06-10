@@ -78,6 +78,7 @@ query ($id: Int!) {
     active
 
     client {
+      id
       name
     }
 

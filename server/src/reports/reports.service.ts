@@ -14,8 +14,11 @@ export class ReportsService {
     private reportSectionService: ReportSectionsService
   ){}
 
-  create(createReportInput: CreateReportInput): Promise<Report> {
-    const newReport = this.reportsRepository.create(createReportInput);
+  async create(createReportInput: CreateReportInput): Promise<Report> {
+    
+    const lastNumber = await this.reportsRepository.count({where: {projectId: createReportInput.projectId}});
+    console.log(lastNumber);
+    const newReport = await this.reportsRepository.create({... createReportInput, number: lastNumber + 1});
     return this.reportsRepository.save(newReport);
   }
 
