@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
 import { ClientsModule } from './clients/clients.module';
 import { ReportsModule } from './reports/reports.module';
@@ -15,6 +14,9 @@ import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { ReportSectionsModule } from './report-sections/report-sections.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { AuthModule } from './auth/auth.module';
+
 
 dotenv.config();
 const nodeEnvironment = `${(
@@ -66,7 +68,9 @@ const nodeEnvironment = `${(
         // },
       }),
     }),
-    UsersModule, ProjectsModule, ClientsModule, ReportsModule, MediaModule, SubcontractorsModule, DesignersModule, ReportSectionsModule],
+     ProjectsModule, ClientsModule, ReportsModule, MediaModule, SubcontractorsModule, DesignersModule, ReportSectionsModule, AuthModule,  MulterModule.register({
+      dest: './uploads',
+    })],
   controllers: [AppController],
   providers: [AppService],
 })

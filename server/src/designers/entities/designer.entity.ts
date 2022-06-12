@@ -53,10 +53,6 @@ export class Designer {
 
   @Column()
   @Field()
-  country: string;
-
-  @Column()
-  @Field()
   vatNumber: string;
 
   @Column()

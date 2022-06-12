@@ -11,11 +11,25 @@ import {
   HttpLink,
   from,
 } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
-const link = from([new HttpLink({ uri: "http://localhost:3000/graphql" })]);
+const link = from([
+  new HttpLink({ uri: `${process.env.REACT_APP_SERVER_URL}/graphql` }),
+]);
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem("D-corprojectsToken");
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
 
 const client = new ApolloClient({
-  link: link,
+  link: authLink.concat(link),
   cache: new InMemoryCache(),
 });
 

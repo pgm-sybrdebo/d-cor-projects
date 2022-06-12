@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Project } from 'src/projects/entities/project.entity';
+import { ReportSection } from 'src/report-sections/entities/report-section.entity';
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
@@ -45,7 +46,7 @@ export class Media {
   @Field((type) => Project)
   project: Project;
 
-  @ManyToOne(() => Media, (media) => media.reportSection)
-  @Field((type) => Media)
-  reportSection: Media;
+  @ManyToOne(() => ReportSection, (reportSection) => reportSection.media)
+  @Field((type) => ReportSection)
+  reportSection: ReportSection;
 }

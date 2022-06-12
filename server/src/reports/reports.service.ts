@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ReportSection } from 'src/report-sections/entities/report-section.entity';
+import { ReportSectionsService } from 'src/report-sections/report-sections.service';
 import { Repository } from 'typeorm';
 import { CreateReportInput } from './dto/create-report.input';
 import { UpdateReportInput } from './dto/update-report.input';
@@ -9,15 +11,27 @@ import { Report } from './entities/report.entity';
 export class ReportsService {
   constructor(
     @InjectRepository(Report) private readonly reportsRepository: Repository<Report>,
+    private reportSectionService: ReportSectionsService
   ){}
 
-  create(createReportInput: CreateReportInput): Promise<Report> {
-    const newReport = this.reportsRepository.create(createReportInput);
+  async create(createReportInput: CreateReportInput): Promise<Report> {
+    
+    const lastNumber = await this.reportsRepository.count({where: {projectId: createReportInput.projectId}});
+    console.log(lastNumber);
+    const newReport = await this.reportsRepository.create({... createReportInput, number: lastNumber + 1});
     return this.reportsRepository.save(newReport);
   }
 
   findAll(): Promise<Report[]> {
     return this.reportsRepository.find();
+  }
+
+  findAllByProjectId(projectId: number): Promise<Report[]> {
+    return this.reportsRepository.find({
+      where: {
+        projectId: projectId,
+      },
+    });
   }
 
   findOne(id: number): Promise<Report> {
@@ -37,13 +51,19 @@ export class ReportsService {
     return this.reportsRepository.save(updatedReport); 
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Report> {
     const report = await this.reportsRepository.findOneOrFail({
       where: {
         id: id,
       },
     });
-    this.reportsRepository.remove(report);
-    return id;
+    return this.reportsRepository.softRemove(report);
+  }
+
+  // Resolve fields
+
+
+  getReportSectionsByReportId(reportId: number): Promise<ReportSection[]> {
+    return this.reportSectionService.findAllByReportId(reportId);
   }
 }

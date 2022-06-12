@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Formik, Field, Form } from "formik";
 import * as yup from "yup";
 import { useEffect, useState } from "react";
-import { Button } from "./Button";
+import { SecondaryButton } from "./SecondaryButton";
 import SearchField from "./SearchField";
 import { FaSearch } from "react-icons/fa";
 
@@ -27,6 +27,8 @@ const SearchContainer = styled.div`
       border: 2px solid ${(props) => props.theme.colors.black};
       border-left: none;
       background-color: transparent;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
       color: ${(props) => props.theme.colors.black};
 
       &:hover {
@@ -49,6 +51,7 @@ const SearchBar = ({ onSearchChange }: any) => {
     if (typeof onSearchChange === "function") {
       onSearchChange(search);
     }
+    // eslint-disable-next-line
   }, [search]);
 
   return (
@@ -74,9 +77,9 @@ const SearchBar = ({ onSearchChange }: any) => {
               as={SearchField}
               type="input"
             />
-            <Button disabled={isSubmitting} type="submit">
+            <SecondaryButton disabled={isSubmitting} type="submit">
               <FaSearch />
-            </Button>
+            </SecondaryButton>
           </Form>
         )}
       </Formik>

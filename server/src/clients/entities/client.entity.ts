@@ -26,6 +26,10 @@ export class Client {
   lastName: string;
 
   @Column()
+  @Field(type => Int)
+  gender: number;
+
+  @Column()
   @Field()
   email: string;
 
@@ -48,10 +52,6 @@ export class Client {
   @Column()
   @Field()
   city: string;
-
-  @Column()
-  @Field()
-  country: string;
 
   @Column()
   @Field()

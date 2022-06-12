@@ -11,6 +11,18 @@ export class ClientsService {
     @InjectRepository(Client) private clientsRepository: Repository<Client>,
   ){}
 
+  async count(name: String): Promise<number> {
+    const rawData = await this.clientsRepository.query(`
+    SELECT
+      COUNT(DISTINCT id) AS total
+    FROM
+      "client"
+    WHERE client.deleted_on IS NULL
+    AND LOWER(client.name) LIKE LOWER('${name}%')
+    `);
+    return rawData[0].total;
+  }
+
   create(createClientInput: CreateClientInput): Promise<Client> {
     const newClient = this.clientsRepository.create(createClientInput);
     return this.clientsRepository.save(newClient);
@@ -20,7 +32,27 @@ export class ClientsService {
     return this.clientsRepository.find();
   }
 
+  async findAllClientsByName(
+    name: string,
+    offset: number,
+    limit: number,
+  ): Promise<Client[]> {
+    const rawData = await this.clientsRepository.query(`
+      SELECT
+        *
+      FROM
+        client
+      WHERE client.deleted_on IS NULL
+      AND LOWER(client.name) LIKE LOWER('${name}%')
+      GROUP BY client.id
+      OFFSET ${offset * limit}
+      LIMIT ${limit}
+    `);
+    return rawData;
+  }
+
   findOne(id: number): Promise<Client> {
+    console.log(id);
     return this.clientsRepository.findOneOrFail({
       where: {
         id: id,
@@ -37,15 +69,12 @@ export class ClientsService {
     return this.clientsRepository.save(updatedClient);
   }
 
-  async remove(id: number): Promise<Number> {
+  async remove(id: number): Promise<Client> {
     const client = await this.clientsRepository.findOneOrFail({
       where: {
         id: id,
       },
     });
-    this.clientsRepository.remove(client);
-    return id;
+    return this.clientsRepository.softRemove(client);
   }
-
-
 }

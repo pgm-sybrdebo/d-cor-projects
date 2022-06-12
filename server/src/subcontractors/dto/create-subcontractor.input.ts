@@ -1,5 +1,5 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsString, IsNotEmpty, IsEmail, IsMobilePhone, IsInt, IsPositive, IsPostalCode, IsAlphanumeric, Contains, MaxLength } from 'class-validator';
+import { IsString, IsNotEmpty, IsEmail, IsMobilePhone, IsInt, IsPositive, IsPostalCode, IsAlphanumeric, Contains, MaxLength, Min, Max, isString, Matches, matches } from 'class-validator';
 
 @InputType()
 export class CreateSubcontractorInput {
@@ -17,6 +17,18 @@ export class CreateSubcontractorInput {
   @IsNotEmpty()
   @Field()
   lastName: string;
+
+  @IsInt()
+  @Min(0)
+  @Max(1)
+  @IsNotEmpty()
+  @Field(type => Int)
+  gender: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @Field()
+  function: string;
 
   @IsEmail()
   @IsNotEmpty()
@@ -49,21 +61,15 @@ export class CreateSubcontractorInput {
   city: string;
 
   @IsNotEmpty()
-  @IsString()
-  @Field()
-  country: string;
-
-  @IsNotEmpty()
   @IsAlphanumeric()
-  @Contains('BE')
-  // @Contains('‹ ^(BE)?0[0-9]{9}$ ›')
+  @Matches('(BE)?0[0-9]{9}')
   @MaxLength(12)
   @Field()
   vatNumber: string;
 
   @IsNotEmpty()
   @IsAlphanumeric()
-  @Contains('BE')
+  @Matches('(BE)[0-9]{14}')
   @MaxLength(16)
   @Field()
   accountNumber: string;

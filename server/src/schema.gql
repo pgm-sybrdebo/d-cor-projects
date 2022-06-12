@@ -5,11 +5,11 @@
 type Client {
   accountNumber: String!
   city: String!
-  country: String!
   created_on: Timestamp!
   deleted_on: Timestamp!
   email: String!
   firstName: String!
+  gender: Int!
   gsm: String!
   houseNumber: Int!
   id: Int!
@@ -26,9 +26,9 @@ type Client {
 input CreateClientInput {
   accountNumber: String!
   city: String!
-  country: String!
   email: String!
   firstName: String!
+  gender: Int!
   gsm: String!
   houseNumber: Int!
   lastName: String!
@@ -42,9 +42,9 @@ input CreateDesignerInput {
   accountNumber: String!
   city: String!
   companyName: String!
-  country: String!
   email: String!
   firstName: String!
+  gender: Int!
   gsm: String!
   houseNumber: Int!
   lastName: String!
@@ -65,19 +65,21 @@ input CreateProjectInput {
   active: Boolean!
   city: String!
   clientId: Int!
-  country: String!
   description: String!
   houseNumber: Int!
   name: String!
   postalCode: String!
+  startDate: Timestamp!
   street: String!
 }
 
 input CreateReportInput {
+  dcorprojects: String!
   generalInfo: String!
-  number: Int!
+  nextDate: Timestamp!
   pdf: String!
   projectId: Int!
+  startDate: Timestamp!
 }
 
 input CreateReportSectionInput {
@@ -92,9 +94,10 @@ input CreateSubcontractorInput {
   accountNumber: String!
   city: String!
   companyName: String!
-  country: String!
   email: String!
   firstName: String!
+  function: String!
+  gender: Int!
   gsm: String!
   houseNumber: Int!
   lastName: String!
@@ -103,19 +106,10 @@ input CreateSubcontractorInput {
   vatNumber: String!
 }
 
-input CreateUserInput {
-  email: String!
-  firstName: String!
-  gsm: String!
-  lastName: String!
-  password: String!
-}
-
 type Designer {
   accountNumber: String!
   city: String!
   companyName: String!
-  country: String!
   created_on: Timestamp!
   deleted_on: Timestamp!
   email: String!
@@ -133,6 +127,16 @@ type Designer {
   vatNumber: String!
 }
 
+type LoginResponse {
+  access_token: String!
+  user: String!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}
+
 type Media {
   created_on: Timestamp!
   deleted_on: Timestamp!
@@ -140,7 +144,7 @@ type Media {
   name: String!
   project: Project!
   projectId: Int!
-  reportSection: Media!
+  reportSection: ReportSection!
   reportSectionId: Int
   source: String!
   type: String!
@@ -148,6 +152,8 @@ type Media {
 }
 
 type Mutation {
+  addDesignerToProject(designerId: Int!, projectId: Int!): Project!
+  addSubcontractorToProject(projectId: Int!, subcontractorId: Int!): Project!
   createClient(createClientInput: CreateClientInput!): Client!
   createDesigner(createDesignerInput: CreateDesignerInput!): Designer!
   createMedia(createMediaInput: CreateMediaInput!): Media!
@@ -155,15 +161,16 @@ type Mutation {
   createReport(createReportInput: CreateReportInput!): Report!
   createReportSection(createReportSectionInput: CreateReportSectionInput!): ReportSection!
   createSubcontractor(createSubcontractorInput: CreateSubcontractorInput!): Subcontractor!
-  createUser(createUserInput: CreateUserInput!): User!
+  login(loginUserInput: LoginUserInput!): LoginResponse!
   removeClient(id: Int!): Client!
   removeDesigner(id: Int!): Designer!
+  removeDesignerFromProject(designerId: Int!, projectId: Int!): Project!
   removeMedia(id: Int!): Media!
   removeProject(id: Int!): Project!
   removeReport(id: Int!): Report!
   removeReportSection(id: Int!): ReportSection!
   removeSubcontractor(id: Int!): Subcontractor!
-  removeUser(id: Int!): User!
+  removeSubcontractorFromProject(projectId: Int!, subcontractorId: Int!): Project!
   updateClient(updateClientInput: UpdateClientInput!): Client!
   updateDesigner(updateDesignerInput: UpdateDesignerInput!): Designer!
   updateMedia(updateMediaInput: UpdateMediaInput!): Media!
@@ -171,7 +178,6 @@ type Mutation {
   updateReport(updateReportInput: UpdateReportInput!): Report!
   updateReportSection(updateReportSectionInput: UpdateReportSectionInput!): ReportSection!
   updateSubcontractor(updateSubcontractorInput: UpdateSubcontractorInput!): Subcontractor!
-  updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
 type Project {
@@ -179,17 +185,17 @@ type Project {
   city: String!
   client: Client!
   clientId: Int!
-  country: String!
   created_on: Timestamp!
   deleted_on: Timestamp!
   description: String!
-  designers: [Designer!]!
+  designers: [Designer!]
   houseNumber: Int!
   id: Int!
   media: [Media!]!
   name: String!
   postalCode: String!
   reports: [Report!]!
+  startDate: Timestamp!
   street: String!
   subcontractors: [Subcontractor!]!
   updated_on: Timestamp!
@@ -201,8 +207,12 @@ type Query {
   activeProjectsByPagination(limit: Int!, offset: Int!): [Project!]!
   client(id: Int!): Client!
   clients: [Client!]!
+  clientsByName(limit: Int!, name: String!, offset: Int!): [Client!]!
   designer(id: Int!): Designer!
   designers: [Designer!]!
+  findAllClientsByReportId(reportId: Int!): [ReportSection!]!
+  findAllDesignersByReportId(reportId: Int!): [ReportSection!]!
+  findAllSubcontractorsByReportId(reportId: Int!): [ReportSection!]!
   media(id: Int!): Media!
   project(id: Int!): Project!
   projects: [Project!]!
@@ -214,22 +224,26 @@ type Query {
   reports: [Report!]!
   subcontractor(id: Int!): Subcontractor!
   subcontractors: [Subcontractor!]!
+  subcontractorsByCompanyName(companyName: String!, func: String!, limit: Int!, offset: Int!): [Subcontractor!]!
   totalActiveProjects(name: String!): Int!
+  totalClientsByName(name: String!): Int!
   totalProjects(name: String!): Int!
-  user(id: Int!): User!
-  users: [User!]!
+  totalSubcontractorsByCompanyName(companyName: String!, func: String!): Int!
 }
 
 type Report {
   created_on: Timestamp!
+  dcorprojects: String!
   deleted_on: Timestamp!
   generalInfo: String!
   id: Int!
+  nextDate: Timestamp!
   number: Int!
   pdf: String!
   project: Project!
   projectId: Int!
   reportSections: [ReportSection!]!
+  startDate: Timestamp!
   updated_on: Timestamp!
 }
 
@@ -242,7 +256,7 @@ type ReportSection {
   designer: Designer!
   designerId: Int
   id: Int!
-  media: [Media!]!
+  media: [Media!]
   report: Report!
   reportId: Int!
   subcontractor: Subcontractor!
@@ -254,11 +268,11 @@ type Subcontractor {
   accountNumber: String!
   city: String!
   companyName: String!
-  country: String!
   created_on: Timestamp!
   deleted_on: Timestamp!
   email: String!
   firstName: String!
+  function: String!
   gender: Int!
   gsm: String!
   houseNumber: Int!
@@ -280,9 +294,9 @@ scalar Timestamp
 input UpdateClientInput {
   accountNumber: String
   city: String
-  country: String
   email: String
   firstName: String
+  gender: Int
   gsm: String
   houseNumber: Int
   id: Int!
@@ -297,9 +311,9 @@ input UpdateDesignerInput {
   accountNumber: String
   city: String
   companyName: String
-  country: String
   email: String
   firstName: String
+  gender: Int
   gsm: String
   houseNumber: Int
   id: Int!
@@ -322,21 +336,23 @@ input UpdateProjectInput {
   active: Boolean
   city: String
   clientId: Int
-  country: String
   description: String
   houseNumber: Int
   id: Int!
   name: String
   postalCode: String
+  startDate: Timestamp
   street: String
 }
 
 input UpdateReportInput {
+  dcorprojects: String
   generalInfo: String
   id: Int!
-  number: Int
+  nextDate: Timestamp
   pdf: String
   projectId: Int
+  startDate: Timestamp
 }
 
 input UpdateReportSectionInput {
@@ -352,9 +368,10 @@ input UpdateSubcontractorInput {
   accountNumber: String
   city: String
   companyName: String
-  country: String
   email: String
   firstName: String
+  function: String
+  gender: Int
   gsm: String
   houseNumber: Int
   id: Int!
@@ -362,25 +379,4 @@ input UpdateSubcontractorInput {
   postalCode: String
   street: String
   vatNumber: String
-}
-
-input UpdateUserInput {
-  email: String
-  firstName: String
-  gsm: String
-  id: Int!
-  lastName: String
-  password: String
-}
-
-type User {
-  created_on: Timestamp!
-  deleted_on: Timestamp!
-  email: String!
-  firstName: String!
-  gsm: String!
-  id: Int!
-  lastName: String!
-  password: String!
-  updated_on: Timestamp!
 }

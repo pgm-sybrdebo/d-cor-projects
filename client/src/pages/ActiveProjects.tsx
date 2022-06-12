@@ -9,8 +9,10 @@ import BaseLayout from "../layouts/BaseLayout";
 import { useEffect, useState } from "react";
 import ProjectHeading from "../components/projects/ProjectHeading";
 import Pagination from "../components/projects/Pagination";
-import { ActiveProjectsOverview, ProjectsOverview } from "../interfaces";
+import { ActiveProjectsOverview } from "../interfaces";
 import Loading from "../components/layout/Loading";
+import CreateFormProject from "../components/forms/CreateFormProject";
+import { Snackbar, Alert } from "@mui/material";
 
 const ProjectsList = styled.ul`
   display: flex;
@@ -31,6 +33,34 @@ const ActiveProjects = () => {
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState<string>("");
   const [sort, setSort] = useState<string>("");
+  const [isOpenCreate, setIsOpenCreate] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarSuccess, setSnackbarSuccess] = useState(true);
+
+  const handleSnackbarMessageChange = (isSelected: string) => {
+    setSnackbarMessage(isSelected);
+  };
+  const handleOpenSnackbarChange = (isSelected: boolean) => {
+    setOpenSnackbar(isSelected);
+  };
+  const handleSnackbarSuccessChange = (isSelected: boolean) => {
+    setSnackbarSuccess(isSelected);
+  };
+
+  const handleSnackbarClose = (
+    e: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
+  const handleClose = () => {
+    setIsOpenCreate(false);
+  };
 
   const {
     loading: loadinging,
@@ -62,6 +92,10 @@ const ActiveProjects = () => {
     setSort(sortString);
   };
 
+  const handleOpenCreateChange = () => {
+    setIsOpenCreate(true);
+  };
+
   useEffect(() => {
     activeProjectsByName({
       variables: {
@@ -90,6 +124,7 @@ const ActiveProjects = () => {
       <ProjectHeading
         onSearchChange={handleSearchChange}
         onSortChange={handleSortChange}
+        handleOpenCreate={handleOpenCreateChange}
       />
       {data && (
         <>
@@ -100,6 +135,7 @@ const ActiveProjects = () => {
                   key={project.id}
                   id={project.id}
                   name={project.name}
+                  city={project.city}
                   active={project.active}
                   search={search}
                   sort={sort}
@@ -119,6 +155,36 @@ const ActiveProjects = () => {
           )}
         </>
       )}
+
+      {isOpenCreate && (
+        <CreateFormProject
+          handleClose={handleClose}
+          open={isOpenCreate}
+          page={pageNumber}
+          name={search}
+          offset={pageNumber - 1}
+          limit={limitItems}
+          sort={sort}
+          onSnackbarMessageChange={handleSnackbarMessageChange}
+          onOpenSnackbarChange={handleOpenSnackbarChange}
+          onSnackbarSuccessChange={handleSnackbarSuccessChange}
+        />
+      )}
+
+      <Snackbar
+        open={openSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          severity={snackbarSuccess ? "success" : "error"}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
       {loading && <Loading />}
       {!error &&
         !totalError &&

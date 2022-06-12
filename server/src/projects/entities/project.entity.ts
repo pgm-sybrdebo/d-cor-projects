@@ -2,7 +2,6 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Dates } from 'src/mixins/date.entity';
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Client } from 'src/clients/entities/client.entity';
-import { User } from 'src/users/entities/user.entity';
 import { Media } from 'src/media/entities/media.entity';
 import { Report } from 'src/reports/entities/report.entity';
 import { Designer } from 'src/designers/entities/designer.entity';
@@ -25,6 +24,10 @@ export class Project {
 
   @Column()
   @Field()
+  startDate: Date;
+
+  @Column()
+  @Field()
   street: string;
 
   @Column()
@@ -38,10 +41,6 @@ export class Project {
   @Column()
   @Field()
   city: string;
-
-  @Column()
-  @Field()
-  country: string;
 
   @Column()
   @Field()
@@ -70,10 +69,6 @@ export class Project {
   @Field((type) => Client)
   client: Client;
 
-  // @ManyToOne(() => User, (user) => user.projects)
-  // @Field((type) => User)
-  // user: User;
-
   @OneToMany(() => Media, (media) => media.project) 
   @Field((type) => [Media])
   media: Media[];
@@ -83,7 +78,7 @@ export class Project {
   reports: Report[];
 
   @ManyToMany(() => Designer, (designer) => designer.projects, {cascade: true})
-  @Field((type) => [Designer])
+  @Field((type) => [Designer], {nullable: true})
   @JoinTable({
     name: 'project_designer',
     joinColumn: {

@@ -11,8 +11,8 @@ define(Media, (faker: typeof Faker, context: Context) => {
   const { projectId } = context;
   const m = new Media();
   m.projectId = projectId;
-  m.name = faker.lorem.word();
-  m.type = "jpg";
-  m.source = "source";
+  m.name = "fallback.png";
+  m.type = "png";
+  m.source = "fallback.png";
   return m;
 });
