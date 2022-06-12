@@ -10,11 +10,11 @@ const nodeEnvironment = `${(
 
 const typeormConfig: ConnectionOptions = {
   type: 'postgres',
-  host: "ec2-54-228-218-84.eu-west-1.compute.amazonaws.com",  
+  host: "ec2-52-206-182-219.compute-1.amazonaws.com",  
   port: Number(5432),
-  username: "hpphelfhushniu",
-  password: "4b608475cc5cc9efac88be52e57c689fd4539f2c66eef2745b5deb824965811f",
-  database: "dh5s2j7ogrtta",
+  username: "nkjzqjuwwdjmxs",
+  password: "8e117ff91fac551a057418540b8ea44182cac56505a9888dbde0b697112aa735",
+  database: "d2531rr627mboh",
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   synchronize: true,
   logging: nodeEnvironment === 'development' ? true : false,
