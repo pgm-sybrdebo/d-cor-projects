@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 
 
@@ -18,7 +17,7 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
+  async login(user: String) {
     console.log(" uuuuuu",user);
     return {
       access_token: this.jwtService.sign({

@@ -106,14 +106,6 @@ input CreateSubcontractorInput {
   vatNumber: String!
 }
 
-input CreateUserInput {
-  email: String!
-  firstName: String!
-  gsm: String!
-  lastName: String!
-  password: String!
-}
-
 type Designer {
   accountNumber: String!
   city: String!
@@ -169,7 +161,6 @@ type Mutation {
   createReport(createReportInput: CreateReportInput!): Report!
   createReportSection(createReportSectionInput: CreateReportSectionInput!): ReportSection!
   createSubcontractor(createSubcontractorInput: CreateSubcontractorInput!): Subcontractor!
-  createUser(createUserInput: CreateUserInput!): User!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   removeClient(id: Int!): Client!
   removeDesigner(id: Int!): Designer!
@@ -180,7 +171,6 @@ type Mutation {
   removeReportSection(id: Int!): ReportSection!
   removeSubcontractor(id: Int!): Subcontractor!
   removeSubcontractorFromProject(projectId: Int!, subcontractorId: Int!): Project!
-  removeUser(id: Int!): User!
   updateClient(updateClientInput: UpdateClientInput!): Client!
   updateDesigner(updateDesignerInput: UpdateDesignerInput!): Designer!
   updateMedia(updateMediaInput: UpdateMediaInput!): Media!
@@ -188,7 +178,6 @@ type Mutation {
   updateReport(updateReportInput: UpdateReportInput!): Report!
   updateReportSection(updateReportSectionInput: UpdateReportSectionInput!): ReportSection!
   updateSubcontractor(updateSubcontractorInput: UpdateSubcontractorInput!): Subcontractor!
-  updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
 type Project {
@@ -240,8 +229,6 @@ type Query {
   totalClientsByName(name: String!): Int!
   totalProjects(name: String!): Int!
   totalSubcontractorsByCompanyName(companyName: String!, func: String!): Int!
-  user(id: Int!): User!
-  users: [User!]!
 }
 
 type Report {
@@ -392,25 +379,4 @@ input UpdateSubcontractorInput {
   postalCode: String
   street: String
   vatNumber: String
-}
-
-input UpdateUserInput {
-  email: String
-  firstName: String
-  gsm: String
-  id: Int!
-  lastName: String
-  password: String
-}
-
-type User {
-  created_on: Timestamp!
-  deleted_on: Timestamp!
-  email: String!
-  firstName: String!
-  gsm: String!
-  id: Int!
-  lastName: String!
-  password: String!
-  updated_on: Timestamp!
 }

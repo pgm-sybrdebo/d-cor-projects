@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
 import { ClientsModule } from './clients/clients.module';
 import { ReportsModule } from './reports/reports.module';
@@ -69,7 +68,7 @@ const nodeEnvironment = `${(
         // },
       }),
     }),
-    UsersModule, ProjectsModule, ClientsModule, ReportsModule, MediaModule, SubcontractorsModule, DesignersModule, ReportSectionsModule, AuthModule,  MulterModule.register({
+     ProjectsModule, ClientsModule, ReportsModule, MediaModule, SubcontractorsModule, DesignersModule, ReportSectionsModule, AuthModule,  MulterModule.register({
       dest: './uploads',
     })],
   controllers: [AppController],
