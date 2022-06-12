@@ -128,10 +128,6 @@ const CreateFormClient = ({
     if (typeof onSnackbarSuccessChange === "function") {
       onSnackbarSuccessChange(snackbarSuccess);
     }
-
-    console.log("weird open", openSnackbar);
-    console.log("weird message", message);
-    console.log("weird succes", snackbarSuccess);
   }, [
     message,
     openSnackbar,
@@ -163,7 +159,7 @@ const CreateFormClient = ({
             }}
             onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
-              console.log("pls", values);
+
               try {
                 await createClient({
                   variables: {

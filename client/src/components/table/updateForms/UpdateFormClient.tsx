@@ -9,7 +9,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import { Button, InputLabel, Select, MenuItem } from "@mui/material";
-import { Formik, Form, Field, FieldArray } from "formik";
+import { Formik, Form, Field } from "formik";
 import { useState, useEffect } from "react";
 import {
   GET_ALL_CLIENTS_BY_NAME,
@@ -118,7 +118,6 @@ const UpdateFormClient = ({
   const [message, setMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarSuccess, setSnackbarSuccess] = useState(true);
-  console.log(selectedRow);
 
   useEffect(() => {
     if (typeof onSnackbarMessageChange === "function") {
@@ -162,7 +161,6 @@ const UpdateFormClient = ({
             onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
               try {
-                console.log(values.gender);
                 await updateClient({
                   variables: {
                     id: selectedRow.id,

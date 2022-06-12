@@ -71,7 +71,6 @@ const ProjectHeading = ({
 }: ProjectHeadingProps) => {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
-  // const [isOpenCreate, setIsOpenCreate] = useState(false);
 
   const handleSearchChange = (searchString: string) => {
     setSearch(searchString);
@@ -81,20 +80,18 @@ const ProjectHeading = ({
     setSort(valueString);
   };
 
-  // const handleCLickCreate = () => {
-  //   setIsOpenCreate(true);
-  // };
-
   useEffect(() => {
     if (typeof onSearchChange === "function") {
       onSearchChange(search);
     }
+    // eslint-disable-next-line
   }, [search]);
 
   useEffect(() => {
     if (typeof onSortChange === "function") {
       onSortChange(sort);
     }
+    // eslint-disable-next-line
   }, [sort]);
 
   // useEffect(() => {

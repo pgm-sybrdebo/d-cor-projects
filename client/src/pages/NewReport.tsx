@@ -33,6 +33,7 @@ const Title = styled.h1`
 const Container = styled.div`
   max-width: ${(props) => props.theme.width.medium};
   margin: 0 auto;
+  margin-bottom: 1.5rem;
 `;
 
 const ButtonContainer = styled.div`
@@ -227,7 +228,7 @@ const NewReport = () => {
     {
       onCompleted: async (data: any) => {
         await setReportNumber(data.createReport.number);
-        console.log("*******", data.createReport);
+
         await updateReport({
           variables: {
             id: data.createReport.id,
@@ -373,9 +374,8 @@ const NewReport = () => {
               onSubmit={async (values, { setSubmitting }) => {
                 setSubmitting(true);
                 try {
-                  console.log("values", values);
                   await setFormValues(values);
-                  console.log("why", projectData.project.data);
+
                   await createReport({
                     variables: {
                       projectId: Number(id),

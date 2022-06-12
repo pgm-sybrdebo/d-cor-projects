@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import Table from "../components/table/Table";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { GridCellParams, MuiEvent } from "@mui/x-data-grid";
-import { Button, Snackbar } from "@material-ui/core";
+import { Snackbar } from "@material-ui/core";
 import { columnsClients } from "../components/table/columns/columnsClients";
 import { Alert } from "@mui/material";
 import {
@@ -35,15 +34,12 @@ const Clients = () => {
   const [snackbarSuccess, setSnackbarSuccess] = useState(true);
 
   const handleSnackbarMessageChange = (isSelected: string) => {
-    console.log("message", isSelected);
     setSnackbarMessage(isSelected);
   };
   const handleOpenSnackbarChange = (isSelected: boolean) => {
-    console.log("open", isSelected);
     setOpenSnackbar(isSelected);
   };
   const handleSnackbarSuccessChange = (isSelected: boolean) => {
-    console.log("success", isSelected);
     setSnackbarSuccess(isSelected);
   };
 
@@ -65,11 +61,7 @@ const Clients = () => {
     setOpenSnackbar(false);
   };
 
-  const {
-    data: totalData,
-    error: totalError,
-    loading: totalLoading,
-  } = useQuery(TOTAL_CLIENTS, {
+  const { data: totalData } = useQuery(TOTAL_CLIENTS, {
     variables: {
       name: search,
     },
@@ -97,7 +89,6 @@ const Clients = () => {
     const { field } = params;
 
     if (field !== "edit" && field !== "delete") {
-      console.log(params.row);
       return;
     }
 

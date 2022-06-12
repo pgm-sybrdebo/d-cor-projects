@@ -1,12 +1,10 @@
 import styled from "styled-components";
 import { ProjectProps } from "./ProjectDetail";
-import { Delete } from "@material-ui/icons";
 import PrimaryButton from "../form/PrimaryButton";
 import { FaPlus } from "react-icons/fa";
-import { Button } from "@mui/material";
 import React, { useRef } from "react";
 import { useMutation } from "@apollo/client";
-import { CREATE_MEDIA, REMOVE_MEDIA } from "../../graphql/media";
+import { CREATE_MEDIA } from "../../graphql/media";
 import { PROJECT_DETAIL } from "../../graphql/projects";
 import ImageList from "../images/ImageList";
 
@@ -52,13 +50,10 @@ export interface ResponsUploadImage {
 const ProjectImages = ({ project }: ProjectProps) => {
   const imagesInput = useRef<HTMLInputElement>(null);
   const [CreateMedia] = useMutation(CREATE_MEDIA);
-  console.log("media", project.media);
 
   const handleNewImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("whyyyyyy");
     const imgData = new FormData();
     if (e.target.files) {
-      console.log("new image", e.target.files[0]);
       for (let i = 0; i < e.target.files.length; i++) {
         imgData.append("images", e.target.files[i]);
       }
@@ -72,7 +67,6 @@ const ProjectImages = ({ project }: ProjectProps) => {
         }
       );
       const uploadResponse = await uploadRequest.json();
-      console.log("resp", uploadResponse);
       uploadResponse.map(async (resp: ResponsUploadImage) => {
         await CreateMedia({
           variables: {

@@ -51,6 +51,7 @@ const SearchBar = ({ onSearchChange }: any) => {
     if (typeof onSearchChange === "function") {
       onSearchChange(search);
     }
+    // eslint-disable-next-line
   }, [search]);
 
   return (

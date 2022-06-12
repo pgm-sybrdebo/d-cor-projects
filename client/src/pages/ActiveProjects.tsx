@@ -9,9 +9,10 @@ import BaseLayout from "../layouts/BaseLayout";
 import { useEffect, useState } from "react";
 import ProjectHeading from "../components/projects/ProjectHeading";
 import Pagination from "../components/projects/Pagination";
-import { ActiveProjectsOverview, ProjectsOverview } from "../interfaces";
+import { ActiveProjectsOverview } from "../interfaces";
 import Loading from "../components/layout/Loading";
 import CreateFormProject from "../components/forms/CreateFormProject";
+import { Snackbar, Alert } from "@mui/material";
 
 const ProjectsList = styled.ul`
   display: flex;
@@ -169,6 +170,21 @@ const ActiveProjects = () => {
           onSnackbarSuccessChange={handleSnackbarSuccessChange}
         />
       )}
+
+      <Snackbar
+        open={openSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          severity={snackbarSuccess ? "success" : "error"}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
       {loading && <Loading />}
       {!error &&
         !totalError &&

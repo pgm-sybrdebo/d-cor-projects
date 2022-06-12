@@ -228,9 +228,6 @@ export function PdfOpenDocument({
     ],
   });
 
-  console.log("subcontractors", subcontractors);
-  console.log("designers", designers);
-  console.log("client", client);
   const getDateFormat = (n: number) => {
     return n.toString().padStart(2, "0");
   };

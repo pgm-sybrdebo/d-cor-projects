@@ -48,6 +48,7 @@ const Dropdown = ({
     if (typeof onValueChange === "function") {
       onValueChange(value);
     }
+    // eslint-disable-next-line
   }, [value]);
 
   const handleChange = (event: SelectChangeEvent) => {

@@ -74,11 +74,6 @@ interface AddSubcontractorFormProps {
   onSnackbarSuccessChange: any;
 }
 
-interface ValueProp {
-  id: number;
-  name: string;
-}
-
 interface SubcontractorProp {
   id: number;
   companyName: string;
@@ -129,11 +124,7 @@ const AddSubcontractorForm = ({
 
   const [addSubcontractor] = useMutation(ADD_SUBCONTRACTOR_TO_PROJECT);
 
-  const {
-    data: dataSubcontractors,
-    loading: loadingSubcontractors,
-    error: errorSubcontractors,
-  } = useQuery(GET_ALL_SUBCONTRACTORS);
+  const { data: dataSubcontractors } = useQuery(GET_ALL_SUBCONTRACTORS);
 
   return (
     <>
@@ -150,9 +141,9 @@ const AddSubcontractorForm = ({
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
                   setSubmitting(true);
-                  console.log("values", values);
+
                   try {
-                    values.subcontractors.map((subcontractor) => {
+                    values.subcontractors.forEach((subcontractor) => {
                       addSubcontractor({
                         variables: {
                           projectId: Number(projectId),

@@ -77,13 +77,13 @@ const TableHeading = ({
     if (typeof onSearchChange === "function") {
       onSearchChange(search);
     }
-  }, [search]);
+  }, [search, onSearchChange]);
 
   useEffect(() => {
     if (typeof onFilterChange === "function") {
       onFilterChange(filter);
     }
-  }, [filter]);
+  }, [filter, onFilterChange]);
 
   return (
     <TableContainer>

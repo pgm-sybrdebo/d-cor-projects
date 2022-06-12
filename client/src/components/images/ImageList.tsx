@@ -59,7 +59,7 @@ const ImageList = ({
     if (typeof onUploadChange === "function") {
       onUploadChange(uploads);
     }
-  }, [uploads]);
+  }, [uploads, onUploadChange]);
 
   const handleDeleteUploadImage = (isSelected: any) => {
     setUploads(isSelected);

@@ -34,10 +34,8 @@ const DatePicker = ({
             value={currentValue}
             onChange={(e: any) => {
               if (onChange) onChange(e);
-              console.log("e", e);
 
               setCurrentValue(e);
-              console.log("currentValue", currentValue);
             }}
             renderInput={(params) => <TextField {...params} />}
           />

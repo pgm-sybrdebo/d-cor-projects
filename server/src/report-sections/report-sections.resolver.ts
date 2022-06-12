@@ -7,46 +7,56 @@ import { Media } from 'src/media/entities/media.entity';
 import { Subcontractor } from 'src/subcontractors/entities/subcontractor.entity';
 import { Designer } from 'src/designers/entities/designer.entity';
 import { Client } from 'src/clients/entities/client.entity';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Resolver(() => ReportSection)
 export class ReportSectionsResolver {
   constructor(private readonly reportSectionsService: ReportSectionsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => ReportSection)
   createReportSection(@Args('createReportSectionInput') createReportSectionInput: CreateReportSectionInput) {
     return this.reportSectionsService.create(createReportSectionInput);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(() => [ReportSection], { name: 'reportSections' })
   findAll() {
     return this.reportSectionsService.findAll();
   }
   
+  @UseGuards(JwtAuthGuard)
   @Query(() => [ReportSection], { name: 'findAllSubcontractorsByReportId' })
   findAllSubcontractorsByReportId(@Args('reportId', { type: () => Int }) reportId: number) {
     return this.reportSectionsService.findAllSubcontractorsByReportId(reportId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(() => [ReportSection], { name: 'findAllDesignersByReportId' })
   findAllDesignersByReportId(@Args('reportId', { type: () => Int }) reportId: number) {
     return this.reportSectionsService.findAllDesignersByReportId(reportId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(() => [ReportSection], { name: 'findAllClientsByReportId' })
   findAllClientsByReportId(@Args('reportId', { type: () => Int }) reportId: number) {
     return this.reportSectionsService.findAllClientsByReportId(reportId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(() => ReportSection, { name: 'reportSection' })
   findOne(@Args('id', { type: () => Int }) id: number) {
     return this.reportSectionsService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => ReportSection)
   updateReportSection(@Args('updateReportSectionInput') updateReportSectionInput: UpdateReportSectionInput) {
     return this.reportSectionsService.update(updateReportSectionInput.id, updateReportSectionInput);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => ReportSection)
   removeReportSection(@Args('id', { type: () => Int }) id: number) {
     return this.reportSectionsService.remove(id);
