@@ -2,9 +2,11 @@ import styled from "styled-components";
 
 const LeftContainer = styled.div`
   width: 100%;
+  margin-bottom: 3rem;
 
   @media (min-width: ${(props) => props.theme.width.medium}) {
     width: 44%;
+    margin-bottom: 0;
   }
 `;
 

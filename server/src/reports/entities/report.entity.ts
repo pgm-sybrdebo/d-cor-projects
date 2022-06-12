@@ -24,6 +24,10 @@ export class Report {
 
   @Column()
   @Field()
+  dcorprojects: string;
+
+  @Column()
+  @Field()
   pdf: string;
 
   @Column()

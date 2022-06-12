@@ -101,8 +101,13 @@ query ($id: Int!) {
     }
 
     reports {
-      created_on 
+      id
       pdf
+      startDate
+      nextDate
+      number
+      generalInfo
+      dcorprojects
     }
 
     media {

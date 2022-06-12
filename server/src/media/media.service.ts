@@ -28,6 +28,15 @@ export class MediaService {
     });
   }
 
+  findAllByReportSectionId(reportSectionId: number): Promise<Media[]> {
+    return this.mediaRepository.find({
+      where: {
+        reportSectionId: reportSectionId,
+      },
+    });
+  }
+  
+
   findOne(id: number): Promise<Media> {
     return this.mediaRepository.findOneOrFail({
       where: {

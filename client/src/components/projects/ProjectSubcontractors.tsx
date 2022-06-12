@@ -1,7 +1,13 @@
-import { IconButton, Tooltip } from "@mui/material";
-import { FaInfoCircle, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import styled from "styled-components";
 import PrimaryButton from "../form/PrimaryButton";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Typography,
+} from "@mui/material";
+import { MdExpandMore } from "react-icons/md";
 
 const RightContainer = styled.div`
   width: 100%;
@@ -35,6 +41,8 @@ const ButtonContainer = styled.div`
 `;
 
 const SubcontractorHeading = styled.div`
+  margin-bottom: 1.5rem;
+
   @media (min-width: 30rem) {
     display: flex;
     justify-content: space-between;
@@ -43,33 +51,37 @@ const SubcontractorHeading = styled.div`
   }
 `;
 
-const SubcontractorCards = styled.div`
-  margin-top: 2rem;
-`;
-
-const SubcontractorCard = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  max-width: 40rem;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  gap: 1rem;
-  background-color: ${(props) => props.theme.colors.lightGrey};
-  border-radius: ${(props) => props.theme.borderRadius.small};
-
-  @media (min-width: ${(props) => props.theme.width.medium}) {
-    margin: 0 0 1rem 0;
-  }
-
+const ContainerAccordion = styled.div`
   span {
     font-size: ${(props) => props.theme.fontSizes.normal};
-  }
+    margin-left: 0.5rem;
 
-  svg {
-    font-size: ${(props) => props.theme.fontSizes.medium};
-    color: ${(props) => props.theme.colors.black};
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+`;
+
+const ContainerDetails = styled.div`
+  p {
+    font-size: ${(props) => props.theme.fontSizes.small};
+
+    span {
+      font-size: ${(props) => props.theme.fontSizes.normal};
+    }
+
+    a {
+      font-size: ${(props) => props.theme.fontSizes.normal};
+      text-decoration: underline;
+      padding-bottom: 0.5rem;
+      color: ${(props) => props.theme.colors.black};
+      text-underline-offset: 3px;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        color: ${(props) => props.theme.colors.primaryAccentColor};
+      }
+    }
   }
 `;
 
@@ -117,22 +129,6 @@ const ProjectSubcontractors = ({
   project,
   handleOpenAddSubcontractor,
 }: ProjectProps) => {
-  const createTooltip = (subcontractor: any) => {
-    return (
-      <div>
-        <p>{`Contactpersoon: ${subcontractor.lastName} ${subcontractor.firstName}`}</p>
-        <p>{`Gsm: ${subcontractor.gsm.slice(0, 3)} ${subcontractor.gsm.slice(
-          3,
-          6
-        )} ${subcontractor.gsm.slice(6, 8)} ${subcontractor.gsm.slice(
-          8,
-          10
-        )} ${subcontractor.gsm.slice(10, 12)}`}</p>
-        <p>{`Email: ${subcontractor.email}`}</p>
-      </div>
-    );
-  };
-
   return (
     <RightContainer>
       <SubcontractorHeading>
@@ -148,7 +144,50 @@ const ProjectSubcontractors = ({
         </ButtonContainer>
       </SubcontractorHeading>
 
-      <SubcontractorCards>
+      {project.subcontractors &&
+        project.subcontractors.length > 0 &&
+        project.subcontractors.map((subcontractor: any) => (
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<MdExpandMore />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <ContainerAccordion>
+                <span>{subcontractor.companyName}</span>
+                <span>({subcontractor.function})</span>
+              </ContainerAccordion>
+            </AccordionSummary>
+            <AccordionDetails>
+              <ContainerDetails>
+                <p>
+                  Contactpersoon:{" "}
+                  <span>{`${subcontractor.lastName} ${subcontractor.firstName}`}</span>
+                </p>
+                <p>
+                  Gsm:{" "}
+                  <a
+                    href={`tel:${subcontractor.gsm}`}
+                  >{`${subcontractor.gsm.slice(0, 3)} ${subcontractor.gsm.slice(
+                    3,
+                    6
+                  )} ${subcontractor.gsm.slice(6, 8)} ${subcontractor.gsm.slice(
+                    8,
+                    10
+                  )} ${subcontractor.gsm.slice(10, 12)}`}</a>
+                </p>
+                <p>
+                  Email:{" "}
+                  <a href={`mailto:${subcontractor.email}`}>
+                    {subcontractor.email}
+                  </a>
+                </p>
+              </ContainerDetails>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+
+      {/* <SubcontractorCards>
         {project.subcontractors &&
           project.subcontractors.map((subcontractor: any) => (
             <SubcontractorCard key={subcontractor.id}>
@@ -165,7 +204,7 @@ const ProjectSubcontractors = ({
               </Tooltip>
             </SubcontractorCard>
           ))}
-      </SubcontractorCards>
+      </SubcontractorCards> */}
     </RightContainer>
   );
 };

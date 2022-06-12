@@ -89,8 +89,15 @@ export interface Media {
 }
 
 export interface Report {
-  created_on: EpochTimeStamp;
+  // created_on: EpochTimeStamp;
+  id: number;
   pdf: string;
+  startDate: EpochTimeStamp;
+  nextDate: EpochTimeStamp;
+  number: number;
+  generalInfo: string;
+  dcorprojects: string;
+  
 }
 
 export interface UploadImageCard {
@@ -101,4 +108,15 @@ export interface UploadImageCard {
 export interface ValueProp {
   id: number;
   name: string;
+}
+
+export interface ReportForm {
+  startDate: Date;
+  nextDate: Date;
+  generalInfo: string;
+  clientInfo: string;
+  clientImages: any;
+  dcorprojectsInfo: string;
+  designers: any;
+  subcontractors: any;
 }

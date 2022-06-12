@@ -36,11 +36,11 @@ const ButtonContainer = styled.div`
 `;
 
 const ContainerHeading = styled.div`
+  margin-bottom: 1rem;
   @media (min-width: 30rem) {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
   }
 `;
 
@@ -55,6 +55,7 @@ const ProjectImages = ({ project }: ProjectProps) => {
   console.log("media", project.media);
 
   const handleNewImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("whyyyyyy");
     const imgData = new FormData();
     if (e.target.files) {
       console.log("new image", e.target.files[0]);

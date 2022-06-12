@@ -4,14 +4,12 @@ import BaseLayout from "../layouts/BaseLayout";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { PROJECT_DETAIL } from "../graphql/projects";
-import PrimaryButton from "../components/form/PrimaryButton";
-import { FaPlus, FaInfoCircle } from "react-icons/fa";
-import { IconButton, Tooltip } from "@mui/material";
 import ProjectDetail from "../components/projects/ProjectDetail";
 import ProjectSubcontractors from "../components/projects/ProjectSubcontractors";
 import ProjectImages from "../components/projects/ProjectImages";
 import ProjectReports from "../components/projects/ProjectReports";
 import AddSubcontractorForm from "../components/forms/AddSubcontractorForm";
+import Loading from "../components/layout/Loading";
 
 const Title = styled.h1`
   margin-bottom: 3rem;
@@ -35,10 +33,6 @@ const Project = () => {
     variables: { id: Number(id) },
   });
 
-  if (data) {
-    console.log("data", data);
-  }
-
   const handleClose = () => {
     setIsOpenAddSubcontractor(false);
   };
@@ -59,6 +53,7 @@ const Project = () => {
 
   return (
     <BaseLayout>
+      {loading && <Loading />}
       {data && (
         <>
           <Title>Project: {data.project.name}</Title>

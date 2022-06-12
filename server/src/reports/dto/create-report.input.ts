@@ -9,16 +9,15 @@ export class CreateReportInput {
   @Field(type => Int)
   projectId: number;
 
-  // @IsNotEmpty()
-  // @IsInt()
-  // @IsPositive()
-  // @Field(type => Int)
-  // number: number;
-
   @IsNotEmpty()
   @IsString()
   @Field()
   generalInfo: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Field()
+  dcorprojects: string;
 
   @IsNotEmpty()
   @IsString()

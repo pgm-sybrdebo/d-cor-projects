@@ -7,7 +7,7 @@ import { FaPlus } from "react-icons/fa";
 import { SecondaryButton } from "../form/SecondaryButton";
 import ImageList from "../images/ImageList";
 import { ResponsUploadImage } from "../projects/ProjectImages";
-import { Media } from "../../interfaces";
+import { Media, ReportForm } from "../../interfaces";
 
 const Container = styled.div`
   margin-top: 1rem;
@@ -17,22 +17,10 @@ export interface ImagesSectionProps {
   fieldValueString: string;
 }
 
-interface Form {
-  startDate: Date;
-  nextDate: Date;
-  generalInfo: string;
-  clientInfo: string;
-  clientImages: any;
-  dcorprojectsInfo: string;
-  dcorprojectsImages: any;
-  designers: any;
-  subcontractors: any;
-}
-
 const ImagesSection = ({ fieldValueString }: ImagesSectionProps) => {
   const imagesInput = useRef<HTMLInputElement>(null);
   const [uploadImages, setUploadImages] = useState<ResponsUploadImage[]>([]);
-  const { setFieldValue, values } = useFormikContext<Form>();
+  const { setFieldValue, values } = useFormikContext<ReportForm>();
 
   const handleUploadChange = (isSelected: any) => {
     setUploadImages(isSelected);

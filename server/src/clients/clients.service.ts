@@ -52,6 +52,7 @@ export class ClientsService {
   }
 
   findOne(id: number): Promise<Client> {
+    console.log(id);
     return this.clientsRepository.findOneOrFail({
       where: {
         id: id,

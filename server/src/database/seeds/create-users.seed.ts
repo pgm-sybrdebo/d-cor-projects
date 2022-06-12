@@ -15,23 +15,23 @@ import { ReportSection } from "src/report-sections/entities/report-section.entit
 export default class CreateUsers implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<any> {
     await factory(User)().createMany(1);
-    const designers = await factory(Designer)().createMany(10);``
-    const subcontractors = await factory(Subcontractor)().createMany(50);
+    const designers = await factory(Designer)().createMany(5);``
+    const subcontractors = await factory(Subcontractor)().createMany(30);
     const clients = await factory(Client)().createMany(50);
     for (const client of clients) {
       const { id } = client;
       const projects = await factory(Project)({id, designers, subcontractors}).createMany(Faker.random.number({ min: 1, max: 5 }));
       for (const project of projects) {
-        const { id, clientId } = project;
-        const reports = await factory(Report)({projectId: id }).createMany(Faker.random.number({ min: 1, max: 5 }));
+        const { id, clientId, name } = project;
+        const reports = await factory(Report)({projectId: id, name: name }).createMany(Faker.random.number({ min: 1, max: 5 }));
         const media = await factory(Media)({ projectId: id }).createMany(Faker.random.number({ min: 1, max: 5 }));
 
         for (const report of reports) {
           const { id } = report;
-          const reportSection = await factory(ReportSection)({reportId: id, clientId: clientId}).createMany(Faker.random.number({ min: 1, max: 5 }));
+          const reportSection1 = await factory(ReportSection)({reportId: id, clientId: clientId}).createMany(1);
+          const reportSection2 = await factory(ReportSection)({reportId: id}).createMany(Faker.random.number({ min: 1, max: 5 }));
         }
       }
-    
     }
   }
 }

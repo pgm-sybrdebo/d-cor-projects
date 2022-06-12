@@ -1,39 +1,30 @@
 import styled from "styled-components";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import BaseLayout from "../layouts/BaseLayout";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";
-import { Formik, Form, Field, FieldArray, useFormikContext } from "formik";
+import { Formik, Form, Field, FieldArray } from "formik";
 import DatePicker from "../components/form/DatePicker";
 import { Grid } from "@material-ui/core";
-import { CREATE_REPORT, CREATE_REPORT_SECTION } from "../graphql/reports";
+import {
+  CREATE_REPORT,
+  CREATE_REPORT_SECTION,
+  UPDATE_REPORT,
+} from "../graphql/reports";
 import { useMutation, useQuery } from "@apollo/client";
 import Textarea from "../components/form/Textarea";
 import { Autocomplete, Button, TextField } from "@mui/material";
-import ReactDOMServer from "react-dom/server";
-import logo from "../assets/dcorprojectPdfImage.jpg";
-import {
-  PDFDownloadLink,
-  Document,
-  Page,
-  View,
-  Text,
-  StyleSheet,
-  Image,
-} from "@react-pdf/renderer";
-import TemplatePdf from "../components/pdf/TemplatePdf";
-import PrimaryButton from "../components/form/PrimaryButton";
-import { SecondaryButton } from "../components/form/SecondaryButton";
-import { FaPlus } from "react-icons/fa";
-import { ResponsUploadImage } from "../components/projects/ProjectImages";
-import ImageList from "../components/images/ImageList";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import ImagesSection from "../components/report/ImagesSection";
 import { Add, Remove } from "@material-ui/icons";
 import { GET_ALL_DESIGNERS } from "../graphql/designers";
-import { Media, ValueProp, UploadImageCard } from "../interfaces";
+import { UploadImageCard, ReportForm } from "../interfaces";
 import { GET_ALL_SUBCONTRACTORS } from "../graphql/subcontractor";
 import { PROJECT_DETAIL } from "../graphql/projects";
 import { CREATE_MEDIA } from "../graphql/media";
+import { PdfDocument } from "../components/pdf/TemplatePdf";
+import Loading from "../components/layout/Loading";
+import PrimaryLink from "../components/form/PrimaryLink";
 
 const Title = styled.h1`
   margin-bottom: 3rem;
@@ -45,7 +36,7 @@ const Container = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  margin: 3rem 0;
+  margin-top: 3rem;
 
   @media (min-width: ${(props) => props.theme.width.medium}) {
     display: flex;
@@ -95,6 +86,29 @@ const ImageSectionContainer = styled.div`
   margin-top: 1.5rem;
 `;
 
+const PDFContainer = styled.div`
+  display: flex;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+
+  a {
+    text-decoration: none;
+    padding: 0.25rem 1rem;
+    color: #fff;
+    text-align: center;
+    background-color: #56b13d;
+    border: 2px solid #56b13d;
+    border-radius: 3px;
+    width: 15rem;
+
+    &:hover {
+      background-color: #fff;
+      color: #56b13d;
+    }
+  }
+`;
+
 const validationSchema = yup.object({
   startDate: yup.date().required("Dit veld is verplicht!"),
   nextDate: yup.date().required("Dit veld is verplicht!"),
@@ -120,7 +134,6 @@ const validationSchema = yup.object({
       "Deze D-corprojects info is te kort. Dit moet minstens 10 tekens bevatten."
     )
     .required("Dit veld is verplicht!"),
-  dcorprojectsImages: yup.array(),
   designers: yup.array().of(
     yup.object().shape({
       designerId: yup.number().min(1).required("Dit veld is verplicht!"),
@@ -139,11 +152,14 @@ const validationSchema = yup.object({
   ),
 });
 
-export interface NewReportProps {}
-
 interface DesignerValues {
   designerId: number;
   companyName: string;
+  firstName: string;
+  lastName: string;
+  gender: number;
+  email: string;
+  gsm: string;
   text: string;
   images: UploadImageCard[];
 }
@@ -157,62 +173,39 @@ interface SubcontractorValues {
 interface DesignerProp {
   id: number;
   companyName: string;
+  firstName: string;
+  lastName: string;
+  gender: number;
+  email: string;
+  gsm: string;
 }
 interface SubcontractorProp {
   id: number;
   companyName: string;
 }
 
-const styles = StyleSheet.create({
-  body: {
-    paddingTop: 35,
-    paddingBottom: 65,
-    paddingHorizontal: 35,
-  },
-  logo: {
-    width: 80,
-  },
-  header: {
-    fontSize: 12,
-    marginBottom: 20,
-    textAlign: "center",
-    color: "grey",
-    border: "1px solid black",
-  },
-  image: {
-    marginVertical: 15,
-    marginHorizontal: 100,
-  },
-  pageNumber: {
-    position: "absolute",
-    fontSize: 12,
-    bottom: 30,
-    left: 0,
-    right: 30,
-    textAlign: "right",
-    color: "grey",
-  },
-  heading: {
-    border: "3px solid black",
-    padding: 4,
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  headingHeading: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row",
-    marginBottom: 10,
-  },
-  text: {
-    fontSize: 8,
-  },
-});
-
-const NewReport = ({}: NewReportProps) => {
+const NewReport = () => {
   let { id } = useParams<{ id: string }>();
-  const { data, loading, error } = useQuery(PROJECT_DETAIL, {
+  const [formValues, setFormValues] = useState<ReportForm>({
+    startDate: new Date(),
+    nextDate: new Date(),
+    generalInfo: "",
+    clientInfo: "",
+    clientImages: [],
+    dcorprojectsInfo: "",
+    designers: [],
+    subcontractors: [],
+  });
+  const [pdfReady, setPdfReady] = useState(false);
+  const [reportNumber, setReportNumber] = useState<number>(0);
+  const [timer, setTimer] = useState<any>(null);
+  const navigate = useNavigate();
+
+  const {
+    data: projectData,
+    loading: projectLoading,
+    error: projectError,
+  } = useQuery(PROJECT_DETAIL, {
     variables: { id: Number(id) },
   });
 
@@ -227,52 +220,142 @@ const NewReport = ({}: NewReportProps) => {
     error: errorSubcontractors,
   } = useQuery(GET_ALL_SUBCONTRACTORS);
 
-  let reportId: number | null = null;
-  const [createReport] = useMutation(CREATE_REPORT, {
-    update: (proxy, mutationResult) => {
-      reportId = mutationResult.data.createReport.id;
-    },
-  });
-  let reportSectionId: number | null = null;
-  const [createReportSection] = useMutation(CREATE_REPORT_SECTION, {
-    update: (proxy, mutationResult) => {
-      console.log("reportSection", mutationResult.data.createReportSection);
-      reportSectionId = mutationResult.data.createReportSection.id;
-    },
-  });
-  const [CreateMedia] = useMutation(CREATE_MEDIA);
-  const test = ["hello", "there", "!"];
+  const [updateReport] = useMutation(UPDATE_REPORT);
 
-  const TemplatePdf = (
-    <Document>
-      <Page style={styles.body}>
-        <Image src={logo} style={styles.logo} />
-        <View style={styles.heading}>
-          <View style={styles.headingHeading}>
-            <Text style={styles.text}>Werfverslag</Text>
-            <Text style={styles.text}>dd. 17/08/2021</Text>
-          </View>
-        </View>
-        <Text style={styles.header} fixed>
-          ksldfjsdljfklsdjfkdljsfskdljfsdlkjflsdkfjsdlk
-        </Text>
+  const [createReport, { loading: reportLoading }] = useMutation(
+    CREATE_REPORT,
+    {
+      onCompleted: async (data: any) => {
+        await setReportNumber(data.createReport.number);
+        console.log("*******", data.createReport);
+        await updateReport({
+          variables: {
+            id: data.createReport.id,
+            pdf: `${data.createReport.pdf}-${data.createReport.number}`,
+          },
+        });
+        await createReportSection({
+          variables: {
+            reportId: Number(data.createReport.id),
+            clientId: Number(projectData.project.client.id),
+            content: formValues?.clientInfo,
+          },
+        });
+        formValues?.designers.forEach(async (designer: DesignerValues) => {
+          await createReportSection({
+            variables: {
+              reportId: Number(data.createReport.id),
+              designerId: Number(designer.designerId),
+              content: designer.text,
+            },
+          });
+        });
 
-        {test.map((text, index) => (
-          <Text key={index}>{text}</Text>
-        ))}
-        <Text
-          style={styles.pageNumber}
-          render={({ pageNumber, totalPages }) =>
-            `${pageNumber} / ${totalPages}`
+        formValues?.subcontractors.forEach(
+          async (subcontractor: SubcontractorValues) => {
+            await createReportSection({
+              variables: {
+                reportId: Number(data.createReport.id),
+                subcontractorId: Number(subcontractor.subcontractorId),
+                content: subcontractor.text,
+              },
+            });
           }
-        />
-      </Page>
-    </Document>
+        );
+      },
+    }
   );
+  const [createReportSection, { loading: reportSectionLoading }] = useMutation(
+    CREATE_REPORT_SECTION,
+    {
+      onCompleted: (data: any) => {
+        if (data.createReportSection.designerId) {
+          const imgs = formValues?.designers.find(
+            (designer: DesignerValues) => {
+              return (
+                designer.designerId === data.createReportSection.designerId
+              );
+            }
+          )?.images;
+
+          imgs.forEach(async (img: UploadImageCard) => {
+            await CreateMedia({
+              variables: {
+                projectId: Number(id),
+                reportSectionId: Number(data.createReportSection.id),
+                name: img.filename,
+                type: img.type,
+                source: img.filename,
+              },
+            });
+          });
+        }
+        if (data.createReportSection.subcontractorId) {
+          const imgs = formValues?.subcontractors.find(
+            (subcontractor: SubcontractorValues) => {
+              return (
+                subcontractor.subcontractorId ===
+                data.createReportSection.subcontractorId
+              );
+            }
+          )?.images;
+
+          imgs.forEach(async (img: UploadImageCard) => {
+            await CreateMedia({
+              variables: {
+                projectId: Number(id),
+                reportSectionId: Number(data.createReportSection.id),
+                name: img.filename,
+                type: img.type,
+                source: img.filename,
+              },
+            });
+          });
+        }
+        if (data.createReportSection.clientId) {
+          formValues?.clientImages.forEach(async (img: UploadImageCard) => {
+            await CreateMedia({
+              variables: {
+                projectId: Number(id),
+                reportSectionId: Number(data.createReportSection.id),
+                name: img.filename,
+                type: img.type,
+                source: img.filename,
+              },
+            });
+          });
+        }
+      },
+    }
+  );
+  const [CreateMedia, { loading: mediaLoading }] = useMutation(CREATE_MEDIA);
+
+  if (
+    mediaLoading ||
+    reportSectionLoading ||
+    reportLoading ||
+    projectLoading ||
+    loadingDesigners ||
+    loadingSubcontractors
+  ) {
+    return (
+      <BaseLayout>
+        <Loading />
+      </BaseLayout>
+    );
+  }
+
+  if (projectError || errorDesigners || errorSubcontractors) {
+    return (
+      <BaseLayout>
+        <p>Er is iets fout gelopen!</p>
+      </BaseLayout>
+    );
+  }
 
   return (
     <BaseLayout>
-      {data && dataDesigners && dataSubcontractors && (
+      {projectData && dataDesigners && dataSubcontractors && !pdfReady && (
         <>
           <Title>Nieuw Werfverslag</Title>
           <Container>
@@ -284,7 +367,6 @@ const NewReport = ({}: NewReportProps) => {
                 clientInfo: "",
                 clientImages: [],
                 dcorprojectsInfo: "",
-                dcorprojectsImages: [],
                 designers: [] as DesignerValues[],
                 subcontractors: [] as SubcontractorValues[],
               }}
@@ -292,11 +374,14 @@ const NewReport = ({}: NewReportProps) => {
                 setSubmitting(true);
                 try {
                   console.log("values", values);
+                  await setFormValues(values);
+                  console.log("why", projectData.project.data);
                   await createReport({
                     variables: {
                       projectId: Number(id),
                       generalInfo: values.generalInfo,
-                      pdf: "pdf",
+                      dcorprojects: values.dcorprojectsInfo,
+                      pdf: projectData.project.name,
                       startDate: values.startDate,
                       nextDate: values.nextDate,
                     },
@@ -310,46 +395,7 @@ const NewReport = ({}: NewReportProps) => {
                     ],
                   });
 
-                  if (reportId) {
-                    await createReportSection({
-                      variables: {
-                        reportId: reportId,
-                        clientId: data.project.client.id,
-                        content: values.clientInfo,
-                      },
-                    });
-
-                    if (values.designers.length > 0) {
-                      values.designers.forEach(async (designer) => {
-                        console.log("designer", designer);
-                        await createReportSection({
-                          variables: {
-                            reportId: Number(reportId),
-                            designerId: Number(designer.designerId),
-                            content: designer.text,
-                          },
-                        });
-                        console.log("why");
-
-                        if (reportSectionId) {
-                          values.designers.forEach(async (designer) => {
-                            designer.images.forEach(async (image) => {
-                              console.log("image", reportSectionId);
-                              await CreateMedia({
-                                variables: {
-                                  projectId: Number(id),
-                                  reportSectionId: Number(reportSectionId),
-                                  name: image.filename,
-                                  type: image.type,
-                                  source: image.filename,
-                                },
-                              });
-                            });
-                          });
-                        }
-                      });
-                    }
-                  }
+                  setPdfReady(true);
                 } catch (error) {}
                 setSubmitting(false);
               }}
@@ -413,22 +459,6 @@ const NewReport = ({}: NewReportProps) => {
                       />
                     </Grid>
                     <Grid item xs={12}>
-                      <SubText>Bouwheer</SubText>
-                      <Field
-                        component={Textarea}
-                        fullWidth
-                        name="clientInfo"
-                        label="Bouwheer:"
-                        value={values.clientInfo}
-                        onChange={(e: any) => {
-                          setFieldValue("clientInfo", e.target.value);
-                        }}
-                        error={Boolean(touched.clientInfo && errors.clientInfo)}
-                        helperText={touched.clientInfo && errors.clientInfo}
-                      />
-                    </Grid>
-                    <ImagesSection fieldValueString="clientImages" />
-                    <Grid item xs={12}>
                       <SubText>D-Corprojects</SubText>
                       <Field
                         component={Textarea}
@@ -447,7 +477,22 @@ const NewReport = ({}: NewReportProps) => {
                         }
                       />
                     </Grid>
-                    <ImagesSection fieldValueString="dcorprojectsImages" />
+                    <Grid item xs={12}>
+                      <SubText>Bouwheer</SubText>
+                      <Field
+                        component={Textarea}
+                        fullWidth
+                        name="clientInfo"
+                        label="Bouwheer:"
+                        value={values.clientInfo}
+                        onChange={(e: any) => {
+                          setFieldValue("clientInfo", e.target.value);
+                        }}
+                        error={Boolean(touched.clientInfo && errors.clientInfo)}
+                        helperText={touched.clientInfo && errors.clientInfo}
+                      />
+                    </Grid>
+                    <ImagesSection fieldValueString="clientImages" />
 
                     <Grid item xs={12}>
                       <FieldArray
@@ -476,6 +521,21 @@ const NewReport = ({}: NewReportProps) => {
                                             values.designers[
                                               values.designers.length - 1
                                             ].companyName = value.companyName;
+                                            values.designers[
+                                              values.designers.length - 1
+                                            ].firstName = value.firstName;
+                                            values.designers[
+                                              values.designers.length - 1
+                                            ].lastName = value.lastName;
+                                            values.designers[
+                                              values.designers.length - 1
+                                            ].gender = value.gender;
+                                            values.designers[
+                                              values.designers.length - 1
+                                            ].email = value.email;
+                                            values.designers[
+                                              values.designers.length - 1
+                                            ].gsm = value.gsm;
                                             setFieldValue(
                                               "designers",
                                               values.designers
@@ -555,6 +615,8 @@ const NewReport = ({}: NewReportProps) => {
                                           arrayHelpers.push({
                                             designerId: 0,
                                             companyName: "",
+                                            gsm: "",
+                                            email: "",
                                             text: "",
                                             images: [],
                                           })
@@ -568,12 +630,20 @@ const NewReport = ({}: NewReportProps) => {
                                       component={Textarea}
                                       name={"designerText"}
                                       onChange={(e: any) => {
-                                        values.designers[
-                                          values.designers.length - 1
-                                        ].text = e.target.value;
-                                        setFieldValue(
-                                          "designers",
-                                          values.designers
+                                        if (timer) {
+                                          clearTimeout(timer);
+                                          setTimer(null);
+                                        }
+                                        setTimer(
+                                          setTimeout(() => {
+                                            values.designers[
+                                              values.designers.length - 1
+                                            ].text = e.target.value;
+                                            setFieldValue(
+                                              "designers",
+                                              values.designers
+                                            );
+                                          }, 3000)
                                         );
                                       }}
                                       type="text"
@@ -610,6 +680,8 @@ const NewReport = ({}: NewReportProps) => {
                                 onClick={() =>
                                   arrayHelpers.push({
                                     designerId: 0,
+                                    gsm: "",
+                                    email: "",
                                     text: "",
                                     companyName: "",
                                     images: [],
@@ -746,13 +818,15 @@ const NewReport = ({}: NewReportProps) => {
                                       component={Textarea}
                                       name={"subcontractorText"}
                                       onChange={(e: any) => {
-                                        values.subcontractors[
-                                          values.subcontractors.length - 1
-                                        ].text = e.target.value;
-                                        setFieldValue(
-                                          "subcontractors",
-                                          values.subcontractors
-                                        );
+                                        setTimeout(() => {
+                                          values.subcontractors[
+                                            values.subcontractors.length - 1
+                                          ].text = e.target.value;
+                                          setFieldValue(
+                                            "subcontractors",
+                                            values.subcontractors
+                                          );
+                                        }, 3000);
                                       }}
                                       type="text"
                                       label="Info"
@@ -823,7 +897,7 @@ const NewReport = ({}: NewReportProps) => {
                         },
                       }}
                     >
-                      Verzenden
+                      Creëer PDF
                     </Button>
                   </ButtonContainer>
                 </Form>
@@ -832,55 +906,40 @@ const NewReport = ({}: NewReportProps) => {
           </Container>
         </>
       )}
-      <PDFDownloadLink document={TemplatePdf} fileName="report.pdf">
+      {/* <PDFDownloadLink document={TemplatePdf} fileName="report.pdf">
         <button>export</button>
-      </PDFDownloadLink>
-
-      {/* <PDFDownloadLink document={MyDoc} fileName="somename.pdf">
-        {({ blob, url, loading, error }) =>
-          loading ? "Loading document..." : "Download now!"
-        }
       </PDFDownloadLink> */}
+      {pdfReady &&
+        !reportLoading &&
+        !reportSectionLoading &&
+        !mediaLoading &&
+        !projectLoading &&
+        !loadingDesigners &&
+        !loadingSubcontractors && (
+          <PDFContainer>
+            <PDFDownloadLink
+              document={
+                <PdfDocument
+                  data={formValues}
+                  reportNumber={reportNumber}
+                  projectName={projectData.project.name}
+                  clientName={projectData.project.client.name}
+                  projectStreet={projectData.project.street}
+                  projectHouseNumber={projectData.project.houseNumber}
+                  projectCity={projectData.project.city}
+                />
+              }
+              fileName={`${projectData.project.name}-${reportNumber}.pdf`}
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? "Loading document..." : "Download Pdf"
+              }
+            </PDFDownloadLink>
+          </PDFContainer>
+        )}
+      <PrimaryLink onClick={() => navigate(-1)}>Ga terug</PrimaryLink>
     </BaseLayout>
   );
 };
 
 export default NewReport;
-
-// const exportPDF = () => {
-//   let element = (
-//     <div>
-//       <div
-//         style={{
-//           backgroundColor: "green",
-//           width: "100%",
-//           border: "1px solid black",
-//         }}
-//       >
-//         <p>super</p>
-//         <img src={logo} alt="test" style={{ width: "5rem" }} />
-//       </div>
-//       <h1 style={{ fontSize: "10rem" }}>Report</h1>
-//       <h1 style={{ fontSize: "10rem" }}>Report</h1>
-//       <h1 style={{ fontSize: "10rem" }}>Report</h1>
-//       <h1 style={{ fontSize: "10rem" }}>Report</h1>
-//       <h1 style={{ fontSize: "10rem" }}>Report</h1>
-//       <p>Super</p>
-//       <p>Super</p>
-//       <footer>
-//         <div style={{ textAlign: "center" }}>
-//           Page <span className="pageCounter"></span>/
-//           <span className="totalPages"></span>
-//         </div>
-//       </footer>
-//     </div>
-//   );
-//   const doc = new jsPDF("p", "px", "a4");
-//   doc.html(ReactDOMServer.renderToString(element), {
-//     callback: function (doc) {
-//       doc.save("sample.pdf");
-//     },
-//     autoPaging: "text",
-//     margin: [5, 60, 15, 30],
-//   });
-// };
