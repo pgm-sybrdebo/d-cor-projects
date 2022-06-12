@@ -161,7 +161,6 @@ export class ProjectsResolver {
 
   @ResolveField((returns) => [Designer])
   designers(@Parent() project: Project): Promise<Designer[]> {
-    console.log(project);
     return this.projectsService.getDesignersByProjectId(project.id);
   }
 

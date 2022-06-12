@@ -18,7 +18,6 @@ export class AuthService {
   }
 
   async login(user: String) {
-    console.log(" uuuuuu",user);
     return {
       access_token: this.jwtService.sign({
         email: user,

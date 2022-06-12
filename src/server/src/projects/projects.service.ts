@@ -82,23 +82,6 @@ export class ProjectsService {
     });
   }
 
-  // findAllProjectsByNameWithPagination(
-  //   name: string,
-  //   offset: number,
-  //   limit: number,
-  // ): Promise<Project[]> {
-  //   return this.projectsRepository.find({
-  //     where: {
-  //       name: Raw((alias) => `LOWER(${alias}) Like LOWER('${name}%')`),
-  //     },
-  //     skip: offset * limit,
-  //     take: limit,
-  //     order: {
-  //       created_on: 'DESC',
-  //     },
-  //   });
-  // }
-
   async findAllProjectsByNameWithPagination(
     name: string,
     sort: string,
@@ -119,53 +102,6 @@ export class ProjectsService {
     `);
     return rawData;
   }
-
-  // findAllActiveProjectsByNameWithPagination(
-  //   name: string,
-  //   sort: string,
-  //   offset: number,
-  //   limit: number,
-  // ): Promise<Project[]> {
-  //   return this.projectsRepository.find({
-  //     where: {
-  //       name: Raw((alias) => `LOWER(${alias}) Like LOWER('${name}%')`),
-  //       active: true,
-  //     },
-  //     skip: offset * limit,
-  //     take: limit,
-  //     order: {
-  //       name: 'ASC',
-  //     },
-  //   });
-  // }
-
-  // async findAllActiveProjectsByNameWithPagination(
-  //   name: string,
-  //   offset: number,
-  //   limit: number,
-  // ): Promise<Project[]> {
-  //   const rawData = await this.projectsRepository.query(`
-  //     SELECT
-  //       *,
-  //       (SELECT COUNT(id) AS total
-  //       FROM project 
-  //       WHERE project.deleted_on IS NULL
-  //       AND LOWER(project.name) LIKE LOWER('${name}%')
-  //       AND project.active = true)
-  //     FROM
-  //       project
-  //     WHERE project.deleted_on IS NULL
-  //     AND LOWER(project.name) LIKE LOWER('${name}%')
-  //     AND project.active = true
-  //     GROUP BY project.id
-  //     ORDER BY project.created_on DESC
-  //     OFFSET ${offset * limit}
-  //     LIMIT ${limit}
-  //   `);
-  //   // console.log(rawData);
-  //   return rawData;
-  // }
-
 
   async findAllActiveProjectsByNameWithPagination(
     name: string,
@@ -322,7 +258,6 @@ export class ProjectsService {
         },
         relations: ['designers'],
       });
-      console.log(project);
     if (project.designers) return project.designers;
     return [];
   }
