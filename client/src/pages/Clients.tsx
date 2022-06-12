@@ -34,15 +34,12 @@ const Clients = () => {
   const [snackbarSuccess, setSnackbarSuccess] = useState(true);
 
   const handleSnackbarMessageChange = (isSelected: string) => {
-    console.log("message", isSelected);
     setSnackbarMessage(isSelected);
   };
   const handleOpenSnackbarChange = (isSelected: boolean) => {
-    console.log("open", isSelected);
     setOpenSnackbar(isSelected);
   };
   const handleSnackbarSuccessChange = (isSelected: boolean) => {
-    console.log("success", isSelected);
     setSnackbarSuccess(isSelected);
   };
 
@@ -92,7 +89,6 @@ const Clients = () => {
     const { field } = params;
 
     if (field !== "edit" && field !== "delete") {
-      console.log(params.row);
       return;
     }
 

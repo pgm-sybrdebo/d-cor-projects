@@ -78,7 +78,6 @@ const ImageCard = ({
   }, [uploads]);
 
   const handleDeleteImage = async (id: number, name: string) => {
-    console.log("target", id);
     await fetch(`${process.env.REACT_APP_DELETE_PROJECT_IMAGE}/${name}`, {
       method: "DELETE",
       headers: new Headers({ Accept: "application/json" }),

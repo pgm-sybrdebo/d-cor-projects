@@ -29,16 +29,13 @@ const RequireAuth = () => {
   let location = useLocation();
   let navigate = useNavigate();
   const token = localStorage.getItem("D-corprojectsToken");
-  console.log("token", token);
 
   if (!token) {
-    console.log("no token");
     return <Navigate to="/login" state={{ from: location }} />;
   }
 
   if (token) {
     const userData = jwt_decode<TokenInfo>(token);
-    console.log("userData", userData);
     if (userData.exp < Date.now() / 1000) {
       localStorage.removeItem("token");
       navigate("/login");

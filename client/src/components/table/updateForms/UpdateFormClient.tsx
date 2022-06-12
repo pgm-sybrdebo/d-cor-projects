@@ -118,7 +118,6 @@ const UpdateFormClient = ({
   const [message, setMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarSuccess, setSnackbarSuccess] = useState(true);
-  console.log(selectedRow);
 
   useEffect(() => {
     if (typeof onSnackbarMessageChange === "function") {
@@ -162,7 +161,6 @@ const UpdateFormClient = ({
             onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
               try {
-                console.log(values.gender);
                 await updateClient({
                   variables: {
                     id: selectedRow.id,

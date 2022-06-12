@@ -56,12 +56,10 @@ const LoginForm = () => {
   const [responseError, setResponseError] = useState("");
   const [login] = useMutation(LOGIN, {
     onCompleted: (response) => {
-      console.log("resp", response);
       localStorage.setItem("D-corprojectsToken", response.login.access_token);
       navigate("/");
     },
     onError: (error) => {
-      console.log(`AUTH ERROR: ${error.message}`);
       setResponseError("Verkeerd email of wachtwoord!");
     },
   });

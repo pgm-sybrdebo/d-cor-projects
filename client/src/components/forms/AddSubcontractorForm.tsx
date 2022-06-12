@@ -141,7 +141,7 @@ const AddSubcontractorForm = ({
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
                   setSubmitting(true);
-                  console.log("values", values);
+
                   try {
                     values.subcontractors.forEach((subcontractor) => {
                       addSubcontractor({

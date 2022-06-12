@@ -56,7 +56,6 @@ const ReportList = ({
   projectStreet,
   projectHouseNumber,
 }: ReportListProps) => {
-  console.log(reports);
   return (
     <ReportsContainer>
       <ReportContainerList>

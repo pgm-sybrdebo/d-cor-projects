@@ -84,13 +84,15 @@ const ProjectHeading = ({
     if (typeof onSearchChange === "function") {
       onSearchChange(search);
     }
-  }, [search, onSearchChange]);
+    // eslint-disable-next-line
+  }, [search]);
 
   useEffect(() => {
     if (typeof onSortChange === "function") {
       onSortChange(sort);
     }
-  }, [sort, onSortChange]);
+    // eslint-disable-next-line
+  }, [sort]);
 
   // useEffect(() => {
   //   if (typeof onOpenCreateChange === "function") {

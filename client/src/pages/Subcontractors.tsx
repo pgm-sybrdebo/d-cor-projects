@@ -96,7 +96,6 @@ const Subcontractors = () => {
     const { field } = params;
 
     if (field !== "edit" && field !== "delete") {
-      console.log(params.row);
       return;
     }
 

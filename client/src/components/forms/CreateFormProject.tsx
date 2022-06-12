@@ -226,7 +226,6 @@ const CreateFormProject = ({
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
                   setSubmitting(true);
-                  console.log("values", values);
                   try {
                     await createProject({
                       variables: {
@@ -264,9 +263,7 @@ const CreateFormProject = ({
                     });
 
                     if (projectId) {
-                      console.log("projectId", projectId);
                       values.designers.forEach((designer) => {
-                        console.log(designer);
                         addDesigner({
                           variables: {
                             projectId: Number(projectId),
