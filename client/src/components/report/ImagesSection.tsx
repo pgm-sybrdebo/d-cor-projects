@@ -7,7 +7,7 @@ import { FaPlus } from "react-icons/fa";
 import { SecondaryButton } from "../form/SecondaryButton";
 import ImageList from "../images/ImageList";
 import { ResponsUploadImage } from "../projects/ProjectImages";
-import { Media, ReportForm } from "../../interfaces";
+import { ReportForm } from "../../interfaces";
 
 const Container = styled.div`
   margin-top: 1rem;
@@ -40,7 +40,13 @@ const ImagesSection = ({ fieldValueString }: ImagesSectionProps) => {
       values.subcontractors[values.subcontractors.length - 1].images =
         uploadImages;
     }
-  }, [uploadImages]);
+  }, [
+    uploadImages,
+    fieldValueString,
+    setFieldValue,
+    values.designers,
+    values.subcontractors,
+  ]);
 
   const handleNewImages = async (
     e: React.ChangeEvent<HTMLInputElement>,

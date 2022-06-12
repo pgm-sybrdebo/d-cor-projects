@@ -9,10 +9,9 @@ import {
   TextField,
 } from "@material-ui/core";
 import { Button, InputLabel, Select, MenuItem } from "@mui/material";
-import { Formik, Form, Field, FieldArray } from "formik";
+import { Formik, Form, Field } from "formik";
 import { useState, useEffect } from "react";
 import {
-  CREATE_SUBCONTRACTOR,
   GET_ALL_SUBCONTRACTORS_BY_COMPANY_NAME,
   TOTAL_SUBCONTRACTORS,
   UPDATE_SUBCONTRACTOR,

@@ -10,6 +10,7 @@ import ProjectImages from "../components/projects/ProjectImages";
 import ProjectReports from "../components/projects/ProjectReports";
 import AddSubcontractorForm from "../components/forms/AddSubcontractorForm";
 import Loading from "../components/layout/Loading";
+import { Snackbar, Alert } from "@mui/material";
 
 const Title = styled.h1`
   margin-bottom: 3rem;
@@ -20,6 +21,11 @@ const FirstContainer = styled.div`
     display: flex;
     justify-content: space-between;
   }
+`;
+
+const Text = styled.p`
+  text-align: center;
+  padding-top: 10%;
 `;
 
 const Project = () => {
@@ -51,6 +57,24 @@ const Project = () => {
     setSnackbarSuccess(isSelected);
   };
 
+  const handleSnackbarClose = (
+    e: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
+  if (error) {
+    return (
+      <BaseLayout>
+        <Text>Er is een fout opgetreden!</Text>
+      </BaseLayout>
+    );
+  }
+
   return (
     <BaseLayout>
       {loading && <Loading />}
@@ -68,6 +92,20 @@ const Project = () => {
           <ProjectImages project={data.project} />
         </>
       )}
+
+      <Snackbar
+        open={openSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          severity={snackbarSuccess ? "success" : "error"}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
 
       {isOpenAddSubcontractor && (
         <AddSubcontractorForm

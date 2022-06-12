@@ -67,11 +67,7 @@ const Subcontractors = () => {
     setOpenSnackbar(false);
   };
 
-  const {
-    data: totalData,
-    error: totalError,
-    loading: totalLoading,
-  } = useQuery(TOTAL_SUBCONTRACTORS, {
+  const { data: totalData } = useQuery(TOTAL_SUBCONTRACTORS, {
     variables: {
       companyName: search,
       func: filter,

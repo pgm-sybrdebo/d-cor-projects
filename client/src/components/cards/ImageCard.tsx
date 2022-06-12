@@ -69,7 +69,7 @@ const ImageCard = ({
     if (typeof onDelete === "function") {
       onDelete(uploadImages);
     }
-  }, [uploadImages, uploads]);
+  }, [uploadImages, uploads, onDelete]);
 
   useEffect(() => {
     if (uploads) {
@@ -79,13 +79,10 @@ const ImageCard = ({
 
   const handleDeleteImage = async (id: number, name: string) => {
     console.log("target", id);
-    const deleteRequest = await fetch(
-      `${process.env.REACT_APP_DELETE_PROJECT_IMAGE}/${name}`,
-      {
-        method: "DELETE",
-        headers: new Headers({ Accept: "application/json" }),
-      }
-    );
+    await fetch(`${process.env.REACT_APP_DELETE_PROJECT_IMAGE}/${name}`, {
+      method: "DELETE",
+      headers: new Headers({ Accept: "application/json" }),
+    });
 
     await deleteMedia({
       variables: {
@@ -102,13 +99,10 @@ const ImageCard = ({
     });
   };
   const handleStopUploadImage = async (name: string) => {
-    const deleteRequest = await fetch(
-      `${process.env.REACT_APP_DELETE_PROJECT_IMAGE}/${name}`,
-      {
-        method: "DELETE",
-        headers: new Headers({ Accept: "application/json" }),
-      }
-    );
+    await fetch(`${process.env.REACT_APP_DELETE_PROJECT_IMAGE}/${name}`, {
+      method: "DELETE",
+      headers: new Headers({ Accept: "application/json" }),
+    });
     const n = uploadImages.filter((img) => img.filename !== name);
     setUploadImages(n);
   };

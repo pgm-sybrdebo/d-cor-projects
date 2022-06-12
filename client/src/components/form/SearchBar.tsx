@@ -51,7 +51,7 @@ const SearchBar = ({ onSearchChange }: any) => {
     if (typeof onSearchChange === "function") {
       onSearchChange(search);
     }
-  }, [search]);
+  }, [search, onSearchChange]);
 
   return (
     <SearchContainer>

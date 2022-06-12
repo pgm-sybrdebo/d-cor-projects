@@ -5,19 +5,10 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  TextareaAutosize,
   Grid,
   TextField,
 } from "@material-ui/core";
-import {
-  Button,
-  InputLabel,
-  Select,
-  MenuItem,
-  Autocomplete,
-  FormControl,
-  Typography,
-} from "@mui/material";
+import { Button, Autocomplete, Typography } from "@mui/material";
 import { Formik, Form, Field, FieldArray } from "formik";
 import { useState, useEffect } from "react";
 import {
@@ -28,7 +19,6 @@ import {
   GET_ALL_PROJECTS_BY_NAME_WITH_PAGINATION,
 } from "../../graphql/projects";
 import { GET_ALL_CLIENTS } from "../../graphql/clients";
-import Dropdown from "../form/Dropdown";
 import SelectBox from "../form/SelectBox";
 import Textarea from "../form/Textarea";
 import InputMaskTextField from "../form/InputMaskTextField";
@@ -207,17 +197,9 @@ const CreateFormProject = ({
   const [addDesigner] = useMutation(ADD_DESIGNER_TO_PROJECT);
   const [addSubcontractor] = useMutation(ADD_SUBCONTRACTOR_TO_PROJECT);
 
-  const { data, loading, error } = useQuery(GET_ALL_CLIENTS);
-  const {
-    data: dataDesigners,
-    loading: loadingDesigners,
-    error: errorDesigners,
-  } = useQuery(GET_ALL_DESIGNERS);
-  const {
-    data: dataSubcontractors,
-    loading: loadingSubcontractors,
-    error: errorSubcontractors,
-  } = useQuery(GET_ALL_SUBCONTRACTORS);
+  const { data } = useQuery(GET_ALL_CLIENTS);
+  const { data: dataDesigners } = useQuery(GET_ALL_DESIGNERS);
+  const { data: dataSubcontractors } = useQuery(GET_ALL_SUBCONTRACTORS);
 
   return (
     <>
@@ -234,7 +216,7 @@ const CreateFormProject = ({
                   active: 0,
                   startDate: new Date(),
                   street: "",
-                  houseNumber: 0,
+                  houseNumber: null,
                   postalCode: "",
                   city: "",
                   designers: [{ id: 0, companyName: "" }] as DesignerProp[],
@@ -283,7 +265,7 @@ const CreateFormProject = ({
 
                     if (projectId) {
                       console.log("projectId", projectId);
-                      values.designers.map((designer) => {
+                      values.designers.forEach((designer) => {
                         console.log(designer);
                         addDesigner({
                           variables: {
@@ -293,7 +275,7 @@ const CreateFormProject = ({
                         });
                       });
 
-                      values.subcontractors.map((subcontractor) => {
+                      values.subcontractors.forEach((subcontractor) => {
                         addSubcontractor({
                           variables: {
                             projectId: Number(projectId),

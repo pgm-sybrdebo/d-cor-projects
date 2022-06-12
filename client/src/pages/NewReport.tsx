@@ -33,6 +33,7 @@ const Title = styled.h1`
 const Container = styled.div`
   max-width: ${(props) => props.theme.width.medium};
   margin: 0 auto;
+  margin-bottom: 1.5rem;
 `;
 
 const ButtonContainer = styled.div`

@@ -48,7 +48,7 @@ const Dropdown = ({
     if (typeof onValueChange === "function") {
       onValueChange(value);
     }
-  }, [value]);
+  }, [value, onValueChange]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setValue(event.target.value as string);

@@ -120,3 +120,9 @@ export interface ReportForm {
   designers: any;
   subcontractors: any;
 }
+
+export interface TokenInfo {
+  email: string,
+  exp: number,
+  iat: number,
+}

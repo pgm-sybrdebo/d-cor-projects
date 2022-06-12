@@ -135,6 +135,16 @@ type Designer {
   vatNumber: String!
 }
 
+type LoginResponse {
+  access_token: String!
+  user: String!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}
+
 type Media {
   created_on: Timestamp!
   deleted_on: Timestamp!
@@ -160,6 +170,7 @@ type Mutation {
   createReportSection(createReportSectionInput: CreateReportSectionInput!): ReportSection!
   createSubcontractor(createSubcontractorInput: CreateSubcontractorInput!): Subcontractor!
   createUser(createUserInput: CreateUserInput!): User!
+  login(loginUserInput: LoginUserInput!): LoginResponse!
   removeClient(id: Int!): Client!
   removeDesigner(id: Int!): Designer!
   removeDesignerFromProject(designerId: Int!, projectId: Int!): Project!

@@ -1,12 +1,7 @@
 import { FaPlus } from "react-icons/fa";
 import styled from "styled-components";
 import PrimaryButton from "../form/PrimaryButton";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Typography,
-} from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { MdExpandMore } from "react-icons/md";
 
 const RightContainer = styled.div`

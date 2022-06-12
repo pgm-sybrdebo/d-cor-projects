@@ -16,6 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { ReportSectionsModule } from './report-sections/report-sections.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { AuthModule } from './auth/auth.module';
 
 
 dotenv.config();
@@ -68,7 +69,7 @@ const nodeEnvironment = `${(
         // },
       }),
     }),
-    UsersModule, ProjectsModule, ClientsModule, ReportsModule, MediaModule, SubcontractorsModule, DesignersModule, ReportSectionsModule,     MulterModule.register({
+    UsersModule, ProjectsModule, ClientsModule, ReportsModule, MediaModule, SubcontractorsModule, DesignersModule, ReportSectionsModule, AuthModule,  MulterModule.register({
       dest: './uploads',
     })],
   controllers: [AppController],

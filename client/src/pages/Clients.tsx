@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import Table from "../components/table/Table";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { GridCellParams, MuiEvent } from "@mui/x-data-grid";
-import { Button, Snackbar } from "@material-ui/core";
+import { Snackbar } from "@material-ui/core";
 import { columnsClients } from "../components/table/columns/columnsClients";
 import { Alert } from "@mui/material";
 import {
@@ -65,11 +64,7 @@ const Clients = () => {
     setOpenSnackbar(false);
   };
 
-  const {
-    data: totalData,
-    error: totalError,
-    loading: totalLoading,
-  } = useQuery(TOTAL_CLIENTS, {
+  const { data: totalData } = useQuery(TOTAL_CLIENTS, {
     variables: {
       name: search,
     },

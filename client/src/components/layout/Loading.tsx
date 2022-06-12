@@ -1,4 +1,4 @@
-import { Box, CircularProgress } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
 import styled from "styled-components";
 
 const Container = styled.div`
