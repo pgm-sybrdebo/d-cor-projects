@@ -219,10 +219,6 @@ const CreateFormProject = ({
     error: errorSubcontractors,
   } = useQuery(GET_ALL_SUBCONTRACTORS);
 
-  const handleSomething = () => {
-    console.log("jup");
-  };
-
   return (
     <>
       {data && dataDesigners && dataSubcontractors && (

@@ -1,5 +1,4 @@
 import { useMutation } from "@apollo/client";
-import React from "react";
 import { FaFolder, FaHeart, FaRegHeart } from "react-icons/fa";
 import styled from "styled-components";
 import {
@@ -8,9 +7,8 @@ import {
   UPDATE_PROJECT,
 } from "../../graphql/projects";
 import { ProjectCardProp } from "../../interfaces";
-import { Button } from "../form/Button";
+import { SecondaryButton } from "../form/SecondaryButton";
 import { Link } from "react-router-dom";
-import * as Routes from "../../routes";
 
 const Card = styled.li`
   position: relative;
@@ -60,6 +58,7 @@ const Card = styled.li`
 
     &:hover {
       border: none;
+      background-color: transparent;
     }
 
     svg:hover {
@@ -89,7 +88,7 @@ const ProjectCard = ({
   offset,
   limit,
 }: ProjectCardProp) => {
-  const [updateProject, { data, loading, error }] = useMutation(UPDATE_PROJECT);
+  const [updateProject] = useMutation(UPDATE_PROJECT);
 
   const handleClick = () => {
     updateProject({
@@ -127,13 +126,13 @@ const ProjectCard = ({
         </div>
         <Block />
       </Link>
-      <Button disabled={false} type="submit" onClick={handleClick}>
+      <SecondaryButton disabled={false} type="submit" onClick={handleClick}>
         {active ? (
           <FaHeart color="#56B13D" size={32} />
         ) : (
           <FaRegHeart color="#56B13D" size={32} />
         )}
-      </Button>
+      </SecondaryButton>
     </Card>
   );
 };

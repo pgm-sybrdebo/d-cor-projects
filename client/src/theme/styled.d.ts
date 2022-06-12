@@ -5,13 +5,15 @@ declare module "styled-components" {
       black: string;
       white: string;
       grey: string;
+      darkGrey: string;
+      lightGrey: string;
       primaryAccentColor: string;
       secondaryAccentColor: string;
-      tertiaryAccentColor: string;
     };
     fontSizes: {
       small: string;
       normal: string;
+      smedium: string;
       medium: string;
       emedium: string;
       large: string;

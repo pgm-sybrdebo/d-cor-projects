@@ -1,9 +1,6 @@
-// import { GridColDef, } from '@material-ui/data-grid';
 import { GridColDef } from "@mui/x-data-grid";
 import styled from "styled-components";
-import { Delete, DeleteForever } from "@material-ui/icons";
-import { BiEdit } from "react-icons/bi";
-// import moment from "moment";
+import { Delete, Edit } from "@material-ui/icons";
 
 const Button = styled.button`
   width: 2rem;
@@ -29,15 +26,28 @@ const Button = styled.button`
   }
 `;
 
-const Center = styled.span`
-  text-align: center;
-  display: block;
-  width: 100%;
-`;
+const DeleteButton = styled.button`
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  min-height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: #ed0034;
+  border: 1px solid #ed0034;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
+  margin: 0 auto;
 
-const Description = styled.span`
-  text-overflow: ellipsis;
-  overflow: hidden;
+  &:hover {
+    background-color: rgba(238, 0, 52, 0.4);
+    color: #fff;
+  }
 `;
 
 const Address = styled.div`
@@ -64,7 +74,7 @@ const columnsSubcontractor: GridColDef[] = [
     minWidth: 100,
     flex: 1,
     renderCell: (params) => {
-      return params.row.gender == 0 ? "man" : "vrouw";
+      return params.row.gender === 0 ? "man" : "vrouw";
     },
   },
   { field: "function", headerName: "Functie", minWidth: 150, flex: 1 },
@@ -150,7 +160,7 @@ const columnsSubcontractor: GridColDef[] = [
     renderCell: (params) => {
       return (
         <Button>
-          <BiEdit />
+          <Edit />
         </Button>
       );
     },
@@ -163,9 +173,9 @@ const columnsSubcontractor: GridColDef[] = [
     sortable: false,
     renderCell: (params) => {
       return (
-        <Button>
+        <DeleteButton>
           <Delete />
-        </Button>
+        </DeleteButton>
       );
     },
   },

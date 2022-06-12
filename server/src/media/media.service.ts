@@ -28,6 +28,15 @@ export class MediaService {
     });
   }
 
+  findAllByReportSectionId(reportSectionId: number): Promise<Media[]> {
+    return this.mediaRepository.find({
+      where: {
+        reportSectionId: reportSectionId,
+      },
+    });
+  }
+  
+
   findOne(id: number): Promise<Media> {
     return this.mediaRepository.findOneOrFail({
       where: {
@@ -45,13 +54,12 @@ export class MediaService {
     return this.mediaRepository.save(updatedMedia); 
   }
 
-  async remove(id: number): Promise<Number> {
+  async remove(id: number): Promise<Media> {
     const media = await this.mediaRepository.findOneOrFail({
       where: {
         id: id,
       },
     });
-    this.mediaRepository.remove(media);
-    return id;
+    return this.mediaRepository.softRemove(media);
   }
 }

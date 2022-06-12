@@ -1,5 +1,5 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsNotEmpty, IsInt, IsPositive, IsString } from 'class-validator';
+import { IsNotEmpty, IsInt, IsPositive, IsString, IsDate } from 'class-validator';
 
 @InputType()
 export class CreateReportInput {
@@ -10,12 +10,6 @@ export class CreateReportInput {
   projectId: number;
 
   @IsNotEmpty()
-  @IsInt()
-  @IsPositive()
-  @Field(type => Int)
-  number: number;
-
-  @IsNotEmpty()
   @IsString()
   @Field()
   generalInfo: string;
@@ -23,5 +17,20 @@ export class CreateReportInput {
   @IsNotEmpty()
   @IsString()
   @Field()
+  dcorprojects: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Field()
   pdf: string;
+
+  @IsNotEmpty()
+  @IsDate()
+  @Field((type) => Date)
+  startDate: Date;
+
+  @IsNotEmpty()
+  @IsDate()
+  @Field((type) => Date)
+  nextDate: Date;
 }

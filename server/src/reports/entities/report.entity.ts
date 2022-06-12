@@ -24,7 +24,19 @@ export class Report {
 
   @Column()
   @Field()
+  dcorprojects: string;
+
+  @Column()
+  @Field()
   pdf: string;
+
+  @Column()
+  @Field()
+  startDate: Date;
+
+  @Column()
+  @Field()
+  nextDate: Date;
 
   @CreateDateColumn()
   @Field()

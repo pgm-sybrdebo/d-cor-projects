@@ -15,6 +15,8 @@ import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { ReportSectionsModule } from './report-sections/report-sections.module';
+import { MulterModule } from '@nestjs/platform-express';
+
 
 dotenv.config();
 const nodeEnvironment = `${(
@@ -66,7 +68,9 @@ const nodeEnvironment = `${(
         // },
       }),
     }),
-    UsersModule, ProjectsModule, ClientsModule, ReportsModule, MediaModule, SubcontractorsModule, DesignersModule, ReportSectionsModule],
+    UsersModule, ProjectsModule, ClientsModule, ReportsModule, MediaModule, SubcontractorsModule, DesignersModule, ReportSectionsModule,     MulterModule.register({
+      dest: './uploads',
+    })],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -9,6 +9,7 @@ import { Designer } from 'src/designers/entities/designer.entity';
 import { Subcontractor } from 'src/subcontractors/entities/subcontractor.entity';
 import { Media } from 'src/media/entities/media.entity';
 import { Report } from 'src/reports/entities/report.entity';
+import { Client } from 'src/clients/entities/client.entity';
 
 @Resolver(() => Project)
 export class ProjectsResolver {
@@ -135,7 +136,10 @@ export class ProjectsResolver {
   }
 
 
-
+  @ResolveField((returns) => Client)
+  client(@Parent() project: Project): Promise<Client> {
+    return this.projectsService.getClientByClientId(project.clientId);
+  }
 
 
   @ResolveField((returns) => [Designer])

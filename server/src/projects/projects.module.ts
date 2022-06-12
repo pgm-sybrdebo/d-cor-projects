@@ -7,10 +7,12 @@ import { DesignersModule } from 'src/designers/designers.module';
 import { SubcontractorsModule } from 'src/subcontractors/subcontractors.module';
 import { MediaModule } from 'src/media/media.module';
 import { ReportsModule } from 'src/reports/reports.module';
+import { ClientsModule } from 'src/clients/clients.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Project]), 
+    ClientsModule,
     DesignersModule, 
     SubcontractorsModule, 
     MediaModule,

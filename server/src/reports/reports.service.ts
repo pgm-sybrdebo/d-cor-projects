@@ -14,8 +14,11 @@ export class ReportsService {
     private reportSectionService: ReportSectionsService
   ){}
 
-  create(createReportInput: CreateReportInput): Promise<Report> {
-    const newReport = this.reportsRepository.create(createReportInput);
+  async create(createReportInput: CreateReportInput): Promise<Report> {
+    
+    const lastNumber = await this.reportsRepository.count({where: {projectId: createReportInput.projectId}});
+    console.log(lastNumber);
+    const newReport = await this.reportsRepository.create({... createReportInput, number: lastNumber + 1});
     return this.reportsRepository.save(newReport);
   }
 
@@ -48,14 +51,13 @@ export class ReportsService {
     return this.reportsRepository.save(updatedReport); 
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Report> {
     const report = await this.reportsRepository.findOneOrFail({
       where: {
         id: id,
       },
     });
-    this.reportsRepository.remove(report);
-    return id;
+    return this.reportsRepository.softRemove(report);
   }
 
   // Resolve fields

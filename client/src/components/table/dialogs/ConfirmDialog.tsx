@@ -44,17 +44,17 @@ const ConfirmDialog = ({
             onClick={() => handleConfirm(selectedRow.id)}
             sx={{
               borderWidth: 2,
-              borderColor: "#56B13D",
-              backgroundColor: "#56B13D",
+              borderColor: "#ED0034",
+              backgroundColor: "rgba(238, 0, 52, 0.4)",
               marginRight: "3rem",
               marginTop: "1rem",
               marginBottom: "1rem",
               color: "#FFF",
               ":hover": {
                 borderWidth: 2,
-                borderColor: "#56B13D",
+                borderColor: "#ED0034",
                 bgcolor: "#FFF",
-                color: "#56B13D",
+                color: "#ED0034",
               },
             }}
           >
@@ -66,16 +66,17 @@ const ConfirmDialog = ({
             size="large"
             fullWidth
             sx={{
-              borderColor: "#ED0034",
-              color: "#ED0034",
+              backgroundColor: "#999999",
+              borderColor: "#999999",
+              color: "#FFF",
               borderWidth: 2,
               marginTop: "1rem",
               marginBottom: "1rem",
               ":hover": {
-                borderColor: "#ED0034",
-                color: "#FFF",
+                borderColor: "#999999",
+                color: "#999999",
                 borderWidth: 2,
-                bgcolor: "rgba(238, 0, 52, 0.4)",
+                bgcolor: "#FFF",
               },
             }}
           >

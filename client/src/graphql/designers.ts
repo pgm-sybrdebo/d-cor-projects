@@ -5,6 +5,11 @@ export const GET_ALL_DESIGNERS = gql`
     designers {
       id
       companyName
+      firstName
+      lastName
+      gender
+      email
+      gsm
     }
   }
 `;

@@ -37,13 +37,12 @@ export class DesignersService {
     return this.designerRepository.save(updatedDesigner); 
   }
 
-  async remove(id: number): Promise<Number> {
+  async remove(id: number): Promise<Designer> {
     const designer = await this.designerRepository.findOneOrFail({
       where: {
         id: id,
       },
     });
-    this.designerRepository.remove(designer);
-    return id;
+    return this.designerRepository.softRemove(designer);
   }
 }

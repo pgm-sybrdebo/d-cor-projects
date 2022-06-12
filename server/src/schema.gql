@@ -74,10 +74,12 @@ input CreateProjectInput {
 }
 
 input CreateReportInput {
+  dcorprojects: String!
   generalInfo: String!
-  number: Int!
+  nextDate: Timestamp!
   pdf: String!
   projectId: Int!
+  startDate: Timestamp!
 }
 
 input CreateReportSectionInput {
@@ -140,7 +142,7 @@ type Media {
   name: String!
   project: Project!
   projectId: Int!
-  reportSection: Media!
+  reportSection: ReportSection!
   reportSectionId: Int
   source: String!
   type: String!
@@ -208,6 +210,9 @@ type Query {
   clientsByName(limit: Int!, name: String!, offset: Int!): [Client!]!
   designer(id: Int!): Designer!
   designers: [Designer!]!
+  findAllClientsByReportId(reportId: Int!): [ReportSection!]!
+  findAllDesignersByReportId(reportId: Int!): [ReportSection!]!
+  findAllSubcontractorsByReportId(reportId: Int!): [ReportSection!]!
   media(id: Int!): Media!
   project(id: Int!): Project!
   projects: [Project!]!
@@ -230,14 +235,17 @@ type Query {
 
 type Report {
   created_on: Timestamp!
+  dcorprojects: String!
   deleted_on: Timestamp!
   generalInfo: String!
   id: Int!
+  nextDate: Timestamp!
   number: Int!
   pdf: String!
   project: Project!
   projectId: Int!
   reportSections: [ReportSection!]!
+  startDate: Timestamp!
   updated_on: Timestamp!
 }
 
@@ -250,7 +258,7 @@ type ReportSection {
   designer: Designer!
   designerId: Int
   id: Int!
-  media: [Media!]!
+  media: [Media!]
   report: Report!
   reportId: Int!
   subcontractor: Subcontractor!
@@ -340,11 +348,13 @@ input UpdateProjectInput {
 }
 
 input UpdateReportInput {
+  dcorprojects: String
   generalInfo: String
   id: Int!
-  number: Int
+  nextDate: Timestamp
   pdf: String
   projectId: Int
+  startDate: Timestamp
 }
 
 input UpdateReportSectionInput {

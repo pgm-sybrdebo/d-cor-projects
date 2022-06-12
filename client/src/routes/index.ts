@@ -4,3 +4,4 @@ export const PROJECTS = "/projecten";
 export const PROJECT = "/project/:id";
 export const CLIENTS = "/clienten";
 export const SUBCONTRACTORS = "/onderaannemers";
+export const NEW_REPORT = "/nieuw-werfverslag/:id";

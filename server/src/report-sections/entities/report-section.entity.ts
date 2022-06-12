@@ -62,7 +62,6 @@ export class ReportSection {
   subcontractor: Subcontractor;
 
   @OneToMany(() => Media, (media) => media.reportSection)
-  @Field((type) => [Media])
-  media: Media[];
-
+  @Field((type) => [Media], {nullable: true})
+  media?: Media[];
 }
