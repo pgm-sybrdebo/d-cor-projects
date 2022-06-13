@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -6,7 +7,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
 
-  button {
+  a {
     margin-horizontal: auto;
     transition: ${(props) => props.theme.transition.normal};
     border: none;
@@ -14,7 +15,6 @@ const Container = styled.div`
     color: ${(props) => props.theme.colors.darkGrey};
     background-color: transparent;
     cursor: pointer;
-    outline: none;
 
     &:hover {
       color: ${(props) => props.theme.colors.black};
@@ -25,15 +25,13 @@ const Container = styled.div`
 
 interface LinkProps {
   children: React.ReactNode;
-  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  id: number;
 }
 
-const PrimaryLink = ({ children, onClick }: LinkProps) => {
+const PrimaryLink = ({ children, id }: LinkProps) => {
   return (
     <Container>
-      <button type="button" onClick={onClick}>
-        {children}
-      </button>
+      <Link to={`/project/${id}`}>{children}</Link>
     </Container>
   );
 };

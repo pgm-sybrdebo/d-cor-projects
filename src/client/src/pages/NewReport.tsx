@@ -937,7 +937,7 @@ const NewReport = () => {
             </PDFDownloadLink>
           </PDFContainer>
         )}
-      <PrimaryLink onClick={() => navigate(-1)}>Ga terug</PrimaryLink>
+      <PrimaryLink id={Number(id)}>Ga terug</PrimaryLink>
     </BaseLayout>
   );
 };
